@@ -1,3 +1,21 @@
+/* 標籤的基本樣式 */
+
+body {
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+}
+
 .sub1-bold {
   font-size: 20px;
   font-weight: 700;
