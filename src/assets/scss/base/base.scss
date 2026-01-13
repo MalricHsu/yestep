@@ -1,0 +1,94 @@
+/* 標籤的基本樣式 */
+
+body {
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sub1-bold {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.sub2-bold {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.sub1-medium {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.sub2-medium {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.body1-bold {
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+.body2-bold {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+.body3-bold {
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+.caption-medium {
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.body1-medium {
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.body2-medium {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.body2-medium {
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.caption-regular {
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.body1-regular {
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+.body2-regular {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+.body3-regular {
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+}
