@@ -10,6 +10,12 @@ img {
   height: auto;
 }
 
+ul,
+ol,
+dl {
+  margin-bottom: 0;
+}
+
 a {
   display: inline-block;
   text-decoration: none;

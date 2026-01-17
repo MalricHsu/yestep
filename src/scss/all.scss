@@ -4,7 +4,15 @@
 @import "bootstrap/scss/bootstrap";
 @import "./util/utilities";
 @import "bootstrap/scss/utilities/api";
+
+// base 通用設定
 @import "./base/base.scss";
+
+// layout
+@import "./layout/header";
+@import "./layout/footer";
+
+// page
 @import "./page/home.scss";
 @import "./page/trailsearchpage.scss";
 @import "./page/traildetail.scss";

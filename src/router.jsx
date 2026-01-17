@@ -1,11 +1,11 @@
 import { createHashRouter } from "react-router-dom";
 import App from "./App";
-import Home from "./assets/pages/Home";
-import TrailSearchPage from "./assets/pages/TrailSearchPage";
-import TrailDetail from "./assets/pages/TrailDetail";
-import Theme from "./assets/pages/Theme";
-import Member from "./assets/pages/Member";
-import NotFound404 from "./assets/pages/NotFound404";
+import Home from "./pages/Home";
+import TrailSearchPage from "./pages/TrailSearchPage";
+import TrailDetail from "./pages/TrailDetail";
+import Theme from "./pages/Theme";
+import Member from "./pages/Member";
+import NotFound404 from "./pages/NotFound404";
 
 const router = createHashRouter([
   {
