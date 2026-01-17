@@ -9,7 +9,7 @@ import logoWhiteLg from "../assets/images/ori-logo-lg-white.svg";
 // import { logoPri } from "../assets/images/ori-logo-pri.svg";
 // import { logoPriLg } from "../assets/images/ori-logo-lg-pri.svg";
 
-import logoAccount from "../assets/images/icon-account.svg";
+import iconAccount from "../assets/images/icon-account.svg";
 
 // 🚩還沒做，Header 滑動超過2/3屏時，轉換樣式
 const Header = () => {
@@ -53,7 +53,7 @@ const Header = () => {
             {/* 登入註冊 */}
             <div className="header__login">
               <Link to="/login" className="text-decoration-none text-white">
-                <img src={logoAccount} className="me-2" alt="登入/註冊按鈕" />
+                <img src={iconAccount} className="me-2" alt="登入/註冊按鈕" />
                 <span>登入/註冊</span>
               </Link>
             </div>
