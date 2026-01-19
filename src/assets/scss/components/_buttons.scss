@@ -1,0 +1,55 @@
+// mixins include 修改
+.btn {
+  &.btn-primary {
+    --bs-btn-padding-x: 1.5rem;
+    --bs-btn-padding-y: 0.75rem;
+    --bs-btn-font-size: 18px;
+    --bs-btn-font-weight: 700;
+    --bs-btn-line-height: 1.5;
+    --bs-btn-border-width: var(--bs-border-width);
+    // --bs-btn-border-color: transparent;
+    --bs-btn-border-radius: 100px;
+    @include button-variant(
+      // $black,
+      $primary-100,
+      // background
+      // $black,
+      transparent,
+      // border
+      // $white,
+      $primary-300,
+      // color
+      $primary-200,
+      // hover-background
+      transparent,
+      // hover-border
+      $white,
+      // hover-color
+      $primary-200,
+      // active-background
+      transparent,
+      // active-border
+      $white // active-color
+    );
+    &:disabled,
+    &.disabled {
+      color: $white;
+      background-color: $black-200;
+      // Remove CSS gradients if they're enabled
+      background-image: if($enable-gradients, none, null);
+      // border-color: $disabled-border;
+    }
+  }
+  &.btn-lg {
+    @include media-breakpoint-down(md) {
+      --bs-btn-font-size: 1.25rem;
+    }
+  }
+
+  // rounded
+  &.rounded {
+    @include media-breakpoint-down(md) {
+      --bs-border-radius: 0.75rem;
+    }
+  }
+}
