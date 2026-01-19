@@ -15,8 +15,8 @@ import iconAccount from "../assets/images/icon-account.svg";
 const Header = () => {
   return (
     <>
-      <header className="py-6">
-        <div className="container">
+      <header className="py-6 position-fixed top-0 w-100 z-1">
+        <div className="container ">
           <div className="header__links d-flex justify-content-between align-items-center ">
             {/* logo + 導覽列 */}
             <div className="header__nav d-flex align-items-center ">

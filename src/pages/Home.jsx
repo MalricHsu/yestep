@@ -1,7 +1,20 @@
+// 引入關於我們圖片
+import aboutImg from "../assets/images/home/about-img.svg";
+
 const Home = () => {
   return (
     <>
       <main>
+        {/* HERO */}
+        <section>
+          <div className="hero ratio ratio-16x9">
+            <img
+              src="https://plus.unsplash.com/premium_photo-1669839774560-f4524492b1d7?q=80&w=640&h=360&0&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              className="object-fit-cover"
+              alt="hero圖片"
+            />
+          </div>
+        </section>
         {/* 關於我們 */}
         <section class="bg-primary-50 py-32">
           <div class="container">
@@ -11,10 +24,7 @@ const Home = () => {
                   <div class="row align-items-center">
                     <div class="col-lg-7">
                       <div class="about__card-img">
-                        <img
-                          src="https://images.plurk.com/UyjTawqYm4EEoIZnpCL3c.png"
-                          alt="關於我們圖片"
-                        />
+                        <img src={aboutImg} alt="關於我們圖片" />
                       </div>
                     </div>
                     <div class="col-lg-5">
@@ -26,7 +36,9 @@ const Home = () => {
                           </p>
                           <p>大多時候，答案只差那麼一步—— </p>
                           <p>
-                            <strong>一個肯定的Yes</strong>
+                            <strong className="text-primary-200">
+                              一個肯定的Yes
+                            </strong>
                           </p>
                         </div>
                         <div class="about__card-paragraph mb-4">
