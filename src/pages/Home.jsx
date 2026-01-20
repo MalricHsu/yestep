@@ -21,7 +21,7 @@ const Home = () => {
           <div className="container">
             <div className="row">
               <div className="col-lg-12">
-                <div className="about__card bg-white rounded-12 p-6 position-relative z-1">
+                <div className="about__card bg-white rounded-lg-60 p-6 position-relative z-1">
                   <div className="row align-items-center">
                     <div className="col-lg-7">
                       <div className="about__card-img">

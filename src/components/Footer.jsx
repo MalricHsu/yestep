@@ -75,7 +75,6 @@ const Footer = () => {
                 <ul className="footer-links list-unstyled d-flex gap-8">
                   <li className="decor-lined">
                     <a href="/" className="text-decoration-none text-black-100">
-                      {/*  */}
                       隱私權政策
                     </a>
                   </li>
