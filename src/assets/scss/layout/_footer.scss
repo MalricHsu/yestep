@@ -1,14 +1,17 @@
+.footer__nav {
+	position: relative;
+}
 .footer-links .decor-lined {
-  position: relative;
+	position: relative;
 }
 
 .footer-links .decor-lined::after {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 1px;
-  background: #9b9da1;
-  right: -16px; /*把線條往右推*/
-  top: 50%;
-  transform: translateY(-50%);
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 1px;
+	background: #9b9da1;
+	right: -16px; /*把線條往右推*/
+	top: 50%;
+	transform: translateY(-50%);
 }
