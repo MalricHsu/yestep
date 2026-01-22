@@ -19,7 +19,7 @@ const Footer = () => {
             <div className="col-lg-8">
               <div className="brand__logo d-flex flex-column mb-13">
                 <Link to="/" className="mb-1">
-                  <img src={logoWhiteLg} className alt="footer logo圖" />
+                  <img src={logoWhiteLg} alt="footer logo圖" />
                 </Link>
                 <p className="brand__logo-slogan text-black-100">
                   每一步，找回生活的呼吸
