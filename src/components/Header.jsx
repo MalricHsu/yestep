@@ -1,33 +1,42 @@
 // 引入Link
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 // 引入logo-white
-// import { logoWhite } from "../assets/images/ori-logo-white.svg";
-import logoWhiteLg from "../assets/images/ori-logo-lg-white.svg";
+import logoWhiteLg from "../../public/Logo-white.png";
+import logoDarkLg from "../../public/Logo.png";
 
-// 引入logo-primary
-// import { logoPri } from "../assets/images/ori-logo-pri.svg";
-// import { logoPriLg } from "../assets/images/ori-logo-lg-pri.svg";
-
-import iconAccount from "../assets/images/icon-account.svg";
-
-// 🚩還沒做，Header 滑動超過2/3屏時，轉換樣式
 const Header = () => {
+	const [scrolled, setScrolled] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setScrolled(window.scrollY > 50);
+		};
+
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
+
 	return (
 		<>
-			<nav className="py-6">
+			<nav className={`py-6 ${scrolled ? "scrolled" : ""}`}>
 				<div className="container">
 					<div className="header__links d-flex justify-content-between align-items-center ">
 						{/* logo + 導覽列 */}
 						<div className="header__nav d-flex align-items-center ">
 							<Link to="/" className="px-4 me-10">
-								<img src={logoWhiteLg} alt="logo圖片" />
+								<img
+									className="logo"
+									src={scrolled ? logoDarkLg : logoWhiteLg}
+									alt="logo圖片"
+								/>
 							</Link>
 							<ul className="list-unstyled d-flex gap-8">
 								<li className="decor-lined">
 									<Link
 										to="/trailtheme"
-										className="text-decoration-none text-white"
+										className="text-decoration-none"
 									>
 										主題活動
 									</Link>
@@ -35,7 +44,7 @@ const Header = () => {
 								<li className="decor-lined">
 									<Link
 										to="/trailsearch"
-										className="text-decoration-none text-white"
+										className="text-decoration-none"
 									>
 										步道總覽
 									</Link>
@@ -44,7 +53,7 @@ const Header = () => {
 								<li>
 									<Link
 										to="/"
-										className="text-decoration-none text-white "
+										className="text-decoration-none "
 									>
 										熱門步道
 									</Link>
@@ -55,13 +64,11 @@ const Header = () => {
 						<div className="header__login">
 							<Link
 								to="/login"
-								className="text-decoration-none text-white"
+								className="d-flex align-items-center text-decoration-none"
 							>
-								<img
-									src={iconAccount}
-									className="me-2"
-									alt="登入/註冊按鈕"
-								/>
+								<i className="material-symbols-outlined me-2">
+									account_circle
+								</i>
 								<span>登入/註冊</span>
 							</Link>
 						</div>
