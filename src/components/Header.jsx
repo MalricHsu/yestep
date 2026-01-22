@@ -2,9 +2,9 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-// 引入logo-white
-import logoWhiteLg from "../../public/Logo-white.png";
-import logoDarkLg from "../../public/Logo.png";
+// 引入 logo
+import logoWhite from "../assets/images/Logo-white.png";
+import logoDark from "../assets/images/Logo.png";
 
 const Header = () => {
 	const [scrolled, setScrolled] = useState(false);
@@ -28,7 +28,7 @@ const Header = () => {
 							<Link to="/" className="px-4 me-10">
 								<img
 									className="logo"
-									src={scrolled ? logoDarkLg : logoWhiteLg}
+									src={scrolled ? logoDark : logoWhite}
 									alt="logo圖片"
 								/>
 							</Link>
