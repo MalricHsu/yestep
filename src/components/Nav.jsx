@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import logoWhite from '../assets/images/Logo-white.png';
 import logoDark from '../assets/images/Logo.png';
 
+//預設nav的字一開始就是非綠色的
 const Nav = () => {
     const [scrolled, setScrolled] = useState(false);
 
@@ -47,6 +48,11 @@ const Nav = () => {
                                 <li>
                                     <Link to="/" className="text-decoration-none ">
                                         熱門步道
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/traildetail" className="text-decoration-none ">
+                                        步道詳細
                                     </Link>
                                 </li>
                             </ul>
