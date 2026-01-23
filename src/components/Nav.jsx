@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import logoWhite from '../assets/images/Logo-white.png';
 import logoDark from '../assets/images/Logo.png';
 
-const Nav = () => {
+//預設nav的字一開始就是非綠色的
+const Nav = ({ isGreen = false }) => {
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -17,10 +18,15 @@ const Nav = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+    //已經捲動 (scrolled 為 true) 強制設定為綠色模式
+    const showDarkStyle = scrolled || isGreen;
+    const navBgClass = scrolled ? 'bg-white shadow-soft' : 'bg-transparent';
 
     return (
         <>
-            <nav className={`py-6 ${scrolled ? 'scrolled' : ''}`}>
+            <nav
+                className={` bg-transparent py-6 ${navBgClass} ${showDarkStyle ? 'text-primary-300' : 'text-white'}`}
+            >
                 <div className="container">
                     <div className="header__links d-flex justify-content-between align-items-center ">
                         {/* logo + 導覽列 */}
@@ -28,7 +34,7 @@ const Nav = () => {
                             <Link to="/" className="px-4 me-10">
                                 <img
                                     className="logo"
-                                    src={scrolled ? logoDark : logoWhite}
+                                    src={showDarkStyle ? logoDark : logoWhite}
                                     alt="logo圖片"
                                 />
                             </Link>
@@ -47,6 +53,11 @@ const Nav = () => {
                                 <li>
                                     <Link to="/" className="text-decoration-none ">
                                         熱門步道
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/traildetail" className="text-decoration-none ">
+                                        步道詳細
                                     </Link>
                                 </li>
                             </ul>
