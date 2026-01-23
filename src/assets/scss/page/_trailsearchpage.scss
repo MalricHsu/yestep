@@ -22,6 +22,7 @@
     .form-control {
         border: none;
         box-shadow: none;
+        font-size: 18px;
 
         &::placeholder {
             color: $black-200;
@@ -36,13 +37,19 @@
     .form-select {
         max-width: 170px;
         color: $black-600;
-        font-size: 18px;
         font-weight: $font-weight-medium;
     }
 
     :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(
             .invalid-tooltip
         ):not(.invalid-feedback) {
+        margin-left: initial;
         border-radius: $border-radius-pill;
+    }
+
+    .search-divider {
+        width: 1px;
+        height: 32px;
+        background-color: $primary-200;
     }
 }
