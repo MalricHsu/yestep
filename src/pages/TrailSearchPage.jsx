@@ -9,6 +9,9 @@ const getErrorMessage = (error) => {
 };
 
 const TrailSearchPage = () => {
+    useEffect(() => {
+        document.title = '步道總覽 | YeStep';
+    }, []);
     const [trailSceneryCount, setTrailSceneryCount] = useState(0);
     const fetchRef = useRef(null);
 

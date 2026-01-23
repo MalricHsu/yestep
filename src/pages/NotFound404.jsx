@@ -1,13 +1,20 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
+
 const NotFound404 = () => {
-  return (
-    <>
-      <button type="button" className="btn btn-primary-50 rounded-16">
-        按我
-      </button>
-      <h1>我是標題</h1>
-      <p>aaaaaa</p>
-    </>
-  );
+    const Navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = 'NotFound404 | YeStep';
+        setTimeout(() => {
+            Navigate('/');
+        }, 3000);
+    }, [Navigate]);
+    return (
+        <>
+            <h1>這是不存在的頁面</h1>
+        </>
+    );
 };
 
 export default NotFound404;
