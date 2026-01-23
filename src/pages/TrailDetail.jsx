@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+// import { useParams } from 'react-router';
 import axios from 'axios';
 import Nav from '../components/Nav';
 import StarRating from '../components/StarRating';
@@ -6,11 +7,14 @@ import StarRating from '../components/StarRating';
 const TrailDetail = () => {
     const [detailData, setDetailData] = useState({});
     const detailApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+    // const useParam = useParams();
+    // const { id } = useParam;
 
     useEffect(() => {
         const handleDetailData = async () => {
             try {
-                const res = await detailApi.get('/trails');
+                // const res = await detailApi.get(`/trails/${id}`);
+                const res = await detailApi.get(`/trails`);
                 console.log(res.data);
                 setDetailData(res.data[1]);
             } catch (error) {
@@ -18,8 +22,12 @@ const TrailDetail = () => {
             }
         };
         handleDetailData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    useEffect(() => {
+        document.title = `${detailData.trail_name} | YeStep`;
+    }, [detailData.trail_name]);
 
     return (
         <div>
