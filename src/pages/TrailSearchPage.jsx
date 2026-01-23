@@ -39,7 +39,7 @@ const TrailSearchPage = () => {
                             <h3 className="text-white text-center fw-medium fs-7 mb-8">步道總覽</h3>
                             <h1 className="text-white text-center mb-8">Next Step！想要去哪裡？</h1>
                             <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
-                                <div className="input-group">
+                                <div className="input-group align-items-center">
                                     <select className="form-select px-4" id="inputGroupSelect01">
                                         <option selected>請選擇地區</option>
                                         <option value="1">北部</option>
@@ -47,9 +47,10 @@ const TrailSearchPage = () => {
                                         <option value="3">南部</option>
                                         <option value="3">東部 </option>
                                     </select>
+                                    <span className="search-divider"></span>
                                     <input
                                         type="text"
-                                        className="form-control"
+                                        className="form-control px-4"
                                         placeholder="Next Step！想要去哪裡？"
                                     />
                                     <button className="btn btn-primary" type="button">
