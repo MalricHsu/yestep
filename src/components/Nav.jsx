@@ -7,7 +7,7 @@ import logoWhite from '../assets/images/Logo-white.png';
 import logoDark from '../assets/images/Logo.png';
 
 //預設nav的字一開始就是非綠色的
-const Nav = ({ isGreen = false }) => {
+const Nav = () => {
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -18,15 +18,10 @@ const Nav = ({ isGreen = false }) => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
-    //已經捲動 (scrolled 為 true) 強制設定為綠色模式
-    const showDarkStyle = scrolled || isGreen;
-    const navBgClass = scrolled ? 'bg-white shadow-soft' : 'bg-transparent';
 
     return (
         <>
-            <nav
-                className={` bg-transparent py-6 ${navBgClass} ${showDarkStyle ? 'text-primary-300' : 'text-white'}`}
-            >
+            <nav className={`py-6 ${scrolled ? 'scrolled' : ''}`}>
                 <div className="container">
                     <div className="header__links d-flex justify-content-between align-items-center ">
                         {/* logo + 導覽列 */}
@@ -34,7 +29,7 @@ const Nav = ({ isGreen = false }) => {
                             <Link to="/" className="px-4 me-10">
                                 <img
                                     className="logo"
-                                    src={showDarkStyle ? logoDark : logoWhite}
+                                    src={scrolled ? logoDark : logoWhite}
                                     alt="logo圖片"
                                 />
                             </Link>
