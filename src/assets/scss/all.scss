@@ -1,28 +1,28 @@
 // Google Symbols
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-@import "bootstrap/scss/functions";
-@import "./variables";
-@import "./variables-dark";
-@import "bootstrap/scss/bootstrap";
-@import "./util/utilities";
-@import "bootstrap/scss/utilities/api";
+@import 'bootstrap/scss/functions';
+@import './variables';
+@import './variables-dark';
+@import 'bootstrap/scss/bootstrap';
+@import './util/utilities';
+@import 'bootstrap/scss/utilities/api';
 
 // base 通用設定
-@import "./base/base.scss";
+@import './base/base.scss';
 
 // components-btn
-@import "./components/buttons";
-@import "./components/searchBar.scss";
+@import './components/buttons';
+@import './components/navbar';
+@import './components/searchBar';
 
 // layout
-@import "./layout/header";
-@import "./layout/footer";
+@import './layout/footer';
 
 // page
-@import "./page/home.scss";
-@import "./page/trailsearchpage.scss";
-@import "./page/traildetail.scss";
-@import "./page/theme.scss";
-@import "./page/member.scss";
-@import "./page/notfound404.scss";
+@import './page/home';
+@import './page/trailsearchpage';
+@import './page/traildetail';
+@import './page/theme';
+@import './page/member';
+@import './page/notfound404';
