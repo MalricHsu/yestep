@@ -10,8 +10,14 @@
 
 // components-btn
 @import "./components/buttons";
-@import "./components/searchBar.scss";
-
+@import "./components/form-floating";
+@import "./components/form-label";
+@import "./components/form-check";
+@import "./components/form-control";
+@import "./components/form-text";
+@import "./components/validation";
+@import "./components/input-group";
+@import "./components/pagination";
 // layout
 @import "./layout/header";
 @import "./layout/footer";

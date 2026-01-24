@@ -1,0 +1,9 @@
+.invalid-feedback,
+.valid-feedback {
+  font-family: "Noto Sans TC";
+}
+.was-validated .form-check-input:invalid:checked,
+.was-validated .form-check-input:invalid:focus,
+.form-check-input.is-invalid:focus {
+  border: 1px solid $red;
+}
