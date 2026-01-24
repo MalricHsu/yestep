@@ -1,0 +1,55 @@
+.search-header {
+    position: relative;
+    padding: 176px 0 144px;
+    background: url(../../images/trailsearchpage/bg.jpg) no-repeat center bottom;
+    background-size: cover;
+
+    &::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 5rem;
+        bottom: -1rem;
+        left: 0;
+        background: url(../../images/trailsearchpage/mask.svg) no-repeat center bottom;
+        background-size: cover;
+    }
+}
+
+.search-bar {
+    border: 1px solid $primary-200;
+    .form-select,
+    .form-control {
+        border: none;
+        box-shadow: none;
+        font-size: 18px;
+
+        &::placeholder {
+            color: $black-200;
+        }
+
+        &:focus {
+            border: none;
+            box-shadow: none;
+        }
+    }
+
+    .form-select {
+        max-width: 170px;
+        color: $black-600;
+        font-weight: $font-weight-medium;
+    }
+
+    :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(
+            .invalid-tooltip
+        ):not(.invalid-feedback) {
+        margin-left: initial;
+        border-radius: $border-radius-pill;
+    }
+
+    .search-divider {
+        width: 1px;
+        height: 32px;
+        background-color: $primary-200;
+    }
+}

@@ -1,6 +1,5 @@
 .decor-lined {
     position: relative;
-    color: inherit;
 }
 
 .decor-lined::after {
@@ -8,28 +7,28 @@
     content: '';
     height: 20px;
     width: 1px;
-    background-color: currentColor;
+    background: #ffffff;
     right: -16px; /*把線條往右推*/
     top: 50%;
     transform: translateY(-50%);
 }
 
+// 要記得刪掉
 nav {
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: 50;
     transition: background-color 0.3s ease;
     background-color: transparent;
+    z-index: 990;
 
     .header__nav,
-    .header__login,
-    a {
-        color: inherit;
+    .header__login {
+        color: $white;
     }
 
     .logo {
-        max-width: 70px;
+        max-width: 60px;
     }
 
     &.scrolled {
