@@ -1,0 +1,30 @@
+.nav-link {
+    font-family: 'Noto Sans TC';
+    font-size: 1.25rem;
+    font-weight: 500;
+    background-color: $primary-100;
+}
+.nav-underline .nav-link.active,
+.nav-underline .show > .nav-link {
+    // 為了不讓padding影響整體，fw統一500
+    font-weight: 500;
+    color: $primary-300;
+}
+.nav-underline {
+    gap: 0;
+}
+.nav-underline .nav-link {
+    padding: 0.75rem;
+}
+.nav-pills {
+    background-color: $black-50;
+    border-radius: 100px;
+    box-shadow: 0 0 32px 0 #00000066;
+    display: inline-flex;
+    padding: 0.5rem;
+}
+.nav-pills .nav-link:hover,
+.nav-pills .nav-link:focus {
+    background-color: $primary-200;
+    color: $white;
+}

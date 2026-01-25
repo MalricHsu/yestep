@@ -193,24 +193,7 @@ const Member = () => {
                 </ul>
             </nav>
 
-            {/* nav, tab,  Segment*/}
-            <ul className="nav nav-pills">
-                <li className="nav-item">
-                    <button className="nav-link active" aria-current="page" type="button">
-                        Active
-                    </button>
-                </li>
-                <li className="nav-item">
-                    <button className="nav-link" type="button">
-                        Default
-                    </button>
-                </li>
-                <li className="nav-item">
-                    <button className="nav-link" type="button">
-                        Default
-                    </button>
-                </li>
-            </ul>
+            {/* nav, Segment*/}
 
             <ul class="nav nav-underline">
                 <li class="nav-item">
@@ -227,6 +210,24 @@ const Member = () => {
                     <a class="nav-link" href="#">
                         Default
                     </a>
+                </li>
+            </ul>
+
+            <ul className="nav nav-pills">
+                <li className="nav-item">
+                    <button className="nav-link active" aria-current="page" type="button">
+                        Active
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button className="nav-link" type="button">
+                        Default
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button className="nav-link" type="button">
+                        Default
+                    </button>
                 </li>
             </ul>
         </>
