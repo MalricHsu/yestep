@@ -1,6 +1,9 @@
 // 引入 Hero 影片
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
+// 引入特色景觀步道圖片
+import featureFlower from '../assets/images/home/feature-flower.svg';
+
 // 引入關於我們圖片
 import aboutImg from '../assets/images/home/about-img.svg';
 import aboutImgLg from '../assets/images/home/about-img-lg.svg';
@@ -39,10 +42,40 @@ const Home = () => {
                 {/* 難易度步道 */}
                 <section></section>
 
-                {/* 特色景觀步道 */}
-                <section></section>
+                {/* 特色景觀步道 trailFeature */}
+                <section>
+                    <div className="trailFeature w-100">
+                        <div className="trailFeature__grid d-grid">
+                            <div className="ratio ratio-4x3">
+                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            </div>
+                            <div className="ratio ratio-4x3">
+                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            </div>
+                            <div className="ratio ratio-4x3">
+                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            </div>
+                            <div className="ratio ratio-4x3">
+                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            </div>
+                            <div className="ratio ratio-4x3">
+                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            </div>
 
-                {/* 關於我們 */}
+                            <div className="ratio ratio-4x3">
+                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            </div>
+                            <div className="ratio ratio-4x3">
+                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            </div>
+                            <div className="ratio ratio-4x3">
+                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 關於我們 about */}
                 <section className="py-16 py-lg-32 position-relative">
                     <div className="container">
                         <div className="row">
