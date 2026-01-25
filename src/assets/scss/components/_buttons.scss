@@ -1,5 +1,6 @@
 // mixins include 修改
 .btn {
+  letter-spacing: 0;
   &.btn-primary {
     --bs-btn-padding-x: 1.5rem;
     --bs-btn-padding-y: 0.75rem;
