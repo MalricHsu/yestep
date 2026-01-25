@@ -1,3 +1,6 @@
+// 引入 Hero 影片
+import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
+
 // 引入關於我們圖片
 import aboutImg from '../assets/images/home/about-img.svg';
 import aboutBgLg from '../assets/images/home/about-bg-lg.svg';
@@ -14,11 +17,14 @@ const Home = () => {
             {/* HERO */}
             <section>
                 <div className="hero ratio ratio-16x9">
-                    <img
-                        src="https://plus.unsplash.com/premium_photo-1669839774560-f4524492b1d7?q=80&w=640&h=360&0&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    <video
+                        src={heroVideoLg}
                         className="object-fit-cover"
-                        alt="hero圖片"
-                    />
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                    ></video>
                 </div>
             </section>
             {/* 特色景觀 */}
