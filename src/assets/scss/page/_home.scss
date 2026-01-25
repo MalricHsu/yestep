@@ -1,27 +1,39 @@
 /* 特色景觀步道 trailFeature */
 
-.trailFeature__grid {
-    grid-template-columns: repeat(2, 1fr); /* 手機兩欄 */
-    grid-auto-rows: auto;
-    gap: 0; /* 緊貼 */
-
-    .col-span-1 {
-        grid-column: span 1;
-    }
-    .col-span-2 {
-        grid-column: span 2;
-    } /* 全寬圖 */
+// 🔸 grid容器設定
+.feature__grid {
+    display: grid;
+    grid-template-columns: 2fr 3fr 2fr; /* 分成三等份 */
 }
 
-/* 桌機版三欄 */
-@media (min-width: 992px) {
-    .trailFeature__grid {
-        grid-template-columns: 2fr 3fr 2fr;
+.feature__column {
+    display: flex;
+    flex-direction: column;
+}
 
-        .col-span-2 {
-            grid-column: auto;
-        }
-    }
+.feature__center-col img {
+    flex: 1;
+}
+
+.feature__side-col img {
+    flex: 1;
+}
+
+// 🔸 遮罩設定
+.feature__img-box {
+    position: relative;
+    z-index: 0;
+}
+
+.feature__img-box::after {
+    position: absolute;
+    content: '';
+    inset: 0;
+    width: 100%;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%);
+    z-index: 1;
 }
 
 /* 關於我們 about */

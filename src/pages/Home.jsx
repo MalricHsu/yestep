@@ -23,6 +23,7 @@ const Home = () => {
         <>
             <main>
                 {/* HERO */}
+                {/* 還有手機版的影片要放 */}
                 <section>
                     <div className="hero ratio ratio-16x9">
                         <video
@@ -36,40 +37,48 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* 主題活動Swiper */}
+                {/* 主題活動 Swiper */}
                 <section></section>
 
                 {/* 難易度步道 */}
                 <section></section>
 
-                {/* 特色景觀步道 trailFeature */}
+                {/* 特色景觀步道 feature */}
                 <section>
-                    <div className="trailFeature w-100">
-                        <div className="trailFeature__grid d-grid">
-                            <div className="ratio ratio-4x3">
-                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                    <div className="feature__grid ">
+                        {/* <!-- 左邊欄位 --> */}
+                        <div className="feature__column feature__side-col">
+                            <div className="feature__img-box">
+                                <img src={featureFlower} alt="" />
                             </div>
-                            <div className="ratio ratio-4x3">
-                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            <div className="feature__img-box">
+                                <img src={featureFlower} alt="" />
                             </div>
-                            <div className="ratio ratio-4x3">
-                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            <div className="feature__img-box">
+                                <img src={featureFlower} alt="" />
                             </div>
-                            <div className="ratio ratio-4x3">
-                                <img src={featureFlower} alt="賞花關鍵字圖片" />
-                            </div>
-                            <div className="ratio ratio-4x3">
-                                <img src={featureFlower} alt="賞花關鍵字圖片" />
-                            </div>
+                        </div>
 
-                            <div className="ratio ratio-4x3">
-                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                        {/* <!-- 中間欄位 --> */}
+                        <div className="feature__column feature__center-col">
+                            <div className="feature__img-box">
+                                <img src={featureFlower} alt="" />
                             </div>
-                            <div className="ratio ratio-4x3">
-                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                            <div className="feature__img-box">
+                                <img src={featureFlower} alt="" />
                             </div>
-                            <div className="ratio ratio-4x3">
-                                <img src={featureFlower} alt="賞花關鍵字圖片" />
+                        </div>
+
+                        {/* <!-- 右邊欄位 --> */}
+                        <div className="feature__column feature__side-col">
+                            <div className="feature__img-box">
+                                <img src={featureFlower} alt="" />
+                            </div>
+                            <div className="feature__img-box">
+                                <img src={featureFlower} alt="" />
+                            </div>
+                            <div className="feature__img-box">
+                                <img src={featureFlower} alt="" />
                             </div>
                         </div>
                     </div>
