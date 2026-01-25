@@ -5,8 +5,9 @@ import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 import aboutImg from '../assets/images/home/about-img.svg';
 import aboutImgLg from '../assets/images/home/about-img-lg.svg';
 
-// 引入山脈圖片
+// 引入關於我們-背景山脈圖
 import aboutBgLg from '../assets/images/home/about-bg-lg.svg';
+import aboutBg from '../assets/images/home/about-bg.svg';
 
 import { useEffect } from 'react';
 
@@ -42,20 +43,28 @@ const Home = () => {
                 <section></section>
 
                 {/* 關於我們 */}
-                <section className="py-32 position-relative">
+                <section className="py-16 py-lg-32 position-relative">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
-                                <div className="about__card bg-white rounded-lg-60 p-6 position-relative z-1">
+                                <div className="about__card bg-white rounded-24 rounded-lg-60 p-4 p-lg-6 position-relative z-1">
                                     <div className="row align-items-center">
                                         <div className="col-lg-7">
                                             <div className="about__card-img">
-                                                <img src={aboutImgLg} alt="關於我們圖片" />
+                                                <picture>
+                                                    {/* ≥ 992px 換成桌機圖 */}
+                                                    <source
+                                                        srcSet={aboutImgLg}
+                                                        media="(min-width: 992px)"
+                                                        alt="關於我們桌機版圖片"
+                                                    />
+                                                    <img src={aboutImg} alt="關於我們手機版圖片" />
+                                                </picture>
                                             </div>
                                         </div>
                                         <div className="col-lg-5">
                                             <div className="about__card-content body2-medium">
-                                                <h2 className="fs-2 mb-6">關於我們</h2>
+                                                <h2 className="fs-5 fs-lg-2 mb-6">關於我們</h2>
                                                 <div className="about__card-paragraph  mb-4">
                                                     <p>
                                                         人生的旅途中，我們經常問自己：「我做得到嗎？我能再往前走嗎？」
@@ -95,8 +104,15 @@ const Home = () => {
                         </div>
                     </div>
                     {/* 背景山脈圖 */}
-                    <div className="about__bg w-100 position-absolute bottom-0">
-                        <img src={aboutBgLg} alt="背景山脈圖" />
+                    <div className="about__bg w-100 position-absolute ">
+                        <picture>
+                            <source
+                                srcSet={aboutBgLg}
+                                media="(min-width: 992px)"
+                                alt="桌機版背景山脈圖"
+                            />
+                            <img src={aboutBg} alt="手機版背景山脈圖" />
+                        </picture>
                     </div>
                 </section>
             </main>
