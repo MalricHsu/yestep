@@ -13,9 +13,17 @@
 @import './base/base.scss';
 
 // components-btn
+@import './components/form-floating';
+@import './components/form-check';
+@import './components/form-control';
+@import './components/form-text';
+@import './components/input-group';
+@import './components/form-label';
+@import './components/validation';
 @import './components/buttons';
+@import './components/nav';
 @import './components/navbar';
-
+@import './components/pagination';
 // layout
 @import './layout/footer';
 

@@ -978,7 +978,7 @@ $form-label-color: $black-900 !default; //null !default;
 // scss-docs-start form-input-variables
 $input-padding-y: 12px; //$input-btn-padding-y !default;
 $input-padding-x: 12px; //$input-btn-padding-x !default;
-$input-font-family: "Noto Sans TC"; //$input-btn-font-family !default;
+$input-font-family: 'Noto Sans TC'; //$input-btn-font-family !default;
 $input-font-size: $input-btn-font-size !default;
 $input-font-weight: $font-weight-base !default;
 $input-line-height: $input-btn-line-height !default;
@@ -1193,8 +1193,7 @@ $form-floating-input-padding-t: 1.75rem; //1.625rem !default;
 $form-floating-input-padding-b: 0.5rem; //0.625rem !default;
 $form-floating-label-height: 1rem; //1.5em !default;
 $form-floating-label-opacity: 0.65 !default;
-$form-floating-label-transform: scale(0.85) translateY(-0.5rem)
-  translateX(0.15rem) !default;
+$form-floating-label-transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem) !default;
 $form-floating-label-disabled-color: $black-400; //$gray-600 !default;
 $form-floating-transition:
     opacity 0.1s ease-in-out,
@@ -1277,12 +1276,12 @@ $zindex-levels: (
 // Navs
 
 // scss-docs-start nav-variables
-$nav-link-padding-y: 0.5rem !default;
-$nav-link-padding-x: 1rem !default;
+$nav-link-padding-y: 0.25rem; // 0.5rem !default;
+$nav-link-padding-x: 1.5rem; // 1rem !default;
 $nav-link-font-size: null !default;
 $nav-link-font-weight: null !default;
-$nav-link-color: var(--#{$prefix}link-color) !default;
-$nav-link-hover-color: var(--#{$prefix}link-hover-color) !default;
+$nav-link-color: $black-900; //var(--#{$prefix}link-color) !default;
+$nav-link-hover-color: $primary-300; // var(--#{$prefix}link-hover-color) !default;
 $nav-link-transition:
     color 0.15s ease-in-out,
     background-color 0.15s ease-in-out,
@@ -1300,12 +1299,12 @@ $nav-tabs-link-active-bg: var(--#{$prefix}body-bg) !default;
 $nav-tabs-link-active-border-color: var(--#{$prefix}border-color) var(--#{$prefix}border-color)
     $nav-tabs-link-active-bg !default;
 
-$nav-pills-border-radius: var(--#{$prefix}border-radius) !default;
+$nav-pills-border-radius: 10rem; // var(--#{$prefix}border-radius) !default;
 $nav-pills-link-active-color: $component-active-color !default;
-$nav-pills-link-active-bg: $component-active-bg !default;
+$nav-pills-link-active-bg: $primary-200; //$component-active-bg !default;
 
 $nav-underline-gap: 1rem !default;
-$nav-underline-border-width: 0.125rem !default;
+$nav-underline-border-width: 3px; //0.125rem !default;
 $nav-underline-link-active-color: var(--#{$prefix}emphasis-color) !default;
 // scss-docs-end nav-variables
 
