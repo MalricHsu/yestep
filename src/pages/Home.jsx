@@ -2,14 +2,14 @@
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
 // 引入特色景觀步道圖片，之後要改用資料渲染
-import featureFlower from '../assets/images/home/feature-flower.svg';
-import featureWaterfall from '../assets/images/home/feature-waterfall.svg';
-import featureStargazing from '../assets/images/home/feature-stargazing.svg';
-import featureSunrise from '../assets/images/home/feature-sunrise.svg';
-import featureSunset from '../assets/images/home/feature-sunset.svg';
-import featureCloud from '../assets/images/home/feature-cloud.svg';
-import featureBirdwatching from '../assets/images/home/feature-birdwatching.svg';
-import featureSacredTree from '../assets/images/home/feature-sacredtree.svg';
+import flower from '../assets/images/home/landscape-flower.svg';
+import waterfall from '../assets/images/home/landscape-waterfall.svg';
+import stargazing from '../assets/images/home/landscape-stargazing.svg';
+import sunrise from '../assets/images/home/landscape-sunrise.svg';
+import sunset from '../assets/images/home/landscape-sunset.svg';
+import cloud from '../assets/images/home/landscape-cloud.svg';
+import birdwatching from '../assets/images/home/landscape-birdwatching.svg';
+import sacredTree from '../assets/images/home/landscape-sacredtree.svg';
 
 // 引入關於我們圖片
 import aboutImg from '../assets/images/home/about-img.svg';
@@ -68,11 +68,27 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* 主題活動 Swiper */}
-                <section></section>
+                {/* 主題活動 Swiper 要拼回 hero */}
+                <section className="pt-16 pb-32">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12">
+                                <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 {/* 難易度步道 */}
-                <section className="pt-16 pb-32"></section>
+                <section className="pt-16 pb-32">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12">
+                                <h2 className="fs-lg-2 fs-5">步道難度指南</h2>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 {/* 特色景觀步道 feature */}
                 <section>
