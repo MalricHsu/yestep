@@ -24,7 +24,7 @@ const Home = () => {
             <main>
                 {/* HERO */}
                 {/* 還有手機版的影片要放 */}
-                <section>
+                <section className="position-relative">
                     <div className="hero ratio ratio-16x9">
                         <video
                             src={heroVideoLg}
@@ -34,6 +34,18 @@ const Home = () => {
                             muted
                             playsInline
                         ></video>
+                    </div>
+                    {/* slogan+搜尋欄 */}
+                    <div className="position-absolute start-0 bottom-0 w-100 z-1">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-lg-8">
+                                    <h1 className="fs-1 text-white mb-8">
+                                        Yes to taking the next step !
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -50,12 +62,15 @@ const Home = () => {
                         <div className="feature__column feature__side-col">
                             <div className="feature__img-box">
                                 <img src={featureFlower} alt="" />
+                                <p className="feature__img-content">賞花</p>
                             </div>
                             <div className="feature__img-box">
                                 <img src={featureFlower} alt="" />
+                                <p className="feature__img-content">瀑布</p>
                             </div>
                             <div className="feature__img-box">
                                 <img src={featureFlower} alt="" />
+                                <p className="feature__img-content">觀星</p>
                             </div>
                         </div>
 
@@ -63,9 +78,11 @@ const Home = () => {
                         <div className="feature__column feature__center-col">
                             <div className="feature__img-box">
                                 <img src={featureFlower} alt="" />
+                                <p className="feature__img-content">日出</p>
                             </div>
                             <div className="feature__img-box">
                                 <img src={featureFlower} alt="" />
+                                <p className="feature__img-content">日落</p>
                             </div>
                         </div>
 
@@ -73,12 +90,15 @@ const Home = () => {
                         <div className="feature__column feature__side-col">
                             <div className="feature__img-box">
                                 <img src={featureFlower} alt="" />
+                                <p className="feature__img-content">雲海</p>
                             </div>
                             <div className="feature__img-box">
                                 <img src={featureFlower} alt="" />
+                                <p className="feature__img-content">賞鳥</p>
                             </div>
                             <div className="feature__img-box">
                                 <img src={featureFlower} alt="" />
+                                <p className="feature__img-content">神木</p>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,20 @@
-/* 特色景觀步道 trailFeature */
+/*  Slogan + Hero */
+
+.hero {
+    position: relative;
+    z-index: 0;
+}
+
+.hero::after {
+    position: absolute;
+    content: '';
+    inset: 0;
+    width: 100%;
+    background: linear-gradient(rgba(70, 100, 10, 0.1), rgba(70, 100, 10, 0.1));
+    z-index: 1;
+}
+
+/* 特色景觀步道 feature */
 
 // 🔸 grid容器設定
 .feature__grid {
@@ -23,6 +39,7 @@
 .feature__img-box {
     position: relative;
     z-index: 0;
+    overflow: hidden;
 }
 
 .feature__img-box::after {
@@ -34,6 +51,23 @@
         linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
         linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%);
     z-index: 1;
+}
+
+.feature__img-content {
+    position: absolute;
+    color: $primary-50;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 2;
+}
+
+// 🔸 hover效果
+.feature__img-box img {
+    transition: transform 0.3s ease;
+}
+
+.feature__img-box:hover img {
+    transform: scale(1.1);
 }
 
 /* 關於我們 about */
