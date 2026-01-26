@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 
 // 引入logo-white
-import logoWhiteLg from '../assets/images/ori-logo-white.svg';
+// import logoWhiteLg from '../assets/images/ori-logo-white.svg';
 
 // 引入icon
 // import iconFacebook from "../assets/images/icon-facebook.svg";
