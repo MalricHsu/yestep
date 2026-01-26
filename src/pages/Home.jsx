@@ -1,6 +1,9 @@
 // 引入 Hero 影片
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
+// 引入 熱門不到 popular
+import popularTrail from '../assets/images/home/popular-trail.svg';
+
 // 引入 特色景觀步道 landscape 資料
 import { landscapeColumns } from '../data/home-landscape';
 
@@ -72,6 +75,9 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
+
+                {/* 熱門步道 */}
+                <section></section>
 
                 {/* 難易度步道 */}
                 <section className="pt-16 pb-32">
