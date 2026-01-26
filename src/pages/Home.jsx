@@ -1,16 +1,6 @@
 // 引入 Hero 影片
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
-// 引入特色景觀步道圖片，之後要改用資料渲染
-import flower from '../assets/images/home/landscape-flower.svg';
-import waterfall from '../assets/images/home/landscape-waterfall.svg';
-import stargazing from '../assets/images/home/landscape-stargazing.svg';
-import sunrise from '../assets/images/home/landscape-sunrise.svg';
-import sunset from '../assets/images/home/landscape-sunset.svg';
-import cloud from '../assets/images/home/landscape-cloud.svg';
-import birdwatching from '../assets/images/home/landscape-birdwatching.svg';
-import sacredTree from '../assets/images/home/landscape-sacredtree.svg';
-
 // 引入關於我們圖片
 import aboutImg from '../assets/images/home/about-img.svg';
 import aboutImgLg from '../assets/images/home/about-img-lg.svg';
@@ -93,6 +83,24 @@ const Home = () => {
                 {/* 特色景觀步道 feature */}
                 <section>
                     <div className="feature__wrap text-primary-50 ">
+                        {/* <div className="feature__column ">
+                            <div className="feature__img-box">
+                                <img
+                                    src={featureSunrise}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="日出圖片"
+                                />
+                                <p className="feature__img-content sub1-bold">日出</p>
+                            </div>
+                            <div className="feature__img-box">
+                                <img
+                                    src={featureSunset}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="日落圖片"
+                                />
+                                <p className="feature__img-content sub1-bold">日落</p>
+                            </div>
+                        </div> */}
                         {/* <!-- 左邊欄位 --> */}
                         <div className="feature__column ">
                             <div className="feature__img-box">
