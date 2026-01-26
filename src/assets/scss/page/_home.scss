@@ -15,7 +15,7 @@
 
 /* 特色景觀步道 feature */
 
-.feature__wrap {
+.landscape__gallery {
     display: grid;
     grid-template-columns: 1fr 1fr; // 🔸 手機版 grid 雙欄
     height: auto;
@@ -27,7 +27,7 @@
     }
 }
 
-.feature__column {
+.landscape__column {
     display: contents;
 
     @media (min-width: 992px) {
@@ -36,16 +36,16 @@
     }
 }
 
-.feature__column:nth-child(1) .feature__img-box:nth-child(3) {
+.landscape__column:nth-child(1) .landscape__column:nth-child(3) {
     grid-column: 1 / -1;
 }
 
-.feature__column:nth-child(3) .feature__img-box:nth-child(1) {
+.landscape__column:nth-child(3) .landscape__column:nth-child(1) {
     grid-column: 1 / -1;
 }
 
 // 🔸 圖片遮罩
-.feature__img-box {
+.landscape__card {
     flex: 1;
     height: 140px;
     position: relative;
@@ -57,7 +57,7 @@
     }
 }
 
-.feature__img-box::after {
+.landscape__card::after {
     position: absolute;
     content: '';
     inset: 0;
@@ -68,7 +68,7 @@
     z-index: 1;
 }
 
-.feature__img-content {
+.landscape__card-title {
     position: absolute;
     left: 1rem;
     bottom: 1rem;
@@ -81,11 +81,11 @@
 }
 
 // 🔸 hover效果
-.feature__img-box img {
+.landscape__card img {
     transition: transform 0.3s ease;
 }
 
-.feature__img-box:hover img {
+.landscape__card:hover img {
     transform: scale(1.1);
 }
 

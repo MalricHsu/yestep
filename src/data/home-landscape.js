@@ -8,13 +8,13 @@ import cloud from '../assets/images/home/landscape-cloud.svg';
 import birdwatching from '../assets/images/home/landscape-birdwatching.svg';
 import sacredTree from '../assets/images/home/landscape-sacredtree.svg';
 
-export const trailLandscape = [
+const landscapeData = [
     {
         id: 1,
         landscapeName: '賞花',
         img: flower,
         tag: 'flower',
-        column: 1,
+        column: 'left',
         alt: '盛開的五顏六色花卉景觀',
     },
     {
@@ -22,7 +22,7 @@ export const trailLandscape = [
         landscapeName: '瀑布',
         img: waterfall,
         tag: 'waterfall',
-        column: 1,
+        column: 'left',
         alt: '壯麗瀑布景觀',
     },
     {
@@ -30,7 +30,7 @@ export const trailLandscape = [
         landscapeName: '觀星',
         img: stargazing,
         tag: 'stargazing',
-        column: 1,
+        column: 'left',
         alt: '滿天星空景觀',
     },
     {
@@ -38,7 +38,7 @@ export const trailLandscape = [
         landscapeName: '日出',
         img: sunrise,
         tag: 'sunrise',
-        column: 2,
+        column: 'center',
         alt: '照耀大地的日出景觀',
     },
     {
@@ -46,7 +46,7 @@ export const trailLandscape = [
         landscapeName: '晚霞',
         img: sunset,
         tag: 'sunset',
-        column: 2,
+        column: 'center',
         alt: '燦爛迷人的晚霞景觀',
     },
     {
@@ -54,7 +54,7 @@ export const trailLandscape = [
         landscapeName: '雲海',
         img: cloud,
         tag: 'cloud',
-        column: 3,
+        column: 'right',
         alt: '壯闊的洶湧雲海景觀',
     },
     {
@@ -62,7 +62,7 @@ export const trailLandscape = [
         landscapeName: '賞鳥',
         img: birdwatching,
         tag: 'birdwatching',
-        column: 3,
+        column: 'right',
         alt: '有著多彩羽毛的小鳥',
     },
     {
@@ -70,7 +70,19 @@ export const trailLandscape = [
         landscapeName: '神木',
         img: sacredTree,
         tag: 'sacredTree',
-        column: 3,
+        column: 'right',
         alt: '參天神木景觀',
     },
 ];
+
+// 分類：左中右三欄的資料
+const left = landscapeData.filter((item) => item.column === 'left');
+const center = landscapeData.filter((item) => item.column === 'center');
+const right = landscapeData.filter((item) => item.column === 'right');
+
+// 匯出
+export const landscapeColumns = {
+    left: left,
+    center: center,
+    right: right,
+};

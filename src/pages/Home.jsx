@@ -1,7 +1,10 @@
 // 引入 Hero 影片
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
-// 引入關於我們圖片
+// 引入 特色景觀步道 landscape 資料
+import { landscapeColumns } from '../data/home-landscape';
+
+// 引入 關於我們
 import aboutImg from '../assets/images/home/about-img.svg';
 import aboutImgLg from '../assets/images/home/about-img-lg.svg';
 
@@ -10,6 +13,7 @@ import aboutBgLg from '../assets/images/home/about-bg-lg.svg';
 import aboutBg from '../assets/images/home/about-bg.svg';
 
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
     useEffect(() => {
@@ -82,97 +86,63 @@ const Home = () => {
 
                 {/* 特色景觀步道 feature */}
                 <section>
-                    <div className="feature__wrap text-primary-50 ">
-                        {/* <div className="feature__column ">
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureSunrise}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="日出圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">日出</p>
-                            </div>
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureSunset}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="日落圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">日落</p>
-                            </div>
-                        </div> */}
-                        {/* <!-- 左邊欄位 --> */}
-                        <div className="feature__column ">
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureFlower}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="賞花圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">賞花</p>
-                            </div>
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureWaterfall}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="瀑布圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">瀑布</p>
-                            </div>
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureStargazing}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="觀星圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">觀星</p>
-                            </div>
+                    <div className="landscape__gallery text-primary-50 ">
+                        {/* 左邊欄 */}
+                        <div className="landscape__column">
+                            {landscapeColumns.left.map((item) => (
+                                <Link
+                                    to={`/search?trail_landscape=${item.tag}`}
+                                    className="landscape__card"
+                                    key={item.id}
+                                >
+                                    <img
+                                        src={item.img}
+                                        className="w-100 h-100 object-fit-cover"
+                                        alt={item.alt}
+                                    />
+                                    <p className="landscape__card-title sub1-bold">
+                                        {item.landscapeName}
+                                    </p>
+                                </Link>
+                            ))}
                         </div>
-                        {/* <!-- 中間欄位 --> */}
-                        <div className="feature__column ">
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureSunrise}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="日出圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">日出</p>
-                            </div>
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureSunset}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="日落圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">日落</p>
-                            </div>
+                        {/* 中間欄 */}
+                        <div className="landscape__column">
+                            {landscapeColumns.center.map((item) => (
+                                <Link
+                                    to={`/search?trail_landscape=${item.tag}`}
+                                    className="landscape__card"
+                                    key={item.id}
+                                >
+                                    <img
+                                        src={item.img}
+                                        className="w-100 h-100 object-fit-cover"
+                                        alt={item.alt}
+                                    />
+                                    <p className="landscape__card-title sub1-bold">
+                                        {item.landscapeName}
+                                    </p>
+                                </Link>
+                            ))}
                         </div>
-                        {/* <!-- 右邊欄位 --> */}
-                        <div className="feature__column ">
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureCloud}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="雲海圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">雲海</p>
-                            </div>
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureBirdwatching}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="賞鳥圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">賞鳥</p>
-                            </div>
-                            <div className="feature__img-box">
-                                <img
-                                    src={featureSacredTree}
-                                    className="w-100 h-100 object-fit-cover"
-                                    alt="神木圖片"
-                                />
-                                <p className="feature__img-content sub1-bold">神木</p>
-                            </div>
+                        {/* 右邊欄 */}
+                        <div className="landscape__column">
+                            {landscapeColumns.right.map((item) => (
+                                <Link
+                                    to={`/search?trail_landscape=${item.tag}`}
+                                    className="landscape__card"
+                                    key={item.id}
+                                >
+                                    <img
+                                        src={item.img}
+                                        className="w-100 h-100 object-fit-cover"
+                                        alt={item.alt}
+                                    />
+                                    <p className="landscape__card-title sub1-bold">
+                                        {item.landscapeName}
+                                    </p>
+                                </Link>
+                            ))}
                         </div>
                     </div>
                 </section>
@@ -185,15 +155,17 @@ const Home = () => {
                                 <div className="about__card bg-white rounded-24 rounded-lg-60 p-4 p-lg-6 position-relative z-1">
                                     <div className="row align-items-center">
                                         <div className="col-lg-7">
-                                            <div className="about__card-img">
+                                            <div className="about__card-img text-center">
                                                 <picture>
-                                                    {/* ≥ 992px 換成桌機圖 */}
                                                     <source
                                                         srcSet={aboutImgLg}
                                                         media="(min-width: 992px)"
-                                                        alt="關於我們桌機版圖片"
+                                                        alt="關於我們桌機版登山者圖"
                                                     />
-                                                    <img src={aboutImg} alt="關於我們手機版圖片" />
+                                                    <img
+                                                        src={aboutImg}
+                                                        alt="關於我們手機版登山者圖"
+                                                    />
                                                 </picture>
                                             </div>
                                         </div>
@@ -246,7 +218,7 @@ const Home = () => {
                                 media="(min-width: 992px)"
                                 alt="桌機版背景山脈圖"
                             />
-                            <img src={aboutBg} alt="手機版背景山脈圖" />
+                            <img src={aboutBg} className="w-100" alt="手機版背景山脈圖" />
                         </picture>
                     </div>
                 </section>
