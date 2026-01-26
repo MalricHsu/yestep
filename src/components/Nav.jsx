@@ -46,12 +46,12 @@ const Nav = () => {
                             </Link>
                             <ul className="list-unstyled d-none d-lg-flex gap-8">
                                 <li className="decor-lined">
-                                    <Link to="/trailtheme" className="text-decoration-none">
+                                    <Link to="/theme" className="text-decoration-none">
                                         主題活動
                                     </Link>
                                 </li>
                                 <li className="decor-lined">
-                                    <Link to="/trailsearch" className="text-decoration-none">
+                                    <Link to="/search" className="text-decoration-none">
                                         步道總覽
                                     </Link>
                                 </li>
@@ -62,7 +62,7 @@ const Nav = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/traildetail" className="text-decoration-none ">
+                                    <Link to="/detail" className="text-decoration-none ">
                                         步道詳細
                                     </Link>
                                 </li>
