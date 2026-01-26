@@ -88,44 +88,76 @@ const Home = () => {
                 {/* 特色景觀步道 feature */}
                 <section>
                     <div className="feature__grid ">
-                        ㄋ{/* <!-- 左邊欄位 --> */}
-                        <div className="feature__column feature__side-col">
+                        {/* <!-- 左邊欄位 --> */}
+                        <div className="feature__column ">
                             <div className="feature__img-box">
-                                <img src={featureFlower} alt="賞花圖片" />
+                                <img
+                                    src={featureFlower}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="賞花圖片"
+                                />
                                 <p className="feature__img-content">賞花</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureWaterfall} alt="瀑布圖片" />
+                                <img
+                                    src={featureWaterfall}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="瀑布圖片"
+                                />
                                 <p className="feature__img-content">瀑布</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureStargazing} alt="觀星圖片" />
+                                <img
+                                    src={featureStargazing}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="觀星圖片"
+                                />
                                 <p className="feature__img-content">觀星</p>
                             </div>
                         </div>
                         {/* <!-- 中間欄位 --> */}
-                        <div className="feature__column feature__center-col">
+                        <div className="feature__column ">
                             <div className="feature__img-box">
-                                <img src={featureSunrise} alt="日出圖片" />
+                                <img
+                                    src={featureSunrise}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="日出圖片"
+                                />
                                 <p className="feature__img-content">日出</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureSunset} alt="日落圖片" />
+                                <img
+                                    src={featureSunset}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="日落圖片"
+                                />
                                 <p className="feature__img-content">日落</p>
                             </div>
                         </div>
                         {/* <!-- 右邊欄位 --> */}
-                        <div className="feature__column feature__side-col">
+                        <div className="feature__column ">
                             <div className="feature__img-box">
-                                <img src={featureCloud} alt="雲海圖片" />
+                                <img
+                                    src={featureCloud}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="雲海圖片"
+                                />
                                 <p className="feature__img-content">雲海</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureBirdwatching} alt="賞鳥圖片" />
+                                <img
+                                    src={featureBirdwatching}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="賞鳥圖片"
+                                />
                                 <p className="feature__img-content">賞鳥</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureSacredTree} alt="神木圖片" />
+                                <img
+                                    src={featureSacredTree}
+                                    className="w-100 h-100 object-fit-cover"
+                                    alt="神木圖片"
+                                />
                                 <p className="feature__img-content">神木</p>
                             </div>
                         </div>
