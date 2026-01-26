@@ -3,6 +3,13 @@ import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
 // 引入特色景觀步道圖片
 import featureFlower from '../assets/images/home/feature-flower.svg';
+import featureWaterfall from '../assets/images/home/feature-waterfall.svg';
+import featureStargazing from '../assets/images/home/feature-stargazing.svg';
+import featureSunrise from '../assets/images/home/feature-sunrise.svg';
+import featureSunset from '../assets/images/home/feature-sunset.svg';
+import featureCloud from '../assets/images/home/feature-cloud.svg';
+import featureBirdwatching from '../assets/images/home/feature-birdwatching.svg';
+import featureSacredTree from '../assets/images/home/feature-sacredtree.svg';
 
 // 引入關於我們圖片
 import aboutImg from '../assets/images/home/about-img.svg';
@@ -81,46 +88,44 @@ const Home = () => {
                 {/* 特色景觀步道 feature */}
                 <section>
                     <div className="feature__grid ">
-                        {/* <!-- 左邊欄位 --> */}
+                        ㄋ{/* <!-- 左邊欄位 --> */}
                         <div className="feature__column feature__side-col">
                             <div className="feature__img-box">
-                                <img src={featureFlower} alt="" />
+                                <img src={featureFlower} alt="賞花圖片" />
                                 <p className="feature__img-content">賞花</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureFlower} alt="" />
+                                <img src={featureWaterfall} alt="瀑布圖片" />
                                 <p className="feature__img-content">瀑布</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureFlower} alt="" />
+                                <img src={featureStargazing} alt="觀星圖片" />
                                 <p className="feature__img-content">觀星</p>
                             </div>
                         </div>
-
                         {/* <!-- 中間欄位 --> */}
                         <div className="feature__column feature__center-col">
                             <div className="feature__img-box">
-                                <img src={featureFlower} alt="" />
+                                <img src={featureSunrise} alt="日出圖片" />
                                 <p className="feature__img-content">日出</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureFlower} alt="" />
+                                <img src={featureSunset} alt="日落圖片" />
                                 <p className="feature__img-content">日落</p>
                             </div>
                         </div>
-
                         {/* <!-- 右邊欄位 --> */}
                         <div className="feature__column feature__side-col">
                             <div className="feature__img-box">
-                                <img src={featureFlower} alt="" />
+                                <img src={featureCloud} alt="雲海圖片" />
                                 <p className="feature__img-content">雲海</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureFlower} alt="" />
+                                <img src={featureBirdwatching} alt="賞鳥圖片" />
                                 <p className="feature__img-content">賞鳥</p>
                             </div>
                             <div className="feature__img-box">
-                                <img src={featureFlower} alt="" />
+                                <img src={featureSacredTree} alt="神木圖片" />
                                 <p className="feature__img-content">神木</p>
                             </div>
                         </div>
