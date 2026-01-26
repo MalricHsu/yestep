@@ -36,13 +36,14 @@ const Home = () => {
                         ></video>
                     </div>
                     {/* slogan+搜尋欄 */}
-                    <div className="position-absolute start-0 bottom-0 w-100 z-1">
+                    <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
                         <div className="container">
-                            <div className="row">
-                                <div className="col-lg-8">
-                                    <h1 className="fs-1 text-white mb-8">
+                            <div className="row ">
+                                <div className="col-lg-8 mx-auto">
+                                    <h1 className="fs-1 text-white text-center ">
                                         Yes to taking the next step !
                                     </h1>
+                                    <div className="hero__search"></div>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +167,7 @@ const Home = () => {
                         </div>
                     </div>
                     {/* 背景山脈圖 */}
-                    <div className="about__bg w-100 position-absolute ">
+                    <div className="about__bg w-100 position-absolute opacity-75 ">
                         <picture>
                             <source
                                 srcSet={aboutBgLg}
