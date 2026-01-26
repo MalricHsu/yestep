@@ -1,7 +1,7 @@
 // 引入 Hero 影片
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
-// 引入特色景觀步道圖片
+// 引入特色景觀步道圖片，之後要改用資料渲染
 import featureFlower from '../assets/images/home/feature-flower.svg';
 import featureWaterfall from '../assets/images/home/feature-waterfall.svg';
 import featureStargazing from '../assets/images/home/feature-stargazing.svg';
@@ -52,17 +52,6 @@ const Home = () => {
                                     </h1>
                                     <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
                                         <div className="input-group align-items-center">
-                                            {/* <select
-                                                    className="form-select px-4"
-                                                    id="inputGroupSelect01"
-                                                >
-                                                    <option selected>請選擇地區</option>
-                                                    <option value="1">北部</option>
-                                                    <option value="2">中部</option>
-                                                    <option value="3">南部</option>
-                                                    <option value="3">東部 </option>
-                                                </select> 
-                                                <span className="search-divider"></span>*/}
                                             <input
                                                 type="text"
                                                 className="form-control px-4"
@@ -83,11 +72,11 @@ const Home = () => {
                 <section></section>
 
                 {/* 難易度步道 */}
-                <section></section>
+                <section className="pt-16 pb-32"></section>
 
                 {/* 特色景觀步道 feature */}
                 <section>
-                    <div className="feature__grid ">
+                    <div className="feature__wrap text-primary-50 ">
                         {/* <!-- 左邊欄位 --> */}
                         <div className="feature__column ">
                             <div className="feature__img-box">
@@ -96,7 +85,7 @@ const Home = () => {
                                     className="w-100 h-100 object-fit-cover"
                                     alt="賞花圖片"
                                 />
-                                <p className="feature__img-content">賞花</p>
+                                <p className="feature__img-content sub1-bold">賞花</p>
                             </div>
                             <div className="feature__img-box">
                                 <img
@@ -104,7 +93,7 @@ const Home = () => {
                                     className="w-100 h-100 object-fit-cover"
                                     alt="瀑布圖片"
                                 />
-                                <p className="feature__img-content">瀑布</p>
+                                <p className="feature__img-content sub1-bold">瀑布</p>
                             </div>
                             <div className="feature__img-box">
                                 <img
@@ -112,7 +101,7 @@ const Home = () => {
                                     className="w-100 h-100 object-fit-cover"
                                     alt="觀星圖片"
                                 />
-                                <p className="feature__img-content">觀星</p>
+                                <p className="feature__img-content sub1-bold">觀星</p>
                             </div>
                         </div>
                         {/* <!-- 中間欄位 --> */}
@@ -123,7 +112,7 @@ const Home = () => {
                                     className="w-100 h-100 object-fit-cover"
                                     alt="日出圖片"
                                 />
-                                <p className="feature__img-content">日出</p>
+                                <p className="feature__img-content sub1-bold">日出</p>
                             </div>
                             <div className="feature__img-box">
                                 <img
@@ -131,7 +120,7 @@ const Home = () => {
                                     className="w-100 h-100 object-fit-cover"
                                     alt="日落圖片"
                                 />
-                                <p className="feature__img-content">日落</p>
+                                <p className="feature__img-content sub1-bold">日落</p>
                             </div>
                         </div>
                         {/* <!-- 右邊欄位 --> */}
@@ -142,7 +131,7 @@ const Home = () => {
                                     className="w-100 h-100 object-fit-cover"
                                     alt="雲海圖片"
                                 />
-                                <p className="feature__img-content">雲海</p>
+                                <p className="feature__img-content sub1-bold">雲海</p>
                             </div>
                             <div className="feature__img-box">
                                 <img
@@ -150,7 +139,7 @@ const Home = () => {
                                     className="w-100 h-100 object-fit-cover"
                                     alt="賞鳥圖片"
                                 />
-                                <p className="feature__img-content">賞鳥</p>
+                                <p className="feature__img-content sub1-bold">賞鳥</p>
                             </div>
                             <div className="feature__img-box">
                                 <img
@@ -158,7 +147,7 @@ const Home = () => {
                                     className="w-100 h-100 object-fit-cover"
                                     alt="神木圖片"
                                 />
-                                <p className="feature__img-content">神木</p>
+                                <p className="feature__img-content sub1-bold">神木</p>
                             </div>
                         </div>
                     </div>

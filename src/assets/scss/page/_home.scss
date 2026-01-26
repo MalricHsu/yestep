@@ -14,23 +14,47 @@
 }
 
 /* 特色景觀步道 feature */
-// 🔸 grid容器設定
-.feature__grid {
+
+.feature__wrap {
     display: grid;
-    grid-template-columns: 2fr 3fr 2fr; /* 分成三等份 */
-    height: 900px;
+    grid-template-columns: 1fr 1fr; // 🔸 手機版 grid 雙欄
+    height: auto;
+    gap: 0;
+
+    @media (min-width: 992px) {
+        grid-template-columns: 2fr 3fr 2fr; // 🔸 桌機版 grid 三欄
+        height: 900px;
+    }
 }
+
 .feature__column {
-    display: flex;
-    flex-direction: column;
+    display: contents;
+
+    @media (min-width: 992px) {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.feature__column:nth-child(1) .feature__img-box:nth-child(3) {
+    grid-column: 1 / -1;
+}
+
+.feature__column:nth-child(3) .feature__img-box:nth-child(1) {
+    grid-column: 1 / -1;
 }
 
 // 🔸 圖片遮罩
 .feature__img-box {
     flex: 1;
+    height: 140px;
     position: relative;
     z-index: 0;
     overflow: hidden;
+
+    @media (min-width: 992px) {
+        height: auto;
+    }
 }
 
 .feature__img-box::after {
@@ -46,10 +70,14 @@
 
 .feature__img-content {
     position: absolute;
-    color: $primary-50;
     left: 1rem;
     bottom: 1rem;
     z-index: 2;
+
+    @media (min-width: 992px) {
+        left: 1.5rem;
+        bottom: 1.5rem;
+    }
 }
 
 // 🔸 hover效果
