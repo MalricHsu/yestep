@@ -14,7 +14,6 @@
 }
 
 /* 特色景觀步道 feature */
-
 .landscape__gallery {
     display: grid;
     grid-template-columns: 1fr 1fr; // 🔸 手機版 grid 雙欄
@@ -36,11 +35,12 @@
     }
 }
 
-.landscape__column:nth-child(1) .landscape__column:nth-child(3) {
+// 這兩行要把寫法換掉
+.landscape__column:nth-child(1) .landscape__card:nth-child(3) {
     grid-column: 1 / -1;
 }
 
-.landscape__column:nth-child(3) .landscape__column:nth-child(1) {
+.landscape__column:nth-child(3) .landscape__card:nth-child(1) {
     grid-column: 1 / -1;
 }
 
