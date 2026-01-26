@@ -1,6 +1,6 @@
 .nav-link {
     font-family: 'Noto Sans TC';
-    font-size: 1.25rem;
+    // font-size: 1.25rem; // rwd differendt size
     font-weight: 500;
     background-color: $primary-100;
 }
@@ -12,6 +12,9 @@
 }
 .nav-underline {
     gap: 0;
+    .nav-item:not(.active) {
+        background-color: $primary-100;
+    }
 }
 .nav-underline .nav-link {
     padding: 0.75rem;
