@@ -1,14 +1,5 @@
 import { Link } from 'react-router';
 
-// 引入logo-white
-// import logoWhiteLg from '../assets/images/ori-logo-white.svg';
-
-// 引入icon
-// import iconFacebook from "../assets/images/icon-facebook.svg";
-// import iconInstagram from "../assets/images/icon-ins.svg";
-// import iconLine from "../assets/images/icon-line.svg";
-// import iconThread from "../assets/images/icon-thread.svg";
-
 const Footer = () => {
     return (
         <>
@@ -18,9 +9,7 @@ const Footer = () => {
                         {/* 🚩左欄logo + nav */}
                         <div className="col-lg-8">
                             <div className="brand__logo d-flex flex-column mb-13">
-                                <Link to="/" className="mb-1">
-                                    <img src={logoWhiteLg} alt="footer logo圖" />
-                                </Link>
+                                <Link to="/" className="mb-1"></Link>
                                 <p className="brand__logo-slogan text-black-100">
                                     每一步，找回生活的呼吸
                                 </p>
@@ -49,24 +38,16 @@ const Footer = () => {
                         <div className="col-lg-4">
                             <ul className="footer__icons list-unstyled d-flex justify-content-end gap-3 mb-5">
                                 <li>
-                                    <a href="/" className="text-white p-2">
-                                        {/* <img src={iconFacebook} alt="facebook icon" /> */}
-                                    </a>
+                                    <a href="/" className="text-white p-2"></a>
                                 </li>
                                 <li>
-                                    <a href="/" className="text-white p-2">
-                                        {/* <img src={iconLine} alt="line icon" /> */}
-                                    </a>
+                                    <a href="/" className="text-white p-2"></a>
                                 </li>
                                 <li>
-                                    <a href="/" className="text-white p-2">
-                                        {/* <img src={iconInstagram} alt="instagram icon" /> */}
-                                    </a>
+                                    <a href="/" className="text-white p-2"></a>
                                 </li>
                                 <li>
-                                    <a href="/" className="text-white p-2">
-                                        {/* <img src={iconThread} alt="thread icon" /> */}
-                                    </a>
+                                    <a href="/" className="text-white p-2"></a>
                                 </li>
                             </ul>
                             <div className="copyright__content d-flex flex-column align-items-end text-white gap-2">
