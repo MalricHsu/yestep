@@ -1,0 +1,19 @@
+.offcanvas {
+    .decor-lined::after {
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: 1px;
+        bottom: 0;
+        left: 50%;
+        right: initial;
+        top: initial;
+        transform: translateX(-50%);
+        background: $primary-300;
+    }
+
+    .nav-link {
+        padding: 8px 0 32px;
+        color: $primary-300;
+    }
+}

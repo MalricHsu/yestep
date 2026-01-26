@@ -9,6 +9,7 @@ const getErrorMessage = (error) => {
 };
 
 const TrailSearchPage = () => {
+    const [region, setRegion] = useState('');
     const [trailSceneryCount, setTrailSceneryCount] = useState(0);
     const fetchRef = useRef(null);
 
@@ -19,6 +20,10 @@ const TrailSearchPage = () => {
         } catch (error) {
             console.error('API 錯誤:', getErrorMessage(error));
         }
+    }, []);
+
+    useEffect(() => {
+        document.title = '步道總覽 | YeStep';
     }, []);
 
     useEffect(() => {
@@ -40,12 +45,16 @@ const TrailSearchPage = () => {
                             <h1 className="text-white text-center mb-8">Next Step！想要去哪裡？</h1>
                             <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
                                 <div className="input-group align-items-center">
-                                    <select className="form-select px-4" id="inputGroupSelect01">
-                                        <option selected>請選擇地區</option>
+                                    <select
+                                        className="form-select px-4"
+                                        value={region}
+                                        onChange={(e) => setRegion(e.target.value)}
+                                    >
+                                        +<option value="">請選擇地區</option>
                                         <option value="1">北部</option>
                                         <option value="2">中部</option>
                                         <option value="3">南部</option>
-                                        <option value="3">東部 </option>
+                                        <option value="4">東部</option>
                                     </select>
                                     <span className="search-divider"></span>
                                     <input
