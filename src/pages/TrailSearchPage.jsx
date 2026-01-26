@@ -76,7 +76,7 @@ const TrailSearchPage = () => {
                 </div>
             </header>
             <main>
-                <div className="bg-primary-50 py-8">
+                <div className="search bg-primary-50 py-8">
                     <div className="container">
                         <div className="d-flex align-items-center column-gap-4 mb-3">
                             <h2 className="text-black-900">步道列表</h2>
@@ -87,6 +87,23 @@ const TrailSearchPage = () => {
                                 </span>
                                 你可能喜歡的步道景觀
                             </p>
+                        </div>
+                        <div className="row">
+                            <div className="col-6">
+                                <div className="card rounded-24 shadow">
+                                    <div className="d-flex">
+                                        <img
+                                            src="https://images.pexels.com/photos/1272809/pexels-photo-1272809.jpeg"
+                                            className="card-img-top rounded-16"
+                                            alt="圖片"
+                                        />
+                                        <div className="card-body">
+                                            <h5 className="card-title">礁溪跑馬古道</h5>
+                                            <p className="card-text">宜蘭縣礁溪鄉</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
