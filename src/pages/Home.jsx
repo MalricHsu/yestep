@@ -40,10 +40,32 @@ const Home = () => {
                         <div className="container">
                             <div className="row ">
                                 <div className="col-lg-8 mx-auto">
-                                    <h1 className="fs-1 text-white text-center ">
+                                    <h1 className="fs-1 text-white text-center mb-8">
                                         Yes to taking the next step !
                                     </h1>
-                                    <div className="hero__search"></div>
+                                    <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
+                                        <div className="input-group align-items-center">
+                                            {/* <select
+                                                    className="form-select px-4"
+                                                    id="inputGroupSelect01"
+                                                >
+                                                    <option selected>請選擇地區</option>
+                                                    <option value="1">北部</option>
+                                                    <option value="2">中部</option>
+                                                    <option value="3">南部</option>
+                                                    <option value="3">東部 </option>
+                                                </select> 
+                                                <span className="search-divider"></span>*/}
+                                            <input
+                                                type="text"
+                                                className="form-control px-4"
+                                                placeholder="Next Step！想要去哪裡？"
+                                            />
+                                            <button className="btn btn-primary" type="button">
+                                                搜尋
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
