@@ -25,45 +25,45 @@ const Home = () => {
 
     return (
         <>
-            <main>
-                {/* HERO */}
-                {/* 還有手機版的影片要放 */}
-                <section className="position-relative">
-                    <div className="hero ratio ratio-16x9">
-                        <video
-                            src={heroVideoLg}
-                            className="object-fit-cover"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                        ></video>
-                    </div>
-                    {/* slogan+搜尋欄 */}
-                    <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
-                        <div className="container">
-                            <div className="row ">
-                                <div className="col-lg-8 mx-auto">
-                                    <h1 className="fs-1 text-white text-center mb-8">
-                                        Yes to taking the next step !
-                                    </h1>
-                                    <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
-                                        <div className="input-group align-items-center">
-                                            <input
-                                                type="text"
-                                                className="form-control px-4"
-                                                placeholder="Next Step！想要去哪裡？"
-                                            />
-                                            <button className="btn btn-primary" type="button">
-                                                搜尋
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
+            {/* HERO */}
+            {/* 還有手機版的影片要放 */}
+            <header className="position-relative">
+                <div className="hero ratio ratio-16x9">
+                    <video
+                        src={heroVideoLg}
+                        className="object-fit-cover"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                    ></video>
+                </div>
+                {/* slogan+搜尋欄 */}
+                <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
+                    <div className="container">
+                        <div className="row ">
+                            <div className="col-lg-8 mx-auto">
+                                <h1 className="fs-1 text-white text-center mb-8">
+                                    Yes to taking the next step !
+                                </h1>
+                                <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
+                                    <div className="input-group align-items-center">
+                                        <input
+                                            type="text"
+                                            className="form-control px-4"
+                                            placeholder="Next Step！想要去哪裡？"
+                                        />
+                                        <button className="btn btn-primary" type="button">
+                                            搜尋
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </header>
+            <main>
                 {/* 主題活動 Swiper 要拼回 hero */}
                 <section className="pt-16 pb-32">
                     <div className="container">
