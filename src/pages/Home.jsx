@@ -64,7 +64,6 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
                 {/* 主題活動 Swiper 要拼回 hero */}
                 <section className="pt-16 pb-32">
                     <div className="container">
@@ -75,10 +74,8 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
                 {/* 熱門步道 */}
                 <section></section>
-
                 {/* 難易度步道 */}
                 <section className="pt-16 pb-32">
                     <div className="container">
@@ -89,7 +86,8 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
+                {/* grid-row: 1/2span; grid-auto-row: 140px; */}
+                {/* https://www.facebook.com/photo/?fbid=122154123614934855&set=a.122094378662934855 */}
                 {/* 特色景觀步道 feature */}
                 <section>
                     <div className="landscape__gallery text-primary-50 ">
@@ -152,7 +150,6 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
                 {/* 關於我們 about */}
                 <section className="py-16 py-lg-32 position-relative">
                     <div className="container">
