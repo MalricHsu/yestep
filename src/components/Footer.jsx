@@ -34,12 +34,15 @@ const Footer = () => {
                             <nav className="footer__nav">
                                 <ul className="footer-links list-unstyled d-flex justify-content-center justify-content-lg-start gap-8 ">
                                     <li className="decor-lined">
-                                        <Link to="/" className="text-decoration-none nav-link">
+                                        <Link to="/theme" className="text-decoration-none nav-link">
                                             主題活動
                                         </Link>
                                     </li>
                                     <li className="decor-lined">
-                                        <Link to="/" className="text-decoration-none nav-link">
+                                        <Link
+                                            to="/search"
+                                            className="text-decoration-none nav-link"
+                                        >
                                             步道總覽
                                         </Link>
                                     </li>
