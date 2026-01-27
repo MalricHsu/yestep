@@ -50,12 +50,12 @@ const NavOffcanvas = ({ show, onClose }) => {
                 <div className="d-flex justify-content-center">
                     <ul className="list-unstyled d-flex flex-column row-gap-12">
                         <li className="decor-lined">
-                            <Link to="/trailtheme" className="nav-link">
+                            <Link to="/theme" className="nav-link">
                                 主題活動
                             </Link>
                         </li>
                         <li className="decor-lined">
-                            <Link to="/trailsearch" className="nav-link">
+                            <Link to="/search" className="nav-link">
                                 步道總覽
                             </Link>
                         </li>
@@ -63,11 +63,6 @@ const NavOffcanvas = ({ show, onClose }) => {
                         <li>
                             <Link to="/" className="nav-link">
                                 熱門步道
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/traildetail" className="nav-link">
-                                步道詳細
                             </Link>
                         </li>
                     </ul>
