@@ -20,14 +20,14 @@ const router = createHashRouter([
                 path: 'search', // 當網址是 /search 時
                 element: <TrailSearchPage />,
             },
-            // {
-            //     path: 'detail/:id', // 當網址是 /trails/123 時
-            //     element: <TrailDetail />,
-            // },
             {
-                path: 'detail', // 當網址是 /trails/123 時
+                path: 'detail/:id', // 當網址是 /trails/123 時
                 element: <TrailDetail />,
             },
+            // {
+            //     path: 'detail', // 當網址是 /trails/123 時
+            //     element: <TrailDetail />,
+            // },
             {
                 path: 'theme', // 當網址是 /trails/123 時
                 element: <Theme />,
