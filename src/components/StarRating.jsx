@@ -1,4 +1,4 @@
-const StarRating = ({ rating }) => {
+const StarRating = ({ rating, fontSize }) => {
     const difficultyMap = {
         休閒級: 1,
         入門級: 2,
@@ -26,7 +26,7 @@ const StarRating = ({ rating }) => {
             {[...Array(totalStars)].map((_, index) => (
                 <span
                     key={index}
-                    style={{ fontSize: '12px' }}
+                    style={{ fontSize: `${fontSize}px` }}
                     className={`material-icons ${index < starCount ? 'text-primary-300' : 'text-black-200'}`}
                 >
                     star

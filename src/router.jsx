@@ -6,6 +6,7 @@ import TrailDetail from './pages/TrailDetail';
 import Theme from './pages/Theme';
 import Member from './pages/Member';
 import NotFound404 from './pages/NotFound404';
+import TrailTag from './pages/TrailTag';
 
 const router = createHashRouter([
     {
@@ -24,10 +25,10 @@ const router = createHashRouter([
                 path: 'detail/:id', // 當網址是 /trails/123 時
                 element: <TrailDetail />,
             },
-            // {
-            //     path: 'detail', // 當網址是 /trails/123 時
-            //     element: <TrailDetail />,
-            // },
+            {
+                path: 'trails', // 當網址是 /trails/123 時
+                element: <TrailTag />,
+            },
             {
                 path: 'theme', // 當網址是 /trails/123 時
                 element: <Theme />,
