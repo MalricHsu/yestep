@@ -12,6 +12,8 @@ const TrailSearchPage = () => {
     useEffect(() => {
         document.title = '步道總覽 | YeStep';
     }, []);
+
+    const [region, setRegion] = useState('');
     const [trailSceneryCount, setTrailSceneryCount] = useState(0);
     const fetchRef = useRef(null);
 
@@ -22,6 +24,10 @@ const TrailSearchPage = () => {
         } catch (error) {
             console.error('API 錯誤:', getErrorMessage(error));
         }
+    }, []);
+
+    useEffect(() => {
+        document.title = '步道總覽 | YeStep';
     }, []);
 
     useEffect(() => {
@@ -43,12 +49,16 @@ const TrailSearchPage = () => {
                             <h1 className="text-white text-center mb-8">Next Step！想要去哪裡？</h1>
                             <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
                                 <div className="input-group align-items-center">
-                                    <select className="form-select px-4" id="inputGroupSelect01">
-                                        <option selected>請選擇地區</option>
+                                    <select
+                                        className="form-select px-4"
+                                        value={region}
+                                        onChange={(e) => setRegion(e.target.value)}
+                                    >
+                                        +<option value="">請選擇地區</option>
                                         <option value="1">北部</option>
                                         <option value="2">中部</option>
                                         <option value="3">南部</option>
-                                        <option value="3">東部 </option>
+                                        <option value="4">東部</option>
                                     </select>
                                     <span className="search-divider"></span>
                                     <input
@@ -66,7 +76,7 @@ const TrailSearchPage = () => {
                 </div>
             </header>
             <main>
-                <div className="bg-primary-50 py-8">
+                <div className="search bg-primary-50 py-8">
                     <div className="container">
                         <div className="d-flex align-items-center column-gap-4 mb-3">
                             <h2 className="text-black-900">步道列表</h2>
@@ -77,6 +87,23 @@ const TrailSearchPage = () => {
                                 </span>
                                 你可能喜歡的步道景觀
                             </p>
+                        </div>
+                        <div className="row">
+                            <div className="col-6">
+                                <div className="card rounded-24 shadow">
+                                    <div className="d-flex">
+                                        <img
+                                            src="https://images.pexels.com/photos/1272809/pexels-photo-1272809.jpeg"
+                                            className="card-img-top rounded-16"
+                                            alt="圖片"
+                                        />
+                                        <div className="card-body">
+                                            <h5 className="card-title">礁溪跑馬古道</h5>
+                                            <p className="card-text">宜蘭縣礁溪鄉</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

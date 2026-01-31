@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Nav from '../components/Nav';
 
 const Theme = () => {
     useEffect(() => {

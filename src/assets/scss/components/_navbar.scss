@@ -13,7 +13,22 @@
     transform: translateY(-50%);
 }
 
-// 要記得刪掉
+.logo {
+    max-width: 50px;
+}
+.logo-yestep {
+    max-width: 90px;
+}
+
+@include media-breakpoint-down(sm) {
+    .logo {
+        max-width: 40px;
+    }
+    .logo-yestep {
+        max-width: 75px;
+    }
+}
+
 nav {
     position: fixed;
     width: 100%;
@@ -27,8 +42,13 @@ nav {
         color: $white;
     }
 
-    .logo {
-        max-width: 60px;
+    .btn-menu {
+        all: initial;
+        color: $white;
+        line-height: 0;
+        --bs-btn-color: #fff;
+        --bs-btn-hover-color: #fff;
+        --bs-btn-active-color: #fff;
     }
 
     &.scrolled {
@@ -38,8 +58,16 @@ nav {
         .header__login {
             color: $primary-300;
         }
+
         .decor-lined::after {
             background: $primary-300;
+        }
+
+        .btn-menu {
+            color: $primary-300;
+            --bs-btn-color: #4f6947;
+            --bs-btn-hover-color: #4f6947;
+            --bs-btn-active-color: #4f6947;
         }
     }
 }
