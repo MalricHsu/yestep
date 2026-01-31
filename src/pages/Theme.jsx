@@ -18,16 +18,15 @@ const Theme = () => {
                 className="d-flex flex-column align-items-center justify-content-center position-relative"
             >
                 <h1 className="sub1-bold text-white">主題活動</h1>
-                <h2 className="text-white fs-1 py-4">
+                <h2 className="text-white fs-4 fs-lg-1 py-4 pt-sm-8">
                     一起走進自然&nbsp;
                     <br style={{ display: 'none' }} />
-                    {/* 手機版以上取消 br */}
                     找回你的節奏
                 </h2>
                 <p className="text-primary-100 sub1-medium">讓自然成為你的休息室</p>
 
                 <ul
-                    class="nav nav-underline position-absolute bottom-0"
+                    class="nav nav-underline position-absolute bottom-0 d-sm-none"
                     style={{
                         flexWrap: 'nowrap',
                         overflowX: 'scroll',
@@ -53,6 +52,32 @@ const Theme = () => {
                         <a class="nav-link body1-medium" href="#">
                             親子步道
                         </a>
+                    </li>
+                </ul>
+                <ul class="nav nav-pills mt-8 d-none d-sm-flex">
+                    <li class="nav-item">
+                        <button
+                            class="nav-link body1-bold active"
+                            aria-current="page"
+                            type="button"
+                        >
+                            每月活動
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link body1-bold" type="button">
+                            忙裡偷閒
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link body1-bold" type="button">
+                            舒壓放鬆
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link body1-bold" type="button">
+                            親子步道
+                        </button>
                     </li>
                 </ul>
             </header>
