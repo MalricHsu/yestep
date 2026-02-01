@@ -88,7 +88,7 @@ const Theme = () => {
                 <h2 className="body1-medium text-primary-300">每月活動</h2>
 
                 <h3 className="fs-5 fs-md-2 mb-4">油桐花季</h3>
-                <ul className="activityIntro list-unstyled bg-white p-4 rounded-24 d-grid mb-3 gap-5">
+                <ul className="activityIntro list-unstyled bg-white p-4 p-md-6 rounded-24 d-grid mb-3 mb-md-6 gap-5 gap-md-6">
                     <li className="">
                         <img
                             src="https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -130,8 +130,8 @@ const Theme = () => {
                     </li>
                 </ul>
 
-                <section className="navigationAndRegistration d-grid gap-3">
-                    <div className="navigation bg-white p-4 rounded-24">
+                <section className="navigationAndRegistration d-grid gap-3 gap-md-6">
+                    <div className="navigation bg-white p-4 p-md-6 rounded-24">
                         <h2 className="sub1-bold text-primary-300">
                             桐花​漫遊導覽​｜帶​你​走入​桐​花​步道，​認識​油桐​花生態​與​文化​故事
                         </h2>
@@ -192,7 +192,7 @@ const Theme = () => {
                             </Link>
                         </p>
                     </div>
-                    <form className="registration bg-white p-4 rounded-24 d-flex flex-column gap-4">
+                    <form className="registration bg-white p-4 p-md-6 rounded-24 d-flex flex-column gap-4 gap-md-5">
                         <h2 className="sub1-bold text-primary-300 text-center">
                             <span className="fw-normal text-primary-200 fs-5">\</span> 立即報名導覽{' '}
                             <span className="fw-normal text-primary-200 fs-5">/</span>
@@ -298,9 +298,9 @@ const Theme = () => {
             <section className="themeSection">
                 <ol className="p-0 m-0 border-0 d-grid">
                     <li
-                        className="px-3 py-8 p-md-16 list-unstyled d-grid gap-6"
+                        className="px-3 py-8 p-md-16  list-unstyled d-grid gap-6"
                         style={{
-                            backgroundImage:
+                            background:
                                 'url(https://images.unsplash.com/photo-1572715381359-002b1eabd56b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
                             backgroundSize: 'cover',
                             backgroundRepeat: 'no-repeat',
@@ -319,7 +319,7 @@ const Theme = () => {
                                 </li>
                             </ul>
                             <h2 className="text-white fs-5 fs-md-2 py-3">忙裡偷閒</h2>
-                            <p className="text-white">
+                            <p className="text-white mt-auto">
                                 在城市與山林之間，不用遠行、不必準備太多，就能走進自然、放慢腳步。
                                 挑一條適合今天心情的步道，讓呼吸回到剛剛好的節奏。
                             </p>
