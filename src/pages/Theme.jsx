@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Nav from '../components/Nav';
 import { Link } from 'react-router-dom';
+import bg02 from '../assets/images/trailtheme/bg02.png';
 
 const Theme = () => {
     useEffect(() => {
@@ -10,10 +11,11 @@ const Theme = () => {
         <>
             <header
                 style={{
-                    backgroundImage: `url("https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")`,
-                    height: '300px',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'bottom',
+                    backgroundImage: `url("${bg02}"), url("https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")`,
+                    backgroundRepeat: 'no-repeat',
+                    height: 'clamp(300px, 28vw, 550px)',
+                    backgroundSize: 'contain, cover',
+                    backgroundPosition: '50% 103%, 50% 80%',
                 }}
                 className="d-flex flex-column align-items-center justify-content-center position-relative"
             >
