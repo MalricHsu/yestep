@@ -1,7 +1,9 @@
+// 引入Nav
+import Nav from '../components/Nav';
 // 引入 Hero 影片
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
-// 引入 熱門不到 popular
+// 引入 熱門步道 popular
 import popularTrail from '../assets/images/home/popular-trail.svg';
 
 // 引入 特色景觀步道 landscape 資料
@@ -28,6 +30,7 @@ const Home = () => {
             {/* HERO */}
             {/* 還有手機版的影片要放 */}
             <header className="position-relative">
+                <Nav />
                 <div className="hero ratio ratio-16x9">
                     <video
                         src={heroVideoLg}
