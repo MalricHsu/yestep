@@ -89,10 +89,8 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-                {/* grid-row: 1/2span; grid-auto-row: 140px; */}
-                {/* https://www.facebook.com/photo/?fbid=122154123614934855&set=a.122094378662934855 */}
                 {/* 特色景觀步道 feature */}
-                <section>
+                <section className="py-5">
                     <div className="landscape__gallery text-primary-50 ">
                         {/* 左邊欄 */}
                         <div className="landscape__column">
@@ -102,11 +100,7 @@ const Home = () => {
                                     className="landscape__card"
                                     key={item.id}
                                 >
-                                    <img
-                                        src={item.img}
-                                        className="w-100 h-100 object-fit-cover"
-                                        alt={item.alt}
-                                    />
+                                    <img src={item.img} alt={item.alt} />
                                     <p className="landscape__card-title sub1-bold">
                                         {item.landscapeName}
                                     </p>
@@ -121,11 +115,7 @@ const Home = () => {
                                     className="landscape__card"
                                     key={item.id}
                                 >
-                                    <img
-                                        src={item.img}
-                                        className="w-100 h-100 object-fit-cover"
-                                        alt={item.alt}
-                                    />
+                                    <img src={item.img} alt={item.alt} />
                                     <p className="landscape__card-title sub1-bold">
                                         {item.landscapeName}
                                     </p>
@@ -140,11 +130,7 @@ const Home = () => {
                                     className="landscape__card"
                                     key={item.id}
                                 >
-                                    <img
-                                        src={item.img}
-                                        className="w-100 h-100 object-fit-cover"
-                                        alt={item.alt}
-                                    />
+                                    <img src={item.img} alt={item.alt} />
                                     <p className="landscape__card-title sub1-bold">
                                         {item.landscapeName}
                                     </p>

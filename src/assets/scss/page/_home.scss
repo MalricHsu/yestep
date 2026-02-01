@@ -14,10 +14,6 @@
 }
 
 /* 特色景觀步道 feature */
-// grid-colums
-// grid-row
-// grid-colums: 3/span3;
-// https://www.facebook.com/photo/?fbid=122154123614934855&set=a.122094378662934855
 .landscape__gallery {
     display: grid;
     grid-template-columns: 1fr 1fr; // 🔸 手機版 grid 雙欄
@@ -26,10 +22,14 @@
 
     @media (min-width: 992px) {
         grid-template-columns: 2fr 3fr 2fr; // 🔸 桌機版 grid 三欄
-        // height: 900px;
+        align-items: start;
     }
 }
-
+.landscape__gallery img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
 .landscape__column {
     display: contents;
 
@@ -39,7 +39,7 @@
     }
 }
 
-// 這兩行要把寫法換掉
+// 指定手機版某些圖片要滿寬
 .landscape__column:nth-child(1) .landscape__card:nth-child(3) {
     grid-column: 1 / -1;
 }
