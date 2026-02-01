@@ -85,14 +85,24 @@ const Theme = () => {
             </header>
 
             {/* 每月活動 */}
-            <section className="monthlyActivity px-3 py-8">
+            <section className="monthlyActivity px-3 py-8 container-fluid ">
                 <h2 className="body1-medium text-primary-300">每月活動</h2>
 
                 <h3 className="fs-2 mb-4">油桐花季</h3>
-                <ul
-                    className="bg-white p-4 rounded-24 d-flex flex-column mb-3 gap-5"
-                    style={{ listStyle: 'none' }}
-                >
+                <ul className="activityIntro list-unstyled bg-white p-4 rounded-24 d-flex d-sm-grid flex-column mb-3 gap-5">
+                    <li className="">
+                        <img
+                            src="https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt=""
+                            className="card-img rounded-12"
+                            style={{ maxHeight: '200px', objectFit: 'cover' }}
+                        />
+                        <div className="mt-3">
+                            <p className="text-black-700">
+                                油​桐花​是​落葉​喬木，​花期​約​在​每​年​4月​至​5月，​盛開時​花朵​如雪般​飄落，​因而​有​「五​月​雪」​的​美稱，​主要​品種​有​白花​桐樹​和​千年​桐。​
+                            </p>
+                        </div>
+                    </li>
                     <li className="">
                         <img
                             src="https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -121,7 +131,7 @@ const Theme = () => {
                     </li>
                 </ul>
 
-                <section className="navigationAndRegistration">
+                <section className="navigationAndRegistration d-grid gap-3">
                     <div className="navigation bg-white p-4 rounded-24">
                         <h2 className="sub1-bold text-primary-300">
                             桐花​漫遊導覽​｜帶​你​走入​桐​花​步道，​認識​油桐​花生態​與​文化​故事
@@ -152,7 +162,7 @@ const Theme = () => {
                             </Link>
                         </p>
                     </div>
-                    <form className="registration bg-white p-4 rounded-24 mt-3 d-flex flex-column gap-4">
+                    <form className="registration bg-white p-4 rounded-24 d-flex flex-column gap-4">
                         <h2 className="sub1-bold text-primary-300 text-center">
                             <span className="fw-normal text-primary-200 fs-5">\</span> 立即報名導覽{' '}
                             <span className="fw-normal text-primary-200 fs-5">/</span>
@@ -257,33 +267,204 @@ const Theme = () => {
             </section>
 
             <section className="themeSection">
-                <ol className="p-0 m-0 border-0">
+                <ol className="p-0 m-0 border-0 d-grid">
                     <li
-                        className="px-3 py-8 list-unstyled d-flex flex-column"
+                        className="px-3 py-8 p-md-16 list-unstyled d-grid gap-6"
                         style={{
                             backgroundImage:
                                 'url(https://images.unsplash.com/photo-1572715381359-002b1eabd56b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
                             backgourndSize: 'cover',
                         }}
                     >
-                        <ul className="list-unstyled d-flex gap-3 flex-wrap">
-                            <li className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100">
-                                交通便利
-                            </li>
-                            <li className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100">
-                                時程短
-                            </li>
-                            <li className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100">
-                                無需裝備
+                        <aside className="d-flex flex-column">
+                            <ul className="list-unstyled d-flex gap-3 flex-wrap">
+                                <li className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100">
+                                    交通便利
+                                </li>
+                                <li className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100">
+                                    時程短
+                                </li>
+                                <li className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100">
+                                    無需裝備
+                                </li>
+                            </ul>
+                            <h2 className="text-white fs-5 py-3">忙裡偷閒</h2>
+                            <p className="text-white">
+                                在城市與山林之間，不用遠行、不必準備太多，就能走進自然、放慢腳步。
+                                挑一條適合今天心情的步道，讓呼吸回到剛剛好的節奏。
+                            </p>
+                        </aside>
+
+                        <ul className="list-unstyled d-grid gap-3 themeList">
+                            <li
+                                className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
+                                style={{
+                                    backgroundImage:
+                                        'url(https://images.unsplash.com/photo-1732421384351-c549122245f9?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
+                                    backgroundSize: 'cover',
+                                    width: '100%',
+                                    height: '245px',
+                                    backgroundPosition: 'center',
+                                    gridTemplateColumns: 'auto auto',
+                                }}
+                            >
+                                <aside>
+                                    <h3 className="text-white sub1-medium">圓山​水神​社​步道​</h3>
+                                    <p className="body3-regular text-black-100 pt-1">
+                                        捷運​圓山站​
+                                    </p>
+                                </aside>
+                                <Link
+                                    className="btn btn-primary p-0 d-flex"
+                                    style={{ width: '48px', aspectRatio: '1/1' }}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        height="24px"
+                                        viewBox="0 -960 960 960"
+                                        width="24px"
+                                        fill="#4F6947"
+                                        className="m-auto"
+                                    >
+                                        <path d="M630-444H192v-72h438L429-717l51-51 288 288-288 288-51-51 201-201Z" />
+                                    </svg>
+                                </Link>
                             </li>
                         </ul>
-                        <h2 className="text-white fs-5 py-3">忙裡偷閒</h2>
-                        <p className="text-white">
-                            在城市與山林之間，不用遠行、不必準備太多，就能走進自然、放慢腳步。
-                            挑一條適合今天心情的步道，讓呼吸回到剛剛好的節奏。
-                        </p>
+                    </li>
+                    <li
+                        className="px-3 py-8 p-md-16  list-unstyled d-grid gap-6"
+                        style={{
+                            backgroundImage:
+                                'url(https://images.unsplash.com/photo-1572715381359-002b1eabd56b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
+                            backgourndSize: 'cover',
+                        }}
+                    >
+                        <aside className="d-flex flex-column">
+                            <ul className="list-unstyled d-flex gap-3 flex-wrap">
+                                <li className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100">
+                                    交通便利
+                                </li>
+                                <li className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100">
+                                    時程短
+                                </li>
+                                <li className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100">
+                                    無需裝備
+                                </li>
+                            </ul>
+                            <h2 className="text-white fs-5 py-3">忙裡偷閒</h2>
+                            <p className="text-white mt-auto">
+                                在城市與山林之間，不用遠行、不必準備太多，就能走進自然、放慢腳步。
+                                挑一條適合今天心情的步道，讓呼吸回到剛剛好的節奏。
+                            </p>
+                        </aside>
 
-                        <ul className="list-unstyled pt-6 d-flex flex-column gap-3">
+                        <ul className="list-unstyled d-grid gap-3 themeList">
+                            <li
+                                className="rounded-24 p-4 d-grid align-content-end justify-content-between"
+                                style={{
+                                    backgroundImage:
+                                        'url(https://images.unsplash.com/photo-1732421384351-c549122245f9?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
+                                    backgroundSize: 'cover',
+                                    width: '100%',
+                                    height: '245px',
+                                    backgroundPosition: 'center',
+                                    gridTemplateColumns: 'auto auto',
+                                    gridAutoRows: '48px',
+                                }}
+                            >
+                                <aside>
+                                    <h3 className="text-white sub1-medium">圓山​水神​社​步道​</h3>
+                                    <p className="body3-regular text-black-100 pt-1">
+                                        捷運​圓山站​
+                                    </p>
+                                </aside>
+                                <Link
+                                    className="btn btn-primary p-0 d-flex"
+                                    style={{ width: '48px', aspectRatio: '1/1' }}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        height="24px"
+                                        viewBox="0 -960 960 960"
+                                        width="24px"
+                                        fill="#4F6947"
+                                        className="m-auto"
+                                    >
+                                        <path d="M630-444H192v-72h438L429-717l51-51 288 288-288 288-51-51 201-201Z" />
+                                    </svg>
+                                </Link>
+                            </li>
+                            <li
+                                className="rounded-24 p-4 d-grid align-content-end justify-content-between"
+                                style={{
+                                    backgroundImage:
+                                        'url(https://images.unsplash.com/photo-1732421384351-c549122245f9?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
+                                    backgroundSize: 'cover',
+                                    width: '100%',
+                                    height: '245px',
+                                    backgroundPosition: 'center',
+                                    gridTemplateColumns: 'auto auto',
+                                    gridAutoRows: '48px',
+                                }}
+                            >
+                                <aside>
+                                    <h3 className="text-white sub1-medium">圓山​水神​社​步道​</h3>
+                                    <p className="body3-regular text-black-100 pt-1">
+                                        捷運​圓山站​
+                                    </p>
+                                </aside>
+                                <Link
+                                    className="btn btn-primary p-0 d-flex"
+                                    style={{ width: '48px', aspectRatio: '1/1' }}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        height="24px"
+                                        viewBox="0 -960 960 960"
+                                        width="24px"
+                                        fill="#4F6947"
+                                        className="m-auto"
+                                    >
+                                        <path d="M630-444H192v-72h438L429-717l51-51 288 288-288 288-51-51 201-201Z" />
+                                    </svg>
+                                </Link>
+                            </li>
+                            <li
+                                className="rounded-24 p-4 d-grid align-content-end justify-content-between"
+                                style={{
+                                    backgroundImage:
+                                        'url(https://images.unsplash.com/photo-1732421384351-c549122245f9?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
+                                    backgroundSize: 'cover',
+                                    width: '100%',
+                                    height: '245px',
+                                    backgroundPosition: 'center',
+                                    gridTemplateColumns: 'auto auto',
+                                    gridAutoRows: '48px',
+                                }}
+                            >
+                                <aside>
+                                    <h3 className="text-white sub1-medium">圓山​水神​社​步道​</h3>
+                                    <p className="body3-regular text-black-100 pt-1">
+                                        捷運​圓山站​
+                                    </p>
+                                </aside>
+                                <Link
+                                    className="btn btn-primary p-0 d-flex"
+                                    style={{ width: '48px', aspectRatio: '1/1' }}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        height="24px"
+                                        viewBox="0 -960 960 960"
+                                        width="24px"
+                                        fill="#4F6947"
+                                        className="m-auto"
+                                    >
+                                        <path d="M630-444H192v-72h438L429-717l51-51 288 288-288 288-51-51 201-201Z" />
+                                    </svg>
+                                </Link>
+                            </li>
                             <li
                                 className="rounded-24 p-4 d-grid align-content-end justify-content-between"
                                 style={{
