@@ -62,7 +62,7 @@ const Nav = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/detail" className="text-decoration-none ">
+                                    <Link to="/detail/1" className="text-decoration-none ">
                                         步道詳細
                                     </Link>
                                 </li>
