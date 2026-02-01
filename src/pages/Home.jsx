@@ -67,7 +67,7 @@ const Home = () => {
                 </div>
             </header>
             <main>
-                {/* 主題活動 Swiper 要拼回 hero */}
+                {/* 主題活動 Swiper */}
                 <section className="pt-16 pb-32">
                     <div className="container">
                         <div className="row">
