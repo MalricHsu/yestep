@@ -29,11 +29,7 @@ button:hover {
     ul.activityIntro {
         grid-template-columns: repeat(2, 1fr);
     }
-    .themeSection ol {
-        gap: 64px 0;
-    }
     .themeSection ol > li {
-        border-radius: 32px;
         grid-template-columns: 1fr 2fr;
     }
 }
@@ -41,6 +37,13 @@ button:hover {
 @media (min-width: 768px) {
     ul.activityIntro {
         grid-template-columns: repeat(3, 1fr);
+    }
+    .themeSection ol {
+        gap: 64px 0;
+    }
+    .themeSection ol > li {
+        border-radius: 32px;
+        grid-template-columns: 1fr 2fr;
     }
     section.navigationAndRegistration {
         grid-template-columns: 2fr 1fr;

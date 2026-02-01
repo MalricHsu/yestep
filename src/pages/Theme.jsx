@@ -19,11 +19,10 @@ const Theme = () => {
                 }}
                 className="d-flex flex-column align-items-center justify-content-center position-relative"
             >
-                <h1 className="sub1-bold text-white">主題活動</h1>
-                <h2 className="text-white fs-4 fs-lg-1 py-4 pt-sm-8">
-                    一起走進自然&nbsp;
-                    <br style={{ display: 'none' }} />
-                    找回你的節奏
+                <h1 className="sub1-medium text-white">主題活動</h1>
+                <h2 className="text-white fs-4 fs-lg-1 py-4 pt-sm-8 text-center">
+                    一起走進自然
+                    <span className="d-inline-block">找回你的節奏</span>
                 </h2>
                 <p className="text-primary-100 sub1-medium">讓自然成為你的休息室</p>
 
@@ -85,17 +84,17 @@ const Theme = () => {
             </header>
 
             {/* 每月活動 */}
-            <section className="monthlyActivity px-3 py-8 container-fluid ">
+            <section className="monthlyActivity px-3 py-8 container-fluid">
                 <h2 className="body1-medium text-primary-300">每月活動</h2>
 
-                <h3 className="fs-2 mb-4">油桐花季</h3>
-                <ul className="activityIntro list-unstyled bg-white p-4 rounded-24 d-flex d-sm-grid flex-column mb-3 gap-5">
+                <h3 className="fs-5 fs-md-2 mb-4">油桐花季</h3>
+                <ul className="activityIntro list-unstyled bg-white p-4 rounded-24 d-grid mb-3 gap-5">
                     <li className="">
                         <img
                             src="https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             alt=""
                             className="card-img rounded-12"
-                            style={{ maxHeight: '200px', objectFit: 'cover' }}
+                            style={{ minHeight: '200px', objectFit: 'cover' }}
                         />
                         <div className="mt-3">
                             <p className="text-black-700">
@@ -108,7 +107,7 @@ const Theme = () => {
                             src="https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             alt=""
                             className="card-img rounded-12"
-                            style={{ maxHeight: '200px', objectFit: 'cover' }}
+                            style={{ minHeight: '200px', objectFit: 'cover' }}
                         />
                         <div className="mt-3">
                             <p className="text-black-700">
@@ -121,7 +120,7 @@ const Theme = () => {
                             src="https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             alt=""
                             className="card-img rounded-12"
-                            style={{ maxHeight: '200px', objectFit: 'cover' }}
+                            style={{ minHeight: '200px', objectFit: 'cover' }}
                         />
                         <div className="mt-3">
                             <p className="text-black-700">
@@ -151,13 +150,44 @@ const Theme = () => {
                                 </p>
                             </li>
                             <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
-                                <h3 className="body2-medium text-primary-300">活動地點</h3>
+                                <h3 className="body2-medium text-primary-300 flex-shrink-0">
+                                    活動地點
+                                </h3>
                                 <p className="text-black-800">神棹山​桐​花​步道​</p>
                             </li>
+                            <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
+                                <h3 className="body2-medium text-primary-300 flex-shrink-0">
+                                    活動對象
+                                </h3>
+                                <p className="text-black-800">
+                                    親子​家庭、​朋友​同樂、​攝影愛​好者、​健行​愛好者​
+                                </p>
+                            </li>
+                            <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
+                                <h3 className="body2-medium text-primary-300 flex-shrink-0">
+                                    活動內容
+                                </h3>
+                                <p className="text-black-800">桐花​步道​導​覽</p>
+                            </li>
+                            <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
+                                <h3 className="body2-medium text-primary-300 flex-shrink-0">
+                                    活動日期
+                                </h3>
+                                <p className="text-black-800">
+                                    2026年​4月​18日​~5月​9日​｜​每​週六、​週日​ ​上午​ 9​:00 –
+                                    ​上午​ ​1​1​:00
+                                </p>
+                            </li>
+                            <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
+                                <h3 className="body2-medium text-primary-300 flex-shrink-0">
+                                    活動費用
+                                </h3>
+                                <p className="text-black-800">免費</p>
+                            </li>
                         </ul>
-                        <p className="body3-regular text-black-800">
+                        <p className="body3-regular text-black-700">
                             報名​結果將以 ​E-​mail ​通知。如有任何疑問請洽
-                            <Link to="/contact" className="btn btn-textLink body3-regular">
+                            <Link to="/contact" className="btn btn-textLink body3-regular ps-1">
                                 line官方客服
                             </Link>
                         </p>
@@ -253,9 +283,8 @@ const Theme = () => {
                                 id="checkDefaultOn"
                                 type="checkbox"
                                 value=""
-                                checked=""
                             />
-                            <label class="form-check-label" for="checkDefaultOn">
+                            <label class="form-check-label text-black-700" htmlFor="checkDefaultOn">
                                 我同意活動照片可作為宣傳使用
                             </label>
                         </div>
@@ -273,7 +302,8 @@ const Theme = () => {
                         style={{
                             backgroundImage:
                                 'url(https://images.unsplash.com/photo-1572715381359-002b1eabd56b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
-                            backgourndSize: 'cover',
+                            backgroundSize: 'cover',
+                            backgroundRepeat: 'no-repeat',
                         }}
                     >
                         <aside className="d-flex flex-column">
@@ -288,14 +318,14 @@ const Theme = () => {
                                     無需裝備
                                 </li>
                             </ul>
-                            <h2 className="text-white fs-5 py-3">忙裡偷閒</h2>
+                            <h2 className="text-white fs-5 fs-md-2 py-3">忙裡偷閒</h2>
                             <p className="text-white">
                                 在城市與山林之間，不用遠行、不必準備太多，就能走進自然、放慢腳步。
                                 挑一條適合今天心情的步道，讓呼吸回到剛剛好的節奏。
                             </p>
                         </aside>
 
-                        <ul className="list-unstyled d-grid gap-3 themeList">
+                        <ul className="list-unstyled d-grid gap-3 gap-md-4 themeList">
                             <li
                                 className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
                                 style={{
@@ -335,9 +365,10 @@ const Theme = () => {
                     <li
                         className="px-3 py-8 p-md-16  list-unstyled d-grid gap-6"
                         style={{
-                            backgroundImage:
+                            background:
                                 'url(https://images.unsplash.com/photo-1572715381359-002b1eabd56b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
-                            backgourndSize: 'cover',
+                            backgroundSize: 'cover',
+                            backgroundRepeat: 'no-repeat',
                         }}
                     >
                         <aside className="d-flex flex-column">
@@ -352,16 +383,16 @@ const Theme = () => {
                                     無需裝備
                                 </li>
                             </ul>
-                            <h2 className="text-white fs-5 py-3">忙裡偷閒</h2>
+                            <h2 className="text-white fs-5 fs-md-2 py-3">忙裡偷閒</h2>
                             <p className="text-white mt-auto">
                                 在城市與山林之間，不用遠行、不必準備太多，就能走進自然、放慢腳步。
                                 挑一條適合今天心情的步道，讓呼吸回到剛剛好的節奏。
                             </p>
                         </aside>
 
-                        <ul className="list-unstyled d-grid gap-3 themeList">
+                        <ul className="list-unstyled d-grid gap-3 gap-md-4 themeList">
                             <li
-                                className="rounded-24 p-4 d-grid align-content-end justify-content-between"
+                                className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
                                 style={{
                                     backgroundImage:
                                         'url(https://images.unsplash.com/photo-1732421384351-c549122245f9?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
@@ -370,7 +401,6 @@ const Theme = () => {
                                     height: '245px',
                                     backgroundPosition: 'center',
                                     gridTemplateColumns: 'auto auto',
-                                    gridAutoRows: '48px',
                                 }}
                             >
                                 <aside>
@@ -396,7 +426,7 @@ const Theme = () => {
                                 </Link>
                             </li>
                             <li
-                                className="rounded-24 p-4 d-grid align-content-end justify-content-between"
+                                className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
                                 style={{
                                     backgroundImage:
                                         'url(https://images.unsplash.com/photo-1732421384351-c549122245f9?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
@@ -405,7 +435,6 @@ const Theme = () => {
                                     height: '245px',
                                     backgroundPosition: 'center',
                                     gridTemplateColumns: 'auto auto',
-                                    gridAutoRows: '48px',
                                 }}
                             >
                                 <aside>
@@ -431,7 +460,7 @@ const Theme = () => {
                                 </Link>
                             </li>
                             <li
-                                className="rounded-24 p-4 d-grid align-content-end justify-content-between"
+                                className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
                                 style={{
                                     backgroundImage:
                                         'url(https://images.unsplash.com/photo-1732421384351-c549122245f9?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
@@ -440,7 +469,6 @@ const Theme = () => {
                                     height: '245px',
                                     backgroundPosition: 'center',
                                     gridTemplateColumns: 'auto auto',
-                                    gridAutoRows: '48px',
                                 }}
                             >
                                 <aside>
@@ -466,7 +494,7 @@ const Theme = () => {
                                 </Link>
                             </li>
                             <li
-                                className="rounded-24 p-4 d-grid align-content-end justify-content-between"
+                                className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
                                 style={{
                                     backgroundImage:
                                         'url(https://images.unsplash.com/photo-1732421384351-c549122245f9?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
@@ -475,7 +503,6 @@ const Theme = () => {
                                     height: '245px',
                                     backgroundPosition: 'center',
                                     gridTemplateColumns: 'auto auto',
-                                    gridAutoRows: '48px',
                                 }}
                             >
                                 <aside>
