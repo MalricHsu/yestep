@@ -66,7 +66,7 @@ const TrailSearchPage = () => {
             }
         };
         getPopularTrailScenery();
-    }, [keyword]);
+    }, []);
 
     useEffect(() => {
         if (!popularTrails || popularTrails.length === 0) return;
@@ -77,7 +77,7 @@ const TrailSearchPage = () => {
         const initSwiper = setTimeout(() => {
             swiperInstance = new Swiper('.popularTrailCards', {
                 modules: [Navigation, Autoplay],
-                slidesPerView: 1.2,
+                slidesPerView: 1.15,
                 spaceBetween: 12,
                 navigation: {
                     nextEl: '.btn-next',
@@ -88,11 +88,23 @@ const TrailSearchPage = () => {
                     disableOnInteraction: false, // 使用者互動後不停止自動播放
                 },
                 breakpoints: {
+                    576: {
+                        slidesPerView: 1.5,
+                        spaceBetween: 20,
+                    },
                     768: {
-                        slidesPerView: 2,
+                        slidesPerView: 2.1,
                         spaceBetween: 20,
                     },
                     992: {
+                        slidesPerView: 2.8,
+                        spaceBetween: 24,
+                    },
+                    1200: {
+                        slidesPerView: 3.4,
+                        spaceBetween: 24,
+                    },
+                    1400: {
                         slidesPerView: 4,
                         spaceBetween: 24,
                     },
@@ -135,6 +147,8 @@ const TrailSearchPage = () => {
                                         type="text"
                                         className="form-control px-4"
                                         placeholder="Next Step！想要去哪裡？"
+                                        value={keyword}
+                                        onChange={onSearch}
                                     />
                                     <button className="btn btn-primary" type="button">
                                         搜尋
@@ -149,7 +163,7 @@ const TrailSearchPage = () => {
                 <div className="search bg-primary-50 py-8">
                     <div className="container">
                         <div className="d-flex flex-column flex-sm-row align-items-start align-items-sm-center column-gap-4 mb-3">
-                            <h2 className="text-black-900 mb-2 mb-sm-0">步道列表</h2>
+                            <h2 className="text-black-900 mb-2 mb-sm-0 fs-5 fs-sm-2">步道列表</h2>
                             <p className="text-black-700 fw-medium">
                                 找到
                                 <span className="text-primary-300 fw-bold mx-1">
@@ -267,23 +281,27 @@ const TrailSearchPage = () => {
                         </div>
                     </div>
                 </div>
-                <div className="popularTrails py-16">
+                <div className="popularTrails pb-8 py-sm-16">
                     <div className="container">
                         <div className="border-1 border-top border-primary-200 pt-8">
-                            <div className="d-flex justify-content-between mb-8">
-                                <h2 className="text-black-900 mb-2 mb-sm-0">本週熱門步道推薦</h2>
-                                <div className="d-flex">
-                                    <button
-                                        type="button"
-                                        className="btn btn-arrow btn-prev"
-                                    ></button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-arrow btn-next"
-                                    ></button>
+                            <div className="d-flex justify-content-between align-items-center mb-4 mb-sm-8">
+                                <h2 className="text-black-900 mb-2 mb-sm-0 fs-5 fs-sm-2">
+                                    本週熱門步道推薦
+                                </h2>
+                                <div className="d-none d-sm-flex gap-3">
+                                    <button type="button" className="btn btn-arrow btn-prev">
+                                        <span className="material-symbols-outlined">
+                                            keyboard_arrow_left
+                                        </span>
+                                    </button>
+                                    <button type="button" className="btn btn-arrow btn-next">
+                                        <span className="material-symbols-outlined">
+                                            keyboard_arrow_right
+                                        </span>
+                                    </button>
                                 </div>
                             </div>
-                            <div className="popularTrailCards swiper-container overflow-hidden">
+                            <div className="popularTrailCards swiper-container">
                                 <div className="swiper-wrapper">
                                     {popularTrails?.map((trail) => {
                                         return (
@@ -313,7 +331,7 @@ const TrailSearchPage = () => {
                                                                 </p>
                                                                 <div className="d-flex gap-1 text-black-100 fs-9">
                                                                     <div className="d-flex align-items-center gap-1">
-                                                                        <i class="material-icons fs-9">
+                                                                        <i className="material-icons fs-9">
                                                                             local_fire_department
                                                                         </i>
                                                                         <span>
@@ -324,7 +342,7 @@ const TrailSearchPage = () => {
                                                                     </div>
                                                                     <span>・</span>
                                                                     <div className="d-flex align-items-center gap-1">
-                                                                        <i class="material-icons fs-9">
+                                                                        <i className="material-icons fs-9">
                                                                             favorite
                                                                         </i>
                                                                         <span>
@@ -354,6 +372,7 @@ const TrailSearchPage = () => {
                         </div>
                     </div>
                 </div>
+                <div className="search-theme py-5"></div>
             </main>
         </>
     );
