@@ -1,8 +1,13 @@
+// 引入Nav
+import Nav from '../components/Nav';
 // 引入 Hero 影片
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
-// 引入 熱門不到 popular
-import popularTrail from '../assets/images/home/popular-trail.svg';
+// 引入 HomeSwiper.jsx
+import HomeSwiper from '../components/HomeSwiper';
+
+// 引入 熱門步道 popular
+// import popularTrail from '../assets/images/home/popular-trail.svg';
 
 // 引入 特色景觀步道 landscape 資料
 import { landscapeColumns } from '../data/home-landscape';
@@ -25,60 +30,65 @@ const Home = () => {
 
     return (
         <>
-            <main>
-                {/* HERO */}
-                {/* 還有手機版的影片要放 */}
-                <section className="position-relative">
-                    <div className="hero ratio ratio-16x9">
-                        <video
-                            src={heroVideoLg}
-                            className="object-fit-cover"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                        ></video>
+            {/* HERO */}
+
+            <header className="position-relative">
+                <Nav />
+                <div className="hero ratio ratio-16x9">
+                    {/* 要換成手機版的影片 */}
+                    <video
+                        src={heroVideoLg}
+                        className="object-fit-cover"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                    ></video>
+                    <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
+                </div>
+                {/* slogan+搜尋欄 */}
+                <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
+                    <div className="container">
+                        <div className="row ">
+                            <div className="col-lg-8 mx-auto">
+                                <h1 className="fs-1 text-white text-center mb-8">
+                                    Yes to taking the next step !
+                                </h1>
+                                <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
+                                    <div className="input-group align-items-center">
+                                        <input
+                                            type="text"
+                                            className="form-control px-4"
+                                            placeholder="Next Step！想要去哪裡？"
+                                        />
+                                        <button className="btn btn-primary" type="button">
+                                            搜尋
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    {/* slogan+搜尋欄 */}
-                    <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
-                        <div className="container">
-                            <div className="row ">
-                                <div className="col-lg-8 mx-auto">
-                                    <h1 className="fs-1 text-white text-center mb-8">
-                                        Yes to taking the next step !
-                                    </h1>
-                                    <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
-                                        <div className="input-group align-items-center">
-                                            <input
-                                                type="text"
-                                                className="form-control px-4"
-                                                placeholder="Next Step！想要去哪裡？"
-                                            />
-                                            <button className="btn btn-primary" type="button">
-                                                搜尋
-                                            </button>
-                                        </div>
-                                    </form>
+                </div>
+            </header>
+            <main>
+                {/* 本月活動特輯 Swiper */}
+                <section className="py-8 py-lg-16 ">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="theme__title mb-6">
+                                    <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
+                                </div>
+                                <div className="theme__swiper">
+                                    <HomeSwiper />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-
-                {/* 主題活動 Swiper 要拼回 hero */}
-                <section className="pt-16 pb-32">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-12">
-                                <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
                 {/* 熱門步道 */}
                 <section></section>
-
                 {/* 難易度步道 */}
                 <section className="pt-16 pb-32">
                     <div className="container">
@@ -89,9 +99,8 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
                 {/* 特色景觀步道 feature */}
-                <section>
+                <section className="py-5">
                     <div className="landscape__gallery text-primary-50 ">
                         {/* 左邊欄 */}
                         <div className="landscape__column">
@@ -101,11 +110,7 @@ const Home = () => {
                                     className="landscape__card"
                                     key={item.id}
                                 >
-                                    <img
-                                        src={item.img}
-                                        className="w-100 h-100 object-fit-cover"
-                                        alt={item.alt}
-                                    />
+                                    <img src={item.img} alt={item.alt} />
                                     <p className="landscape__card-title sub1-bold">
                                         {item.landscapeName}
                                     </p>
@@ -120,11 +125,7 @@ const Home = () => {
                                     className="landscape__card"
                                     key={item.id}
                                 >
-                                    <img
-                                        src={item.img}
-                                        className="w-100 h-100 object-fit-cover"
-                                        alt={item.alt}
-                                    />
+                                    <img src={item.img} alt={item.alt} />
                                     <p className="landscape__card-title sub1-bold">
                                         {item.landscapeName}
                                     </p>
@@ -139,11 +140,7 @@ const Home = () => {
                                     className="landscape__card"
                                     key={item.id}
                                 >
-                                    <img
-                                        src={item.img}
-                                        className="w-100 h-100 object-fit-cover"
-                                        alt={item.alt}
-                                    />
+                                    <img src={item.img} alt={item.alt} />
                                     <p className="landscape__card-title sub1-bold">
                                         {item.landscapeName}
                                     </p>
@@ -152,7 +149,6 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
                 {/* 關於我們 about */}
                 <section className="py-16 py-lg-32 position-relative">
                     <div className="container">

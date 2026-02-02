@@ -1,3 +1,12 @@
+a,
+a:hover,
+Link,
+Link:hover,
+button,
+button:hover {
+    transition: all 0.4s eases;
+}
+
 .theme-header {
     position: relative;
     padding: 176px 0 144px;
@@ -13,5 +22,33 @@
         left: 0;
         background: url(../../images/trailsearchpage/mask.svg) no-repeat center bottom;
         background-size: cover;
+    }
+}
+
+@media (min-width: 576px) {
+    ul.activityIntro {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .themeSection ol > li {
+        grid-template-columns: 1fr 2fr;
+    }
+}
+
+@media (min-width: 768px) {
+    ul.activityIntro {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .themeSection ol {
+        gap: 64px 0;
+    }
+    .themeSection ol > li {
+        border-radius: 32px;
+        grid-template-columns: 1fr 2fr;
+    }
+    section.navigationAndRegistration {
+        grid-template-columns: 2fr 1fr;
+    }
+    ul.themeList {
+        grid-template-columns: 1fr 1fr;
     }
 }
