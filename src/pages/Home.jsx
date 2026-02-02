@@ -31,10 +31,11 @@ const Home = () => {
     return (
         <>
             {/* HERO */}
-            {/* 還有手機版的影片要放 */}
+
             <header className="position-relative">
                 <Nav />
                 <div className="hero ratio ratio-16x9">
+                    {/* 要換成手機版的影片 */}
                     <video
                         src={heroVideoLg}
                         className="object-fit-cover"
@@ -43,6 +44,7 @@ const Home = () => {
                         muted
                         playsInline
                     ></video>
+                    <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
                 </div>
                 {/* slogan+搜尋欄 */}
                 <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
