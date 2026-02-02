@@ -43,7 +43,7 @@ function HomeSwiper() {
             >
                 {carouselData.map((item) => (
                     <SwiperSlide key={item.id}>
-                        <div className="theme position-relative">
+                        <div className="theme ">
                             <div className="theme__img">
                                 <img
                                     src={item.image}

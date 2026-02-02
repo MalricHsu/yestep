@@ -21,6 +21,10 @@
     }
 }
 
+.theme {
+    position: relative;
+}
+
 .theme__decor {
     position: absolute;
     z-index: 1;
@@ -36,7 +40,6 @@
 .theme__content {
     position: relative;
     z-index: 2;
-    bottom: 0;
 
     @media (min-width: 992px) {
         position: absolute;
