@@ -3,8 +3,10 @@ import Nav from '../components/Nav';
 // 引入 Hero 影片
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
+// 引入 Swiper
+
 // 引入 熱門步道 popular
-import popularTrail from '../assets/images/home/popular-trail.svg';
+// import popularTrail from '../assets/images/home/popular-trail.svg';
 
 // 引入 特色景觀步道 landscape 資料
 import { landscapeColumns } from '../data/home-landscape';
@@ -67,12 +69,15 @@ const Home = () => {
                 </div>
             </header>
             <main>
-                {/* 主題活動 Swiper */}
+                {/* 本月活動特輯 Swiper */}
                 <section className="pt-16 pb-32">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
-                                <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
+                                <div className="theme__title">
+                                    <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
+                                </div>
+                                <div className="theme__swiper">這裡要引入Swiper元件</div>
                             </div>
                         </div>
                     </div>
