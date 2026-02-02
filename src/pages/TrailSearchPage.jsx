@@ -1,6 +1,9 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import Nav from '../components/Nav';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+
+// 元件
+import Nav from '../components/Nav';
+import StarRating from '../components/StarRating';
 
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 // 顯示 API 錯誤
@@ -9,34 +12,31 @@ const getErrorMessage = (error) => {
 };
 
 const TrailSearchPage = () => {
-    useEffect(() => {
-        document.title = '步道總覽 | YeStep';
-    }, []);
+    const [keyword, setKeyword] = useState('');
+    const [filteredTrailCount, setFilteredTrailsCount] = useState(0);
+    const [filteredTrails, setFilteredTrails] = useState([]);
 
-    const [region, setRegion] = useState('');
-    const [trailSceneryCount, setTrailSceneryCount] = useState(0);
-    const fetchRef = useRef(null);
-
-    const getTrailSceneryCount = useCallback(async () => {
-        try {
-            const res = await searchApi.get('/trails');
-            setTrailSceneryCount(res.data.length ?? 0);
-        } catch (error) {
-            console.error('API 錯誤:', getErrorMessage(error));
+    const onSearch = (e) => {
+        if (e.key === 'Enter') {
+            setKeyword(e.target.value);
         }
-    }, []);
+    };
 
     useEffect(() => {
         document.title = '步道總覽 | YeStep';
-    }, []);
 
-    useEffect(() => {
-        fetchRef.current = getTrailSceneryCount;
-    }, [getTrailSceneryCount]);
-
-    useEffect(() => {
-        fetchRef.current?.();
-    }, []);
+        const getTrailScenery = async () => {
+            try {
+                const res = await searchApi.get('/trails');
+                setFilteredTrailsCount(res.data.length ?? 0);
+                setFilteredTrails(res.data);
+                console.log(res.data);
+            } catch (error) {
+                console.error('API 錯誤:', getErrorMessage(error));
+            }
+        };
+        getTrailScenery();
+    }, [keyword]);
 
     return (
         <>
@@ -51,8 +51,8 @@ const TrailSearchPage = () => {
                                 <div className="input-group align-items-center">
                                     <select
                                         className="form-select px-4"
-                                        value={region}
-                                        onChange={(e) => setRegion(e.target.value)}
+                                        value={keyword}
+                                        onChange={onSearch}
                                     >
                                         +<option value="">請選擇地區</option>
                                         <option value="1">北部</option>
@@ -83,27 +83,52 @@ const TrailSearchPage = () => {
                             <p className="text-black-700 fw-medium">
                                 找到
                                 <span className="text-primary-300 fw-bold mx-1">
-                                    {trailSceneryCount}筆
+                                    {filteredTrailCount}筆
                                 </span>
                                 你可能喜歡的步道景觀
                             </p>
                         </div>
-                        <div className="row">
-                            <div className="col-6">
-                                <div className="card rounded-24 shadow">
-                                    <div className="d-flex">
-                                        <img
-                                            src="https://images.pexels.com/photos/1272809/pexels-photo-1272809.jpeg"
-                                            className="card-img-top rounded-16"
-                                            alt="圖片"
-                                        />
-                                        <div className="card-body">
-                                            <h5 className="card-title">礁溪跑馬古道</h5>
-                                            <p className="card-text">宜蘭縣礁溪鄉</p>
+                        <div className="row row-gap-6">
+                            {filteredTrails.map((trail) => {
+                                return (
+                                    <>
+                                        <div className="col-md-6">
+                                            <div className="card rounded-24 shadow">
+                                                <div className="row">
+                                                    <div className="col-md-6">
+                                                        <img
+                                                            src={trail.trail_image}
+                                                            className="card-img-top rounded-16"
+                                                            alt={trail.trail_name}
+                                                        />
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <div className="card-body">
+                                                            <h5 className="card-title">
+                                                                {trail.trail_name}
+                                                            </h5>
+                                                            <p className="card-text">
+                                                                {trail.trail_address}
+                                                            </p>
+                                                            <div className="d-flex align-items-center">
+                                                                <StarRating
+                                                                    rating={trail.trail_difficulty}
+                                                                />
+                                                                <p>・約{trail.trail_hour}</p>
+                                                            </div>
+                                                            <div className="d-flex">
+                                                                <ul>
+                                                                    <li></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    </>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
