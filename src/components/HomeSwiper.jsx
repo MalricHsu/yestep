@@ -24,7 +24,7 @@ function HomeSwiper() {
             image: themeImg01,
             imageLg: themeImgLg02,
             title: '當​我​們​「桐」​在​一起​',
-            derscription: '在​花間​小徑，​留​下歡笑​與足跡',
+            derscription: '在​花間​小徑，和家人一同​留​下歡笑​與足跡',
         },
         {
             id: 3,
@@ -73,7 +73,7 @@ function HomeSwiper() {
                                             04 April
                                         </h3>
                                         <div
-                                            className="d-flex flex-column flex-lg-row justify-content-between align-items-start
+                                            className="theme__card d-flex flex-column flex-lg-row justify-content-between align-items-start
   align-items-lg-center  gap-6 p-6 bg-white rounded-24"
                                         >
                                             <div>

@@ -73,7 +73,7 @@ const Home = () => {
             </header>
             <main>
                 {/* 本月活動特輯 Swiper */}
-                <section className="py-16">
+                <section className="py-8 py-lg-16 ">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
