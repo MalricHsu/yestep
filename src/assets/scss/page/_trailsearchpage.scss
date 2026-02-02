@@ -18,6 +18,7 @@
 
 .search-bar {
     border: 1px solid $primary-200;
+
     .form-select,
     .form-control {
         border: none;
@@ -55,13 +56,119 @@
 }
 
 .search {
+    .shadow {
+        box-shadow: 0 0.25rem 2rem rgba($black, 0.15) !important;
+    }
+
     .card {
         border: none;
-        padding: 0.75rem;
+
+        .btn-go {
+            border: none;
+            line-height: 0;
+            color: $primary-300;
+            background-color: $primary-100;
+            transition: all 0.15s ease-in-out;
+        }
+
+        &:hover {
+            .btn-go {
+                color: $white;
+                transform: rotate(-48deg);
+                background-color: $primary-200;
+            }
+        }
     }
-    .card-img-top {
-        // max-width: 300px;
-        height: 176px;
-        object-fit: cover;
+
+    .card-img {
+        max-width: 300px;
+
+        @include media-breakpoint-down(xxl) {
+            max-width: 250px;
+        }
+
+        @include media-breakpoint-down(xl) {
+            max-width: 100%;
+        }
+
+        .card-img-top {
+            height: 176px;
+            object-fit: cover;
+        }
+    }
+
+    .card-body {
+        padding: 0.5rem;
+    }
+}
+
+.popularTrailCards {
+    .swiper-slide {
+        height: 434px;
+
+        a {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .card {
+        border: none;
+
+        .btn-go {
+            border: none;
+            line-height: 0;
+            color: $primary-300;
+            background-color: $primary-100;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .card-img {
+            transform: scale(1);
+            transition: all 0.15 ease-in-out;
+        }
+
+        .card-img {
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+
+        &:hover {
+            .btn-go {
+                color: $white;
+                transform: rotate(-48deg);
+                background-color: $primary-200;
+            }
+        }
+    }
+
+    .card-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba($black, 0.6));
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .card-body {
+        position: relative;
     }
 }
