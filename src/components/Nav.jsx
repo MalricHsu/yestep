@@ -27,7 +27,7 @@ const Nav = () => {
 
     return (
         <>
-            <nav className={`py-3 py-lg-6 ${scrolled ? 'scrolled' : ''}`}>
+            <nav className={`py-3 py-lg-6 ${scrolled ? 'scrolled shadow-sm' : ''}`}>
                 <div className="container">
                     <div className="header__links d-flex justify-content-between align-items-center">
                         {/* logo + 導覽列 */}
@@ -61,11 +61,6 @@ const Nav = () => {
                                         熱門步道
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link to="/detail/1" className="text-decoration-none ">
-                                        步道詳細
-                                    </Link>
-                                </li>
                             </ul>
                         </div>
                         {/* 登入註冊 */}
@@ -74,7 +69,9 @@ const Nav = () => {
                                 to="/login"
                                 className="d-flex align-items-center text-decoration-none"
                             >
-                                <i className="material-symbols-outlined me-2">account_circle</i>
+                                <span className="material-symbols-outlined me-2">
+                                    account_circle
+                                </span>
                                 <span>登入/註冊</span>
                             </Link>
                         </div>
@@ -85,7 +82,7 @@ const Nav = () => {
                             className="btn btn-menu d-block d-lg-none p-3"
                             onClick={() => setShow(true)}
                         >
-                            <i className="material-symbols-outlined">menu</i>
+                            <span className="material-symbols-outlined">menu</span>
                         </button>
                     </div>
                 </div>
