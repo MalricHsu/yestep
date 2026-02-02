@@ -94,6 +94,10 @@
         .card-img-top {
             height: 176px;
             object-fit: cover;
+
+            @include media-breakpoint-down(xl) {
+                height: 180px;
+            }
         }
     }
 
@@ -102,7 +106,37 @@
     }
 }
 
+.popularTrails {
+    overflow: hidden;
+
+    .btn-arrow {
+        border: none;
+        line-height: 0;
+        padding: 0.5rem;
+        background-color: $white;
+        box-shadow: 0 0.0625rem 0.5rem rgba($black, 0.08);
+
+        &.swiper-button-disabled,
+        &:disabled {
+            color: $black-500;
+            background-color: $black-100;
+            opacity: 1;
+        }
+
+        &:hover {
+            color: $white;
+            background-color: $primary-200;
+        }
+    }
+}
+
 .popularTrailCards {
+    overflow: hidden;
+
+    @include media-breakpoint-down(sm) {
+        overflow: visible;
+    }
+
     .swiper-slide {
         height: 434px;
 

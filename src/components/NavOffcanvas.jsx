@@ -37,7 +37,7 @@ const NavOffcanvas = ({ show, onClose }) => {
         <div ref={offcanvasRef} className="offcanvas offcanvas-end bg-primary-50" tabIndex="-1">
             <div className="offcanvas-header">
                 <h5 className="offcanvas-title">
-                    <Link to="/" className="d-flex column-gap-2 pe-4 me-10">
+                    <Link to="/" className="d-flex column-gap-2 pe-4 me-10" onClick={onClose}>
                         <img className="logo" src={logoDark} alt="logo圖片" />
                         <img className="logo-yestep" src={yestepDark} alt="logo圖片" />
                     </Link>
@@ -50,18 +50,18 @@ const NavOffcanvas = ({ show, onClose }) => {
                 <div className="d-flex justify-content-center">
                     <ul className="list-unstyled d-flex flex-column row-gap-12">
                         <li className="decor-lined">
-                            <Link to="/theme" className="nav-link">
+                            <Link to="/theme" className="nav-link" onClick={onClose}>
                                 主題活動
                             </Link>
                         </li>
                         <li className="decor-lined">
-                            <Link to="/search" className="nav-link">
+                            <Link to="/search" className="nav-link" onClick={onClose}>
                                 步道總覽
                             </Link>
                         </li>
                         {/* 熱門步道要連到首頁的點擊率小卡 */}
                         <li>
-                            <Link to="/" className="nav-link">
+                            <Link to="/" className="nav-link" onClick={onClose}>
                                 熱門步道
                             </Link>
                         </li>
