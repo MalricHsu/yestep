@@ -1,0 +1,204 @@
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+// 第三方套件
+import axios from 'axios';
+import Swiper from 'swiper';
+import { Navigation, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+
+// 工具
+import { formatNumber } from '../utils/formatNumber';
+import { getErrorMessage } from '../utils/error';
+
+// API
+const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+
+const PopularTrails = ({ onUpdate }) => {
+    const [popularTrails, setPopularTrails] = useState([]);
+
+    // 取得熱門步道資料
+    useEffect(() => {
+        const getPopularTrailScenery = async () => {
+            try {
+                const res = await searchApi.get(
+                    '/trails?_sort=trail_popular&_limit=10&_order=desc',
+                );
+                setPopularTrails(res.data);
+            } catch (error) {
+                console.error('API 錯誤:', getErrorMessage(error));
+            }
+        };
+        getPopularTrailScenery();
+    }, []);
+
+    // 初始化 Swiper
+    useEffect(() => {
+        if (!popularTrails || popularTrails.length === 0) return;
+
+        let swiperInstance = null;
+        const initSwiper = setTimeout(() => {
+            swiperInstance = new Swiper('.popularTrailCards', {
+                modules: [Navigation, Autoplay],
+                slidesPerView: 1.15,
+                spaceBetween: 12,
+                navigation: {
+                    nextEl: '.btn-next',
+                    prevEl: '.btn-prev',
+                },
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                breakpoints: {
+                    576: {
+                        slidesPerView: 1.5,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2.1,
+                        spaceBetween: 20,
+                    },
+                    992: {
+                        slidesPerView: 2.8,
+                        spaceBetween: 24,
+                    },
+                    1200: {
+                        slidesPerView: 3.4,
+                        spaceBetween: 24,
+                    },
+                    1400: {
+                        slidesPerView: 4,
+                        spaceBetween: 24,
+                    },
+                },
+            });
+        }, 100);
+
+        return () => {
+            clearTimeout(initSwiper);
+            if (swiperInstance) {
+                swiperInstance.destroy();
+            }
+        };
+    }, [popularTrails]);
+
+    // 處理步道點擊
+    const handleAddPopular = async (id, currentPopular) => {
+        try {
+            // 呼叫父元件傳進來的 handleAddPopular
+            if (onUpdate) {
+                await onUpdate(id, currentPopular);
+            }
+
+            // 同步更新「熱門步道」元件內部的數字，讓使用者立刻看到變化
+            setPopularTrails((prev) =>
+                prev.map((t) =>
+                    t.id === id ? { ...t, trail_popular: (t.trail_popular || 0) + 1 } : t,
+                ),
+            );
+        } catch (error) {
+            console.error('更新失敗:', getErrorMessage(error));
+        }
+    };
+
+    return (
+        <div className="popularTrails pb-8 py-sm-16">
+            <div className="container">
+                <div className="border-1 border-top border-primary-200 pt-8">
+                    <div className="d-flex justify-content-between align-items-center mb-4 mb-sm-8">
+                        <h2 className="text-black-900 mb-2 mb-sm-0 fs-5 fs-sm-2">
+                            本週熱門步道推薦
+                        </h2>
+                        <div className="d-none d-sm-flex gap-3">
+                            <button type="button" className="btn btn-arrow btn-prev">
+                                <span className="material-symbols-outlined">
+                                    keyboard_arrow_left
+                                </span>
+                            </button>
+                            <button type="button" className="btn btn-arrow btn-next">
+                                <span className="material-symbols-outlined">
+                                    keyboard_arrow_right
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="popularTrailCards swiper-container">
+                        <div className="swiper-wrapper">
+                            {popularTrails.map((trail) => {
+                                return (
+                                    <div className="swiper-slide" key={trail.id}>
+                                        <Link
+                                            to={`/detail/${trail.id}`}
+                                            className="card d-flex rounded-24 h-100 overflow-hidden"
+                                            onClick={() =>
+                                                handleAddPopular(trail.id, trail.trail_popular)
+                                            }
+                                        >
+                                            <div className="card-img">
+                                                <img
+                                                    src={trail.trail_image}
+                                                    alt={trail.trail_name}
+                                                />
+                                            </div>
+
+                                            <div className="card-body d-flex flex-column align-items-start">
+                                                <div className="bg-primary-50 text-primary-300 rounded-20 px-3 py-1 fw-bold">
+                                                    {trail.trail_difficulty}
+                                                </div>
+                                                <div className="d-flex justify-content-between align-items-end w-100 mt-auto">
+                                                    <div className="d-flex flex-column">
+                                                        <h4 className="card-title fs-7 fw-medium text-white mb-1">
+                                                            {trail.trail_name}
+                                                        </h4>
+                                                        <p className="text-black-100 fs-9 mb-1">
+                                                            {trail.trail_address}
+                                                        </p>
+                                                        <div className="d-flex gap-1 text-black-100 fs-9">
+                                                            <div className="d-flex align-items-center gap-1">
+                                                                <i className="material-icons fs-9">
+                                                                    local_fire_department
+                                                                </i>
+                                                                <span>
+                                                                    {formatNumber(
+                                                                        trail.trail_popular,
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                            <span>・</span>
+                                                            <div className="d-flex align-items-center gap-1">
+                                                                <i className="material-icons fs-9">
+                                                                    favorite
+                                                                </i>
+                                                                <span>
+                                                                    {formatNumber(
+                                                                        trail.trail_collect,
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-go p-3"
+                                                    >
+                                                        <span className="material-symbols-outlined">
+                                                            arrow_forward
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default PopularTrails;
