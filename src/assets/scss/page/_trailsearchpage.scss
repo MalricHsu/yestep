@@ -1,18 +1,33 @@
 .search-header {
     position: relative;
     padding: 176px 0 144px;
-    background: url(../../images/trailsearchpage/bg.jpg) no-repeat center bottom;
+    background: url(https://images.unsplash.com/photo-1446483050676-bd2fdf3ac2d6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)
+        no-repeat center bottom;
     background-size: cover;
 
-    &::before {
+    &::before,
+    &::after {
         content: '';
         position: absolute;
         width: 100%;
+        left: 0;
+    }
+
+    &::before {
+        height: 100%;
+        top: 0;
+        background: linear-gradient(to bottom, rgba($black, 0.5), transparent);
+    }
+
+    &::after {
         height: 5rem;
         bottom: -1rem;
-        left: 0;
         background: url(../../images/trailsearchpage/mask.svg) no-repeat center bottom;
         background-size: cover;
+    }
+
+    .container {
+        position: relative;
     }
 }
 
@@ -77,11 +92,27 @@
                 transform: rotate(-48deg);
                 background-color: $primary-200;
             }
+            .card-img-top {
+                transform: scale(1.1);
+            }
         }
     }
 
     .card-img {
+        position: relative;
         max-width: 300px;
+
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba($black, 0.8), transparent 50%);
+            z-index: 1;
+        }
 
         @include media-breakpoint-down(xxl) {
             max-width: 250px;
@@ -94,11 +125,19 @@
         .card-img-top {
             height: 176px;
             object-fit: cover;
+            transition: all 0.15s ease-in-out;
 
             @include media-breakpoint-down(xl) {
                 height: 180px;
             }
         }
+    }
+
+    .card-featured {
+        position: absolute;
+        bottom: 0.5rem;
+        left: 0.5rem;
+        z-index: 2;
     }
 
     .card-body {
@@ -158,22 +197,14 @@
             transition: all 0.15s ease-in-out;
         }
 
-        .card-img {
-            transform: scale(1);
-            transition: all 0.15 ease-in-out;
-        }
-
-        .card-img {
-            &:hover {
-                transform: scale(1.1);
-            }
-        }
-
         &:hover {
             .btn-go {
                 color: $white;
                 transform: rotate(-48deg);
                 background-color: $primary-200;
+            }
+            .card-img {
+                transform: scale(1.05);
             }
         }
     }
@@ -183,6 +214,7 @@
         top: 0;
         left: 0;
         height: 100%;
+        transition: all 0.15s ease-in-out;
 
         &::before {
             content: '';
@@ -205,4 +237,94 @@
     .card-body {
         position: relative;
     }
+}
+
+.search-theme {
+    position: relative;
+    background: url(https://images.unsplash.com/photo-1725877762973-2422cee8ac72?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)
+        no-repeat center bottom;
+    background-size: cover;
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(4px);
+        filter: hue-rotate(-30deg);
+    }
+
+    .container {
+        position: relative;
+    }
+
+    .btn-arrow {
+        border: none;
+        border: 1px solid rgba($white, 0.75);
+        line-height: 0;
+        padding: 0.5rem;
+        color: rgba($white, 0.75);
+        opacity: 1;
+    }
+}
+
+.themeInfoBanner {
+    overflow: hidden;
+
+    .swiper-slide {
+        width: 140px;
+        height: 270px;
+        transition: width 0.15s ease;
+        cursor: pointer;
+    }
+
+    .swiper-slide-active {
+        width: 388px;
+    }
+
+    .card {
+        border: none;
+        background-color: transparent;
+    }
+
+    .card-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background-color: transparent;
+
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba($black, 0.8), transparent 50%);
+            z-index: 1;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .card-body {
+        position: relative;
+        background-color: transparent;
+        z-index: 2;
+    }
+}
+
+.go-theme {
+    position: absolute;
+    bottom: 0;
 }
