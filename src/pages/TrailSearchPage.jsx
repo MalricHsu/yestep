@@ -209,7 +209,7 @@ const TrailSearchPage = () => {
                 </div>
             </header>
             <main>
-                <div className="search bg-primary-50 py-8">
+                <section className="search bg-primary-50 py-8">
                     <div className="container">
                         <div className="d-flex flex-column flex-sm-row align-items-start align-items-sm-center column-gap-4 mb-3">
                             <h2 className="text-black-900 mb-2 mb-sm-0 fs-5 fs-sm-2">步道列表</h2>
@@ -342,11 +342,11 @@ const TrailSearchPage = () => {
                             </ul>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <PopularTrails onUpdate={handleAddPopular} />
+                <PopularTrails onUpdate={handleAddPopular} hasBorder={true} />
 
-                <div className="search-theme py-20">
+                <section className="search-theme py-20">
                     <div className="container">
                         <div className="row">
                             <div className="col-lg-4">
@@ -410,7 +410,7 @@ const TrailSearchPage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </main>
         </>
     );
