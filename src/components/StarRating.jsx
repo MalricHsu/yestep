@@ -1,4 +1,4 @@
-const StarRating = ({ rating, fontSize }) => {
+const StarRating = ({ rating, fontSize, color }) => {
     const difficultyMap = {
         休閒級: 1,
         入門級: 2,
@@ -27,13 +27,14 @@ const StarRating = ({ rating, fontSize }) => {
                 <span
                     key={index}
                     style={{ fontSize: `${fontSize}px` }}
-                    className={`material-icons ${index < starCount ? 'text-primary-300' : 'text-black-200'}`}
+                    className={`material-icons ${index < starCount ? `${color}` : 'text-black-200'}`}
                 >
                     star
                 </span>
             ))}
         </div>
     );
+    text - primary - 300;
 };
 
 export default StarRating;

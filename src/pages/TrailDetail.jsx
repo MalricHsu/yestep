@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect, Fragment, useRef } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import ActionModal from '../components/ActionModal';
 
 const TrailDetail = () => {
     const [detailData, setDetailData] = useState([]);
@@ -129,6 +130,25 @@ const TrailDetail = () => {
         };
     }, [reviewData]);
 
+    const ModalRef = useRef(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
+    const [isPlan, setIsPlan] = useState(false);
+
+    const handleAction = (type) => {
+        if (!isLoggedIn) {
+            ModalRef.current.open(`${type}_guest`);
+        } else {
+            if (type === 'like') {
+                setIsLiked(true);
+            }
+            if (type === 'plan') {
+                setIsPlan(true);
+            }
+            ModalRef.current.open(`${type}_auth`);
+        }
+    };
+
     //地圖元件
     const TrailMap = () => {
         return (
@@ -152,15 +172,21 @@ const TrailDetail = () => {
             <>
                 <button
                     type="button"
-                    className="btn btn-outline-primary-300 p-3 d-flex justify-content-center align-items-center me-3"
+                    className={`btn  p-3 d-flex justify-content-center align-items-center me-3 ${isLiked ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'} `}
                     style={{ width: '48px', height: '48px' }}
+                    onClick={() => {
+                        handleAction('like');
+                    }}
                 >
                     <span className="material-symbols-outlined m-0">favorite</span>
                 </button>
 
                 <button
                     type="button"
-                    className="btn btn-outline-primary-300 px-6 py-3 d-flex justify-content-center align-items-center me-3"
+                    className={`btn  px-6 py-3 d-flex justify-content-center align-items-center me-3 ${isPlan ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'}  `}
+                    onClick={() => {
+                        handleAction('plan');
+                    }}
                 >
                     <span className="material-symbols-outlined me-2">add_circle</span>
                     <p className="body1-bold">加入行程</p>
@@ -168,8 +194,18 @@ const TrailDetail = () => {
             </>
         );
     };
+
     return (
         <div>
+            {/* 測試用：切換登入狀態的按鈕 (開發時方便測試) */}
+            <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 9999 }}>
+                <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => setIsLoggedIn(!isLoggedIn)}
+                >
+                    {isLoggedIn ? '目前狀態：已登入' : '目前狀態：未登入'}
+                </button>
+            </div>
             <header className="detail-header">
                 <Nav />
             </header>
@@ -225,6 +261,7 @@ const TrailDetail = () => {
                                                                         detailData.trail_difficulty
                                                                     }
                                                                     fontSize={12}
+                                                                    color={'text-primary-300'}
                                                                 />
                                                             </div>
                                                         </div>
@@ -440,12 +477,14 @@ const TrailDetail = () => {
                                                                 <StarRating
                                                                     rating={review.rating}
                                                                     fontSize={12}
+                                                                    color={'text-primary-300'}
                                                                 />
                                                             </div>
                                                             <div className="d-block d-lg-none">
                                                                 <StarRating
                                                                     rating={review.rating}
                                                                     fontSize={16}
+                                                                    color={'text-primary-300'}
                                                                 />
                                                             </div>
                                                         </div>
@@ -574,6 +613,8 @@ const TrailDetail = () => {
                     </div>
                 </div>
             </div>
+            {/* Modal */}
+            <ActionModal ref={ModalRef} />
         </div>
     );
 };

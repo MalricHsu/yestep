@@ -199,4 +199,27 @@
             --bs-border-radius: 0.75rem;
         }
     }
+    &.btn-primary-100 {
+        @include button-variant(
+            $primary-100,
+            transparent,
+            // 2. 邊框：透明
+            $primary-300,
+            // 3. 文字顏色：設定為 $primary-300 (這裡!)
+            // --- Hover 狀態 (滑鼠移上去) ---
+            $primary-200,
+            // 4. Hover 背景：變深一點
+            $primary-200,
+            // 5. Hover 邊框
+            $white,
+
+            // 6. Hover 文字：變白色 (或是你也想維持 primary-300 就改這)
+            // --- Active 狀態 (點擊時) ---
+            $primary-200,
+            // 7. Active 背景
+            $primary-200,
+            // 8. Active 邊框
+            $white // 9. Active 文字
+        );
+    }
 }
