@@ -7,6 +7,7 @@ import Theme from './pages/Theme';
 import Member from './pages/Member';
 import NotFound404 from './pages/NotFound404';
 import TrailTag from './pages/TrailTag';
+import Login from './pages/Login';
 
 const router = createHashRouter([
     {
@@ -42,6 +43,10 @@ const router = createHashRouter([
                 element: <NotFound404 />,
             },
         ],
+    },
+    {
+        path: '/login',
+        element: <Login />,
     },
 ]);
 

@@ -273,6 +273,7 @@ const TrailSearchPage = () => {
                                                         <StarRating
                                                             rating={trail.trail_difficulty}
                                                             fontSize={12}
+                                                            color={'black-400'}
                                                         />
                                                         <p>・{trail.trail_hour}</p>
                                                     </div>

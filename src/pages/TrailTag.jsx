@@ -9,7 +9,7 @@ const TrailTag = () => {
     const [trails, setTrails] = useState([]);
 
     //抓取那個網頁？後面的字
-    const [searchParams] = useSearchParams(); //拿到物件
+    const [searchParams] = useSearchParams(); //拿到網址物件
 
     // console.log(useSearchParams());
     //從物件中取出相對應的key，就會給出值
