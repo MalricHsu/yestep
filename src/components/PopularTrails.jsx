@@ -15,7 +15,7 @@ import { getErrorMessage } from '../utils/error';
 // API
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 
-const PopularTrails = ({ onUpdate }) => {
+const PopularTrails = ({ onUpdate, hasBorder = false }) => {
     const [popularTrails, setPopularTrails] = useState([]);
 
     // 取得熱門步道資料
@@ -104,9 +104,11 @@ const PopularTrails = ({ onUpdate }) => {
     };
 
     return (
-        <div className="popularTrails pb-8 py-sm-16">
+        <section className="popularTrails pb-8 py-sm-16">
             <div className="container">
-                <div className="border-1 border-top border-primary-200 pt-8">
+                <div
+                    className={`pt-8 ${hasBorder ? 'border-1 border-top border-primary-200' : ''}`}
+                >
                     <div className="d-flex justify-content-between align-items-center mb-4 mb-sm-8">
                         <h2 className="text-black-900 mb-2 mb-sm-0 fs-5 fs-sm-2">
                             本週熱門步道推薦
@@ -197,7 +199,7 @@ const PopularTrails = ({ onUpdate }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 
