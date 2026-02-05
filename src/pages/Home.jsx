@@ -52,7 +52,6 @@ const Home = () => {
     return (
         <>
             {/* HERO */}
-
             <header className="position-relative">
                 <Nav />
                 <div className="hero ratio ratio-16x9">
@@ -75,7 +74,7 @@ const Home = () => {
                                 <h1 className="fs-1 text-white text-center mb-8">
                                     Yes to taking the next step !
                                 </h1>
-                                <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
+                                <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pill">
                                     <div className="input-group align-items-center">
                                         <input
                                             type="text"
@@ -92,6 +91,7 @@ const Home = () => {
                     </div>
                 </div>
             </header>
+
             <main>
                 {/* 本月活動特輯 Swiper */}
                 <section className="py-8 py-lg-16 ">
