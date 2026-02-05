@@ -64,10 +64,11 @@ const Nav = () => {
                             </ul>
                         </div>
                         {/* 登入註冊 */}
-                        <div className="dropdown header__login d-none d-lg-flex">
+                        <div className="dropdown header__login d-none d-lg-flex ">
                             <button
                                 type="button"
-                                className="dropdown-btn d-flex align-items-center text-decoration-none"
+                                className="dropdown-btn d-flex align-items-center text-decoration-none border-0 bg-transparent"
+                                data-bs-display="static"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
@@ -76,7 +77,7 @@ const Nav = () => {
                                 </span>
                                 <span>登入/註冊</span>
                             </button>
-                            <ul className="dropdown-menu">
+                            <ul className="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <Link
                                         className="dropdown-item text-primary-300 px-4 py-2 "

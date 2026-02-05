@@ -38,7 +38,7 @@ function HomeSwiper() {
     return (
         <>
             <Swiper
-                style={{ overflow: 'visible' }}
+                style={{ overflow: 'hidden' }}
                 className="swiper"
                 loop={true}
                 spaceBetween={72}
