@@ -64,18 +64,37 @@ const Nav = () => {
                             </ul>
                         </div>
                         {/* 登入註冊 */}
-                        <div className="header__login d-none d-lg-flex">
-                            <Link
-                                to="/login"
-                                className="d-flex align-items-center text-decoration-none"
+                        <div className="dropdown header__login d-none d-lg-flex">
+                            <button
+                                type="button"
+                                className="dropdown-btn d-flex align-items-center text-decoration-none"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
                             >
                                 <span className="material-symbols-outlined me-2">
                                     account_circle
                                 </span>
                                 <span>登入/註冊</span>
-                            </Link>
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li>
+                                    <Link
+                                        className="dropdown-item text-primary-300 px-4 py-2 "
+                                        to="/login"
+                                    >
+                                        會員中心
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        className="dropdown-item text-primary-300 px-4 py-2"
+                                        to="/register"
+                                    >
+                                        註冊
+                                    </Link>
+                                </li>
+                            </ul>
                         </div>
-
                         {/* 手機用 Nav */}
                         <button
                             type="button"
