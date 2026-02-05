@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 // 不同路由對應顏色
 const routeColorMap = {
-    '/search': 'btn-red',
+    // '/search': 'btn-red',
     '/detail': 'btn-black-600',
     '/trails': 'btn-black-700',
     '/theme': 'btn-black-900',
