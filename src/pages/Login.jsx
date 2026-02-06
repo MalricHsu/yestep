@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     useEffect(() => {
@@ -10,26 +11,26 @@ const Login = () => {
             <section
                 className=""
                 style={{
-                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.6)), url('https://images.unsplash.com/photo-1587951326187-c9baa4606bff?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
-                    // 為了讓背景填滿，建議加這行 (視需求調整)
+                    backgroundImage: `url('https://images.unsplash.com/photo-1587951326187-c9baa4606bff?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
                     minHeight: '100vh',
                     width: '100%',
-                    backgroundSize: 'cover', // 建議用 cover 填滿畫面，contain 可能會留白
+                    backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    opacity: '0.8',
                 }}
             >
-                <div
-                    className="loginContainer rounded-5"
-                    // 3. 修正這裡的 style，字串改為物件
+                <form
+                    className="loginContainer rounded-5 position-relative d-flex flex-column"
                     style={{
                         maxWidth: '500px',
                         width: '100%',
                         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        padding: '5em 2em',
+                        padding: '5em calc(1em + 2vw) 2em',
+                        margin: '0 2em 0 3em',
                     }}
                 >
                     <div className="form-floating mb-3">
@@ -39,7 +40,6 @@ const Login = () => {
                             id="floatingInput"
                             placeholder="name@example.com"
                         />
-                        {/* 4. for 改為 htmlFor */}
                         <label htmlFor="floatingInput" className="text-white">
                             帳號
                         </label>
@@ -55,7 +55,23 @@ const Login = () => {
                             密碼
                         </label>
                     </div>
-                </div>
+                    <Link type="submit" className="btn btn-primary rounded-3 mt-5 w-100">
+                        登入
+                    </Link>
+                    <Link className="btn btn-text align-self-end body1-medium p-3">立即註冊</Link>
+                    <p
+                        className="slg position-absolute fs-4 text-white"
+                        style={{
+                            left: 'calc(-1em - 2vw)',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: 'min-content',
+                            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
+                        }}
+                    >
+                        每​ 一​ 步 ，​ 都​ 是​ 為​ 出 發 ​做​ 準 ​備 。​
+                    </p>
+                </form>
             </section>
         </>
     );
