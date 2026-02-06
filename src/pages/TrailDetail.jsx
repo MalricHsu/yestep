@@ -9,18 +9,34 @@ import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import ActionModal from '../components/ActionModal';
+import { useSelector } from 'react-redux';
 
 const TrailDetail = () => {
-    const [detailData, setDetailData] = useState([]);
+    const [detailData, setDetailData] = useState({});
     const [reviewData, setReviewData] = useState([]);
     const [systemOne, setSystemOne] = useState([]);
     const [systemOther, setSystemOther] = useState([]);
     const detailApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
     const useParam = useParams();
     const { id } = useParam;
+
+    //狀態
+    const isLogin = useSelector((state) => {
+        console.log(state);
+        return state.auth.isLogin;
+    });
+    const user = useSelector((state) => {
+        console.log(state);
+        return state.auth.user;
+    });
+    const ModalRef = useRef(null);
+    const [favoriteId, setFavoriteId] = useState(null);
+    const [planId, setPlanId] = useState(null);
+
     useEffect(() => {
         document.title = `${detailData.trail_name} | YeStep`;
     }, [detailData.trail_name]);
+
     //取得步道資料
     useEffect(() => {
         const handleDetailData = async () => {
@@ -37,6 +53,89 @@ const TrailDetail = () => {
         handleDetailData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
+    //檢查收藏/行程
+    useEffect(() => {
+        const checkStatus = async () => {
+            // 必須 "已登入" 且 "有使用者ID" 且 "有目前步道ID" 才去檢查
+            if (isLogin && user && id) {
+                try {
+                    //檢查收藏
+                    const favRes = await detailApi.get(
+                        `/favorites?userId=${user.id}&trailId=${id}`,
+                    );
+                    if (favRes.data.length > 0) {
+                        setFavoriteId(favRes.data[0].id);
+                    } else {
+                        setFavoriteId(null);
+                    }
+
+                    const planRes = await detailApi.get(
+                        `/itinerary?userId=${user.id}&trailId=${id}`,
+                    );
+                    if (planRes.data.length > 0) {
+                        setPlanId(planRes.data[0].id);
+                    } else {
+                        setPlanId(null);
+                    }
+                } catch (error) {
+                    console.error('狀態檢查失敗', error);
+                }
+            } else {
+                // 如果沒登入，清空狀態
+                setFavoriteId(null);
+                setPlanId(null);
+            }
+        };
+        checkStatus();
+    }, [isLogin, user, id, detailApi]);
+
+    //處理按鈕點擊
+    const handleAction = async (type) => {
+        if (!isLogin) {
+            ModalRef.current.open(`${type}_guest`);
+            return;
+        }
+        try {
+            if (type === 'like') {
+                if (favoriteId) {
+                    //取消收藏
+                    await detailApi.delete(`/favorites/${favoriteId}`);
+                    setFavoriteId(null);
+                } else {
+                    const res = await detailApi.post('/favorites', {
+                        userId: user.id,
+                        trailId: id, // 使用 URL 參數的 ID
+                        trailName: detailData.trail_name, // 存入名稱方便以後顯示
+                        trailImage: detailData.trail_image,
+                    });
+                    setFavoriteId(res.data.id);
+                    ModalRef.current.open('like_auth');
+                }
+            }
+            if (type === 'plan') {
+                if (planId) {
+                    // --- 取消行程 (Delete) ---
+                    await detailApi.delete(`/itinerary/${planId}`);
+                    setPlanId(null);
+                } else {
+                    // --- 加入行程 (Post) ---
+                    const res = await detailApi.post('/itinerary', {
+                        userId: user.id,
+                        trailId: id,
+                        trailName: detailData.trail_name,
+                        trailImage: detailData.trail_image,
+                        date: new Date().toISOString(),
+                    });
+                    setPlanId(res.data.id);
+                    ModalRef.current.open('plan_auth');
+                }
+            }
+        } catch (error) {
+            console.error('操作失敗', error);
+            alert('連線錯誤，請稍後再試');
+        }
+    };
+
     //取得回覆資料
     useEffect(() => {
         const handleReviewData = async () => {
@@ -51,7 +150,7 @@ const TrailDetail = () => {
         handleReviewData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    //取得有關中央山脈脊梁國家步道系統資料
+    //取得有關中央山脈脊梁國家步道系統資料  //取得與中央山脈無關
     useEffect(() => {
         const getSystemData = async () => {
             try {
@@ -66,10 +165,6 @@ const TrailDetail = () => {
             }
         };
         getSystemData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
-    //取得與中央山脈無關
-    useEffect(() => {
         const getOtherData = async () => {
             try {
                 const res = await detailApi.get('/trails');
@@ -87,7 +182,6 @@ const TrailDetail = () => {
         getOtherData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
-
     //swiper
     useEffect(() => {
         if (!reviewData || reviewData.length === 0) return;
@@ -130,25 +224,6 @@ const TrailDetail = () => {
         };
     }, [reviewData]);
 
-    const ModalRef = useRef(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isLiked, setIsLiked] = useState(false);
-    const [isPlan, setIsPlan] = useState(false);
-
-    const handleAction = (type) => {
-        if (!isLoggedIn) {
-            ModalRef.current.open(`${type}_guest`);
-        } else {
-            if (type === 'like') {
-                setIsLiked(true);
-            }
-            if (type === 'plan') {
-                setIsPlan(true);
-            }
-            ModalRef.current.open(`${type}_auth`);
-        }
-    };
-
     //地圖元件
     const TrailMap = () => {
         return (
@@ -168,6 +243,9 @@ const TrailDetail = () => {
 
     //按鈕元件
     const ActionButtons = () => {
+        // 利用 !! 將 ID 轉為布林值來決定樣式
+        const isLiked = !!favoriteId;
+        const isPlan = !!planId;
         return (
             <>
                 <button
@@ -197,15 +275,6 @@ const TrailDetail = () => {
 
     return (
         <div>
-            {/* 測試用：切換登入狀態的按鈕 (開發時方便測試) */}
-            <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 9999 }}>
-                <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => setIsLoggedIn(!isLoggedIn)}
-                >
-                    {isLoggedIn ? '目前狀態：已登入' : '目前狀態：未登入'}
-                </button>
-            </div>
             <header className="detail-header">
                 <Nav />
             </header>

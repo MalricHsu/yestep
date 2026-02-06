@@ -8,6 +8,7 @@ import Member from './pages/Member';
 import NotFound404 from './pages/NotFound404';
 import TrailTag from './pages/TrailTag';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 const router = createHashRouter([
     {
@@ -47,6 +48,10 @@ const router = createHashRouter([
     {
         path: '/login',
         element: <Login />,
+    },
+    {
+        path: '/register',
+        element: <Register />,
     },
 ]);
 
