@@ -118,7 +118,9 @@ const Login = () => {
                     <button type="submit" className="btn btn-primary rounded-3 mt-5 w-100">
                         登入
                     </button>
-                    <Link className="btn btn-text align-self-end body1-medium p-3">立即註冊</Link>
+                    <Link to="/register" className="btn btn-text align-self-end body1-medium p-3">
+                        立即註冊
+                    </Link>
                     <p
                         className="slg position-absolute fs-4 text-white"
                         style={{
