@@ -25,6 +25,28 @@ button:hover {
     }
 }
 
+.themeSection ul > li > a {
+    box-shadow: 0px 0px 2vw 0px rgba(0, 0, 0, 0.4);
+    filter: brightness(0.9);
+    transition: all 0.4s ease;
+    * {
+        transition: all 0.4s ease;
+    }
+}
+.themeSection ul > li > a:hover {
+    filter: brightness(1);
+    box-shadow: 0px 0px 3vw 0px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s ease;
+    i {
+        background-color: #a3b082;
+        color: red;
+        svg {
+            color: rgb(255, 255, 255);
+            transform: rotate(-45deg);
+            transition: all 0.4s ease;
+        }
+    }
+}
 @media (min-width: 576px) {
     ul.activityIntro {
         grid-template-columns: repeat(2, 1fr);
@@ -45,6 +67,8 @@ button:hover {
         border-radius: 32px;
         grid-template-columns: 1fr 2fr;
     }
+}
+@media (min-width: 992px) {
     section.navigationAndRegistration {
         grid-template-columns: 2fr 1fr;
     }
