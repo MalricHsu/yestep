@@ -51,11 +51,16 @@ nav {
         --bs-btn-active-color: #fff;
     }
 
+    .dropdown-btn {
+        color: $white;
+    }
+
     &.scrolled {
         background-color: $primary-50;
 
         .header__nav,
-        .header__login {
+        .header__login,
+        .dropdown-btn {
             color: $primary-300;
         }
 

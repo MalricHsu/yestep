@@ -37,69 +37,63 @@ function HomeSwiper() {
 
     return (
         <>
-            <div className="overflow-hidden">
-                <Swiper
-                    style={{ overflow: 'visible' }}
-                    className="swiper"
-                    loop={true}
-                    spaceBetween={72}
-                    slidesPerView={1} //手機版、電腦版顯示 1 張
-                >
-                    {carouselData.map((item) => (
-                        <SwiperSlide key={item.id}>
-                            <div className="theme ">
-                                <div className="theme__img">
-                                    <picture>
-                                        {/* 當螢幕 >= 992px 時，顯示 imageLg */}
-                                        <source media="(min-width: 992px)" srcSet={item.imageLg} />
-
-                                        {/* 預設 (手機版) 顯示 image */}
-                                        <img
-                                            src={item.image}
-                                            className="w-100 object-fit-cover "
-                                            alt={item.title}
-                                        />
-                                    </picture>
-                                </div>
+            <Swiper
+                style={{ overflow: 'hidden' }}
+                className="swiper"
+                loop={true}
+                spaceBetween={72}
+                slidesPerView={1} //手機版、電腦版顯示 1 張
+            >
+                {carouselData.map((item) => (
+                    <SwiperSlide key={item.id}>
+                        <div className="theme ">
+                            <div className="theme__img">
                                 <picture>
-                                    <source media="(min-width: 992px)" srcSet={swiperDecorLg} />
+                                    {/* 當螢幕 >= 992px 時，顯示 imageLg */}
+                                    <source media="(min-width: 992px)" srcSet={item.imageLg} />
+
+                                    {/* 預設 (手機版) 顯示 image */}
                                     <img
-                                        src={swiperDecor}
-                                        className="theme__decor "
-                                        alt="裝飾圖片"
+                                        src={item.image}
+                                        className="w-100 object-fit-cover "
+                                        alt={item.title}
                                     />
-                                    <source />
                                 </picture>
-                                <div className="theme__content w-100">
-                                    <div className="row ">
-                                        <div className="col-lg-8">
-                                            <h3 className="fs-lg-1 fs-4 text-primary-300 mb-4">
-                                                04 April
-                                            </h3>
-                                            <div
-                                                className="theme__card d-flex flex-column flex-lg-row justify-content-between align-items-start
+                            </div>
+                            <picture>
+                                <source media="(min-width: 992px)" srcSet={swiperDecorLg} />
+                                <img src={swiperDecor} className="theme__decor " alt="裝飾圖片" />
+                                <source />
+                            </picture>
+                            <div className="theme__content w-100">
+                                <div className="row ">
+                                    <div className="col-lg-8">
+                                        <h3 className="fs-lg-1 fs-4 text-primary-300 mb-4">
+                                            04 April
+                                        </h3>
+                                        <div
+                                            className="theme__card d-flex flex-column flex-lg-row justify-content-between align-items-start
   align-items-lg-center  gap-6 p-6 bg-white rounded-24"
-                                            >
-                                                <div>
-                                                    <h5 className="fs-5 mb-3 text-primary-300 ">
-                                                        {item.title}
-                                                    </h5>
-                                                    <p className="text-black-700">
-                                                        {item.derscription}
-                                                    </p>
-                                                </div>
-                                                <button className="theme__btn px-6 py-3 border-0 bg-primary-100 text-primary-300 body1-bold rounded-100">
-                                                    立即預約
-                                                </button>
+                                        >
+                                            <div>
+                                                <h5 className="fs-5 mb-3 text-primary-300 ">
+                                                    {item.title}
+                                                </h5>
+                                                <p className="text-black-700">
+                                                    {item.derscription}
+                                                </p>
                                             </div>
+                                            <button className="theme__btn px-6 py-3 border-0 bg-primary-100 text-primary-300 body1-bold rounded-100">
+                                                立即預約
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-            </div>
+                        </div>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
         </>
     );
 }

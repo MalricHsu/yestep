@@ -7,6 +7,7 @@ const Theme = () => {
     useEffect(() => {
         document.title = '主題活動 | YeStep';
     }, []);
+
     return (
         <>
             <Nav />
@@ -101,7 +102,7 @@ const Theme = () => {
                         />
                         <div className="mt-3">
                             <p className="text-black-700">
-                                油​桐花​是​落葉​喬木，​花期​約​在​每​年​4月​至​5月，​盛開時​花朵​如雪般​飄落，​因而​有​「五​月​雪」​的​美稱，​主要​品種​有​白花​桐樹​和​千年​桐。​
+                                油​桐花​是​落葉​喬木，​花期​約​在​每​年​4月​至​5月，​盛開​時​花朵​如雪般​飄落，​因而​有​「五​月​雪」​的​美稱，​主要​品種​有​白花​桐樹​和​千年​桐。​
                             </p>
                         </div>
                     </li>
@@ -242,12 +243,16 @@ const Theme = () => {
                                 <span class="text-red ps-1">*</span>
                             </label>
                             <select class="form-select" id="exampleFormControlSelect1" required="">
-                                <option>請選擇活動場次</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                <option value="" disabled selected hidden>
+                                    請選擇活動場次
+                                </option>
+                                {Array.from({ length: 7 }).map((_, index) => {
+                                    return (
+                                        <option key={index} value={index + 1}>
+                                            {index + 1}
+                                        </option>
+                                    );
+                                })}
                             </select>
                         </div>
                         <div>
