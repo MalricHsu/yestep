@@ -6,9 +6,9 @@ import { loginSuccess } from '../slices/authSlice';
 import axios from 'axios';
 
 // API
-// const LoginApi = axios.create({ baseURL: 'http://localhost:3000/' });
-const LoginApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
-const Login = () => {
+// const RegisterApi = axios.create({ baseURL: 'http://localhost:3000/' });
+const RegisterApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+const Register = () => {
     useEffect(() => {
         document.title = '登入 | YeStep';
     }, []);
@@ -25,16 +25,27 @@ const Login = () => {
     const onSubmit = async (data) => {
         console.log(data);
         try {
-            const res = await LoginApi.post('/login', data);
+            const res = await RegisterApi.post('/register', {
+                name: data.username,
+                email: data.email,
+                password: data.password,
+            });
             const { accessToken, user } = res.data;
+
             dispatch(loginSuccess({ accessToken, user }));
-            alert(`歡迎回來，${user.name} YeStep`);
+            alert(`${data.name} 歡迎加入YeStep`);
             navigate('/');
         } catch (error) {
             console.error('登入失敗', error);
             // 處理錯誤訊息
+
             if (error.response) {
-                alert(error.response.data || '帳號或密碼錯誤');
+                // json-server-auth 通常回傳 "Email already exists"
+                alert(
+                    error.response.data === 'Email already exists'
+                        ? '此 Email 已被註冊過'
+                        : '註冊失敗',
+                );
             } else {
                 alert('伺服器連線失敗');
             }
@@ -69,6 +80,25 @@ const Login = () => {
                         margin: '0 2em 0 3em',
                     }}
                 >
+                    <div className="form-floating mb-3">
+                        <input
+                            {...register('username', {
+                                required: '暱稱是必填項目',
+                            })}
+                            type="text"
+                            className="form-control bg-transparent text-white"
+                            id="floatingInput"
+                            placeholder="name@example.com"
+                        />
+                        {errors.username ? (
+                            <p className="text-red"> {errors?.username?.message}</p>
+                        ) : (
+                            ''
+                        )}
+                        <label htmlFor="floatingInput" className="text-white">
+                            暱稱
+                        </label>
+                    </div>
                     <div className="form-floating mb-3">
                         <input
                             {...register('email', {
@@ -116,9 +146,11 @@ const Login = () => {
                         </label>
                     </div>
                     <button type="submit" className="btn btn-primary rounded-3 mt-5 w-100">
-                        登入
+                        註冊
                     </button>
-                    <Link className="btn btn-text align-self-end body1-medium p-3">立即註冊</Link>
+                    <Link to="/login" className="btn btn-text align-self-end body1-medium p-3">
+                        已經有帳號由此登入
+                    </Link>
                     <p
                         className="slg position-absolute fs-4 text-white"
                         style={{
@@ -137,4 +169,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;

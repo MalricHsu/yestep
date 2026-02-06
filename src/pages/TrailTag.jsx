@@ -43,11 +43,11 @@ const TrailTag = () => {
 
     return (
         <>
-            <header className="detail-header">
+            <header className="tag-header">
                 <Nav />
             </header>
             <section>
-                <div className="container mt-8">
+                <div className="container mt-10">
                     <div className="row">
                         <h2 className="fs-5 fs-lg-2 mb-6 mb-lg-8">{tagName} 相關步道</h2>
                         {trails.map((trail) => {
