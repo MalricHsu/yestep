@@ -84,8 +84,10 @@ const Theme = () => {
                 </ul>
             </header>
 
-            {/* 每月活動 */}
-            <section className="monthlyActivity px-3 py-8 container-fluid">
+            <section
+                className="monthlyActivity px-3 py-8 container-fluid"
+                style={{ maxWidth: '1296px' }}
+            >
                 <h2 className="body1-medium text-primary-300">每月活動</h2>
 
                 <h3 className="fs-5 fs-md-2 mb-4">油桐花季</h3>
@@ -296,8 +298,11 @@ const Theme = () => {
                 </section>
             </section>
 
-            <section className="themeSection">
-                <ol className="p-0 m-0 border-0 d-grid">
+            <section className="themeSection container-fluid">
+                <ol
+                    className="p-0 m-0 border-0 d-grid"
+                    style={{ maxWidth: '1296px', margin: 'auto' }}
+                >
                     <li
                         className="px-3 py-8 p-md-16  list-unstyled d-grid gap-6"
                         style={{
