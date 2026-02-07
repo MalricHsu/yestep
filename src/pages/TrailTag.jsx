@@ -31,9 +31,15 @@ const TrailTag = () => {
                     //換成路由看得懂的樣子（可以加很多的參數）
                     queryName = searchParams.toString();
                 }
-                const res = await tagApi.get(`/trails?${queryName}`);
-                console.log(res.data);
-                setTrails(res.data);
+                const [res1, res2] = await Promise.all([
+                    tagApi.get(`/trails?${queryName}`),
+                    tagApi.get(`/theme?${queryName}`),
+                ]);
+                // 使用 ES6 的展開運算子 (...) 把兩個陣列合併成一個
+                const combinedData = [...res1.data, ...res2.data];
+
+                // 把合併後的資料存進去，React 就會自動渲染這整包資料
+                setTrails(combinedData);
             } catch (error) {
                 console.log(error);
             }

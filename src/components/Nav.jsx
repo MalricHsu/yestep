@@ -128,7 +128,7 @@ const Nav = () => {
                                         <li>
                                             <Link
                                                 className="dropdown-item text-primary-300 px-4 py-2"
-                                                to="login"
+                                                to="/login"
                                             >
                                                 會員登入
                                             </Link>

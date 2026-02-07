@@ -19,3 +19,5 @@ function HeroSwiper() {
 
     return <></>;
 }
+
+export default HeroSwiper;

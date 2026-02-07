@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 const TrailCard = ({ trailData }) => {
     return (
         <>
-            <div className="row">
+            <div className="row g-6">
                 {trailData.map((data) => {
                     return (
                         <div className="col-md-4 mb-6 mb-lg-0" key={data.id}>
