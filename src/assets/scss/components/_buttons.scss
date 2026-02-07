@@ -117,7 +117,7 @@
             $primary-200 // active-color
         );
         &:hover {
-            text-decoration: 1.6px solid underline $primary-200;
+            text-decoration: 1px solid underline $primary-200;
             text-underline-offset: 3px;
         }
 
@@ -169,13 +169,11 @@
             // active-border
             $primary-200 // active-color
         );
-        &:hover {
-            text-decoration: 1.6px solid underline $primary-200;
-            text-underline-offset: 3px;
-        }
-
+        &:hover,
         &:active {
-            border-bottom: 1.5px solid $primary-200;
+            text-decoration: 1px solid underline $primary-200;
+            text-underline-offset: 3px;
+            // border-bottom: 1.5px solid $primary-200;
         }
         &:disabled,
         &.disabled {
