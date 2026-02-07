@@ -1,0 +1,23 @@
+nav {
+    // position: static;
+}
+body {
+    // height: 300vh;
+    // padding-top: 70px;
+}
+
+// ul.nav-underline {
+//     display: flex;
+//     li {
+//         flex: 1;
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//     }
+// }
+
+@media (min-width: 576px) {
+    nav {
+        // position: fixed;
+    }
+}
