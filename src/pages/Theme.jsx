@@ -621,7 +621,7 @@ const Theme = () => {
                                         {cards.map((trail) => (
                                             <li key={trail.id}>
                                                 <Link
-                                                    to={`/detail/${trail.id}`}
+                                                    to={`/theme/${trail.id}`}
                                                     className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
                                                     style={{
                                                         background: `url(${trail.trail_image})`,

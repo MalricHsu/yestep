@@ -15,6 +15,7 @@ import NavOffcanvas from './NavOffcanvas.jsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../slices/authSlice';
+import { createMessage } from '../slices/infoSlice.js';
 
 //預設nav的字一開始就是非綠色的
 const Nav = () => {
@@ -45,7 +46,12 @@ const Nav = () => {
     const handleLogout = (e) => {
         e.preventDefault();
         dispatch(logout());
-        alert('您已成功登出');
+        dispatch(
+            createMessage({
+                text: `${user.name}，登入成功`,
+                type: 'success',
+            }),
+        );
         navigate('/'); // 回到首頁
     };
 
@@ -128,7 +134,7 @@ const Nav = () => {
                                         <li>
                                             <Link
                                                 className="dropdown-item text-primary-300 px-4 py-2"
-                                                to="login"
+                                                to="/login"
                                             >
                                                 會員登入
                                             </Link>
