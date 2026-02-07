@@ -282,7 +282,7 @@ const RegistrationForm = () => {
                     <input
                         className={`form-control text-center ${errors.qty ? 'is-invalid' : ''}`}
                         name="qty"
-                        type="number"
+                        type="text"
                         min="0"
                         max="10"
                         value={form.qty}
