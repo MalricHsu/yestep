@@ -1,6 +1,7 @@
 // 引入Nav
 import Nav from '../components/Nav';
 // 引入 Hero 影片
+import heroVideo from '../assets/videos/hero-video.mp4';
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
 // 引入 HomeSwiper.jsx
@@ -55,9 +56,8 @@ const Home = () => {
             <header className="position-relative">
                 <Nav />
                 <div className="hero ratio ratio-16x9">
-                    {/* 要換成手機版的影片 */}
                     <video
-                        src={heroVideoLg}
+                        src={heroVideo}
                         className="object-fit-cover"
                         autoPlay
                         loop
