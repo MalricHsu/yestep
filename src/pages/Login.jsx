@@ -124,16 +124,13 @@ const Login = () => {
                         立即註冊
                     </Link>
                     <p
-                        className="slg position-absolute fs-5 fs-md-4 text-white"
+                        className="slg position-absolute body1-medium fs-sm-5 fs-md-4 text-white"
                         style={{
-                            left: 'calc(-1em - 3vw)',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            width: 'min-content',
                             textShadow: '1px 1px 2px rgba(2px, -2px, 0, 1px)',
                         }}
                     >
-                        每 一 步 ， 都 是 為 出 發 做 準 備 。
+                        每 一 步 ，{' '}
+                        <span className="d-inline-block">都 是 為 出 發 做 準 備 。</span>
                     </p>
                 </form>
             </section>
