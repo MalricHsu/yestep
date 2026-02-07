@@ -10,7 +10,7 @@ import themeImgLg03 from '../assets/images/home/theme-swiper-lg-03.svg';
 import swiperDecor from '../assets/images/home/swiper-decor.svg';
 import swiperDecorLg from '../assets/images/home/swiper-decor-lg.svg';
 
-function HomeSwiper() {
+function ThemeSwiper() {
     const [carouselData] = useState([
         {
             id: 1,
@@ -39,7 +39,7 @@ function HomeSwiper() {
         <>
             <Swiper
                 style={{ overflow: 'hidden' }}
-                className="home-swiper"
+                className="theme-swiper"
                 loop={true}
                 spaceBetween={72}
                 slidesPerView={1} //手機版、電腦版顯示 1 張
@@ -98,4 +98,4 @@ function HomeSwiper() {
     );
 }
 
-export default HomeSwiper;
+export default ThemeSwiper;

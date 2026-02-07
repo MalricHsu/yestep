@@ -8,7 +8,7 @@ import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 import HeroSwiper from '../components/HeroSwiper';
 
 // 引入 HomeSwiper.jsx
-import HomeSwiper from '../components/HomeSwiper';
+import ThemeSwiper from '../components/ThemeSwiper';
 
 // 引入 特色景觀步道 landscape 資料
 import { landscapeColumns } from '../data/home-landscape';
@@ -106,7 +106,7 @@ const Home = () => {
                                     <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
                                 </div>
                                 <div className="theme__swiper">
-                                    <HomeSwiper />
+                                    <ThemeSwiper />
                                 </div>
                             </div>
                         </div>
