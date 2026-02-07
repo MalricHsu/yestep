@@ -32,7 +32,7 @@ const Login = () => {
             dispatch(loginSuccess({ accessToken, user }));
             dispatch(
                 createMessage({
-                    text: `歡迎回來，${user.name} YeStep`,
+                    text: `${user.name}，歡迎回來 YeStep`,
                     type: 'success',
                 }),
             );

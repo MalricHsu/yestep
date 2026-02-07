@@ -39,7 +39,7 @@ function HomeSwiper() {
         <>
             <Swiper
                 style={{ overflow: 'hidden' }}
-                className="swiper"
+                className="home-swiper"
                 loop={true}
                 spaceBetween={72}
                 slidesPerView={1} //手機版、電腦版顯示 1 張
