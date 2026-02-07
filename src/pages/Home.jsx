@@ -7,7 +7,7 @@ import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 // 引入 HeroSwiper.jsx
 import HeroSwiper from '../components/HeroSwiper';
 
-// 引入 HomeSwiper.jsx
+// 引入 主題活動特輯 ThemeSwiper
 import ThemeSwiper from '../components/ThemeSwiper';
 
 // 引入 特色景觀步道 landscape 資料
@@ -21,7 +21,7 @@ import aboutImgLg from '../assets/images/home/about-img-lg.svg';
 import aboutBgLg from '../assets/images/home/about-bg-lg.svg';
 import aboutBg from '../assets/images/home/about-bg.svg';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PopularTrails from '../components/PopularTrails';
 
@@ -50,18 +50,34 @@ const Home = () => {
         }
     };
 
+    //Hero顯示邏輯
+    const [heroMode, setHeroMode] = useState('video');
+
     return (
         <>
             <header className="position-relative">
                 <Nav />
                 {/* HERO:手機90vh、桌機16:9 */}
                 <div className="hero">
-                    <video className="object-fit-cover w-100 h-100" autoPlay loop muted playsInline>
-                        <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
-                        <source src={heroVideo} type="video/mp4" />
-                    </video>
-                    {/* Hero-Swiper */}
-                    <div className="w-100 h-100"></div>
+                    {/* 值為video */}
+                    {heroMode === 'video' && (
+                        <video
+                            className="object-fit-cover w-100 h-100"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                        >
+                            <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
+                            <source src={heroVideo} type="video/mp4" />
+                        </video>
+                    )}
+                    {/* 值為swiper */}
+                    {heroMode === 'swiper' && (
+                        <div className="w-100 h-100">
+                            <HeroSwiper />
+                        </div>
+                    )}
                 </div>
                 {/* slogan+搜尋欄 */}
                 <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
@@ -89,9 +105,13 @@ const Home = () => {
                 </div>
                 {/* 切換按鈕 */}
                 <div className="hero__bottom-wrap position-absolute start-50 translate-middle-x z-1">
-                    <div className="d-flex gap-5 bg-black-700 rounded-pill">
-                        <button className="btn btn-white">影片</button>
-                        <button className="btn btn-red">輪播</button>
+                    <div className="d-flex bg-primary-300 rounded-pill">
+                        <button className="btn rounded-pill" onClick={() => setHeroMode('video')}>
+                            <span class="material-symbols-outlined">animated_images</span>
+                        </button>
+                        <button className="btn  rounded-pill" onClick={() => setHeroMode('swiper')}>
+                            <span class="material-symbols-outlined">filter</span>
+                        </button>
                     </div>
                 </div>
             </header>
