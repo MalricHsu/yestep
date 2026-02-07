@@ -44,6 +44,9 @@ button:hover {
         z-index: 10;
         transition: all 0.4s ease-out;
     }
+    svg {
+        transition: all 0.4s ease-out;
+    }
 }
 
 .themeSection ul > li > a:hover {
@@ -60,7 +63,7 @@ button:hover {
         color: rgb(255, 255, 255);
         svg {
             transform: rotate(-45deg);
-            transition: all 0.4s ease-in;
+            transition: all 0.4s ease-out;
         }
     }
 }
