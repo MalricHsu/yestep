@@ -8,6 +8,7 @@ import yestepDark from '../assets/images/logo/yestep.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../slices/authSlice';
+import { createMessage } from '../slices/infoSlice.js';
 
 const NavOffcanvas = ({ show, onClose }) => {
     const offcanvasRef = useRef(null);
@@ -17,14 +18,22 @@ const NavOffcanvas = ({ show, onClose }) => {
         console.log(state);
         return state.auth.isLogin;
     });
-
+    const user = useSelector((state) => {
+        console.log(state);
+        return state.auth.user;
+    });
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleLogout = (e) => {
         e.preventDefault();
         dispatch(logout());
-        alert('您已成功登出');
+        dispatch(
+            createMessage({
+                text: `${user.name}，登入成功`,
+                type: 'success',
+            }),
+        );
         navigate('/'); // 回到首頁
     };
 
