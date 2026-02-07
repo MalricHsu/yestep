@@ -1,3 +1,7 @@
+// 難易度小卡、切換按鈕hover樣式
+// fix: 選單active邏輯
+// 已修：預約按鈕Link
+
 // 引入Nav
 import Nav from '../components/Nav';
 // 引入 Hero 影片
@@ -50,7 +54,7 @@ const Home = () => {
         }
     };
 
-    //Hero顯示邏輯
+    // Hero顯示邏輯
     const [heroMode, setHeroMode] = useState('video');
 
     return (
