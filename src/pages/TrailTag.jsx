@@ -1,22 +1,22 @@
-import axios from 'axios';
+//react套件
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+//第三方套件
+import axios from 'axios';
+//元件
 import Nav from '../components/Nav';
 
 const tagApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
-
 const TrailTag = () => {
     const [trails, setTrails] = useState([]);
-
     //抓取那個網頁？後面的字
     const [searchParams] = useSearchParams(); //拿到網址物件
-
-    // console.log(useSearchParams());
     //從物件中取出相對應的key，就會給出值
     const tagName =
         searchParams.get('trail_tags') ||
         searchParams.get('trail_region') ||
         searchParams.get('trail_system') ||
+        searchParams.get('trail_landscape') ||
         '搜尋結果';
 
     useEffect(() => {
