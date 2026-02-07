@@ -1,32 +1,53 @@
+//react套件
 import { useState, useEffect, Fragment, useRef } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+//第三方套件
 import axios from 'axios';
-import Nav from '../components/Nav';
-import StarRating from '../components/StarRating';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+
+//元件
+import Nav from '../components/Nav';
+import StarRating from '../components/StarRating';
 import ActionModal from '../components/ActionModal';
+import TrailCard from '../components/TrailCard';
 
 const TrailDetail = () => {
-    const [detailData, setDetailData] = useState([]);
+    const [detailData, setDetailData] = useState({});
     const [reviewData, setReviewData] = useState([]);
     const [systemOne, setSystemOne] = useState([]);
     const [systemOther, setSystemOther] = useState([]);
     const detailApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
     const useParam = useParams();
     const { id } = useParam;
+
+    //狀態管理
+    const isLogin = useSelector((state) => {
+        return state.auth.isLogin;
+    });
+    const user = useSelector((state) => {
+        return state.auth.user;
+    });
+
+    const ModalRef = useRef(null);
+    const [favoriteId, setFavoriteId] = useState(null);
+    const [planId, setPlanId] = useState(null);
+
+    //標題名稱
     useEffect(() => {
         document.title = `${detailData.trail_name} | YeStep`;
     }, [detailData.trail_name]);
-    //取得步道資料
+
+    //取得步道資料 //取得有關中央山脈脊梁國家步道系統資料 //取得與中央山脈無關
     useEffect(() => {
         const handleDetailData = async () => {
             try {
                 const res = await detailApi.get(`/trails/${id}`);
-                // console.log(res);
                 setDetailData(res.data);
                 // 重點：使用 behavior: 'instant' 實現「直接跳轉」的感覺
                 window.scrollTo({ top: 0, behavior: 'instant' });
@@ -35,24 +56,6 @@ const TrailDetail = () => {
             }
         };
         handleDetailData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
-    //取得回覆資料
-    useEffect(() => {
-        const handleReviewData = async () => {
-            try {
-                const res = await detailApi.get(`/reviews`);
-                // console.log(res.data);
-                setReviewData(res.data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        handleReviewData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    //取得有關中央山脈脊梁國家步道系統資料
-    useEffect(() => {
         const getSystemData = async () => {
             try {
                 const res = await detailApi.get('/trails?trail_system_like=中央山脈');
@@ -66,10 +69,6 @@ const TrailDetail = () => {
             }
         };
         getSystemData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
-    //取得與中央山脈無關
-    useEffect(() => {
         const getOtherData = async () => {
             try {
                 const res = await detailApi.get('/trails');
@@ -88,10 +87,22 @@ const TrailDetail = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
+    //取得回覆資料
+    useEffect(() => {
+        const handleReviewData = async () => {
+            try {
+                const res = await detailApi.get(`/reviews`);
+                setReviewData(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        handleReviewData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     //swiper
     useEffect(() => {
         if (!reviewData || reviewData.length === 0) return;
-
         // 定義 swiper 變數以便後續銷毀
         let swiperInstance = null;
         // 使用 setTimeout 確保 React 已經把 DOM (卡片) 真的畫在螢幕上了
@@ -130,25 +141,6 @@ const TrailDetail = () => {
         };
     }, [reviewData]);
 
-    const ModalRef = useRef(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isLiked, setIsLiked] = useState(false);
-    const [isPlan, setIsPlan] = useState(false);
-
-    const handleAction = (type) => {
-        if (!isLoggedIn) {
-            ModalRef.current.open(`${type}_guest`);
-        } else {
-            if (type === 'like') {
-                setIsLiked(true);
-            }
-            if (type === 'plan') {
-                setIsPlan(true);
-            }
-            ModalRef.current.open(`${type}_auth`);
-        }
-    };
-
     //地圖元件
     const TrailMap = () => {
         return (
@@ -165,9 +157,11 @@ const TrailDetail = () => {
             ></iframe>
         );
     };
-
     //按鈕元件
     const ActionButtons = () => {
+        // 利用 !! 將 ID 轉為布林值來決定樣式
+        const isLiked = !!favoriteId;
+        const isPlan = !!planId;
         return (
             <>
                 <button
@@ -195,17 +189,91 @@ const TrailDetail = () => {
         );
     };
 
+    //檢查收藏/行程
+    useEffect(() => {
+        const checkStatus = async () => {
+            // 必須 "已登入" 且 "有使用者ID" 且 "有目前步道ID" 才去檢查
+            if (isLogin && user && id) {
+                try {
+                    //檢查收藏
+                    const favRes = await detailApi.get(
+                        `/favorites?userId=${user.id}&trailId=${id}`,
+                    );
+                    if (favRes.data.length > 0) {
+                        setFavoriteId(favRes.data[0].id);
+                    } else {
+                        setFavoriteId(null);
+                    }
+
+                    const planRes = await detailApi.get(
+                        `/itinerary?userId=${user.id}&trailId=${id}`,
+                    );
+                    if (planRes.data.length > 0) {
+                        setPlanId(planRes.data[0].id);
+                    } else {
+                        setPlanId(null);
+                    }
+                } catch (error) {
+                    console.error('狀態檢查失敗', error);
+                }
+            } else {
+                // 如果沒登入，清空狀態
+                setFavoriteId(null);
+                setPlanId(null);
+            }
+        };
+        checkStatus();
+    }, [isLogin, user, id, detailApi]);
+
+    //處理按鈕點擊
+    const handleAction = async (type) => {
+        if (!isLogin) {
+            ModalRef.current.open(`${type}_guest`);
+            return;
+        }
+        try {
+            if (type === 'like') {
+                if (favoriteId) {
+                    //取消收藏
+                    await detailApi.delete(`/favorites/${favoriteId}`);
+                    setFavoriteId(null);
+                } else {
+                    const res = await detailApi.post('/favorites', {
+                        userId: user.id,
+                        trailId: id, // 使用 URL 參數的 ID
+                        trailName: detailData.trail_name, // 存入名稱方便以後顯示
+                        trailImage: detailData.trail_image,
+                    });
+                    setFavoriteId(res.data.id);
+                    ModalRef.current.open('like_auth');
+                }
+            }
+            if (type === 'plan') {
+                if (planId) {
+                    // --- 取消行程 (Delete) ---
+                    await detailApi.delete(`/itinerary/${planId}`);
+                    setPlanId(null);
+                } else {
+                    // --- 加入行程 (Post) ---
+                    const res = await detailApi.post('/itinerary', {
+                        userId: user.id,
+                        trailId: id,
+                        trailName: detailData.trail_name,
+                        trailImage: detailData.trail_image,
+                        date: new Date().toISOString(),
+                    });
+                    setPlanId(res.data.id);
+                    ModalRef.current.open('plan_auth');
+                }
+            }
+        } catch (error) {
+            console.error('操作失敗', error);
+            alert('連線錯誤，請稍後再試');
+        }
+    };
+
     return (
         <div>
-            {/* 測試用：切換登入狀態的按鈕 (開發時方便測試) */}
-            <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 9999 }}>
-                <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => setIsLoggedIn(!isLoggedIn)}
-                >
-                    {isLoggedIn ? '目前狀態：已登入' : '目前狀態：未登入'}
-                </button>
-            </div>
             <header className="detail-header">
                 <Nav />
             </header>
@@ -227,9 +295,7 @@ const TrailDetail = () => {
                             <div className="col-lg-7 d-flex flex-column">
                                 <div className="detail-information bg-white rounded-24 mb-3 mb-lg-0 h-100">
                                     <div className="p-6 p-lg-8 h-100">
-                                        {/*標題*/}
                                         <div className="d-flex justify-content-between align-items-start mb-6 mb-lg-12">
-                                            {/*地名 */}
                                             <div>
                                                 <p className="sub1-medium fs-8 fs-lg-7 text-primary-300 mb-2  ">
                                                     {detailData.trail_address}
@@ -376,6 +442,13 @@ const TrailDetail = () => {
                                                 >
                                                     {detailData.trail_region}
                                                 </Link>
+                                                <Link
+                                                    to={`/trails?trail_landscape=${detailData.trail_landscape}`}
+                                                    className="bg-primary-50 text-primary-300 body2-bold px-3 py-1 rounded-20 me-2 mb-1"
+                                                >
+                                                    {detailData.trail_landscape}
+                                                </Link>
+
                                                 {detailData.trail_tags?.map((item, index) => {
                                                     return (
                                                         <Link
@@ -407,16 +480,13 @@ const TrailDetail = () => {
             <section className="bg-detail-section2">
                 <div className="container">
                     <div className="py-8 py-lg-16">
-                        {/*建立 Header Flex 容器*/}
                         <div className="d-flex justify-content-between align-items-end mb-4 mb-lg-8">
-                            {/*標題*/}
                             <div className="trail-experience-title ">
                                 <p className="body1-medium text-primary-300 mb-2">
                                     來自步道上的聲音
                                 </p>
                                 <h2 className="fs-5 fs-lg-2">Yestep | 找回生活的步調</h2>
                             </div>
-                            {/*按鈕*/}
                             <div className="d-none d-lg-flex gap-3">
                                 <div className="detail-button-prev detail-nav-btn">
                                     <span className="material-symbols-outlined">
@@ -430,7 +500,6 @@ const TrailDetail = () => {
                                 </div>
                             </div>
                         </div>
-
                         <div className="trail-experience-content swiper-container overflow-hidden">
                             <div className="swiper-wrapper ">
                                 {reviewData?.map((review) => {
@@ -512,104 +581,11 @@ const TrailDetail = () => {
                         <p className="body1-medium text-primary-300 mb-3">
                             中央山脈脊梁國家步道系統
                         </p>
-                        <div className="row">
-                            {systemOne.map((system) => {
-                                return (
-                                    <div className="col-md-4 mb-6 mb-lg-0" key={system.id}>
-                                        <div
-                                            className="card bg-dark text-white rounded-24 overflow-hidden border-0 position-relative recommend-card"
-                                            style={{ height: '300px' }}
-                                        >
-                                            <img
-                                                src={system.trail_image}
-                                                className="card-img object-fit-cover w-100 h-100"
-                                                alt={system.trail_name}
-                                            />
-                                            <div className="card-img-overlay d-flex flex-column">
-                                                <div className="d-flex align-items-start">
-                                                    <span className="badge bg-primary-50 text-primary-300 body2-bold detail-badge px-3 py-1 rounded-20">
-                                                        {system.trail_difficulty}
-                                                    </span>
-                                                </div>
-
-                                                <div className="mt-auto ">
-                                                    <div className="d-flex justify-content-between align-items-center">
-                                                        <div>
-                                                            <h5 className="sub1-medium detail-textshadow mb-1">
-                                                                {system.trail_name}
-                                                            </h5>
-                                                            <p className="body3-regular detail-textshadow">
-                                                                {system.trail_address}
-                                                            </p>
-                                                        </div>
-                                                        <Link
-                                                            to={`/detail/${system.id}`}
-                                                            className="btn btn-primary-100 text-primary-300 p-3 d-flex justify-content-center align-items-center stretched-link"
-                                                        >
-                                                            <span className="material-symbols-outlined">
-                                                                arrow_forward
-                                                            </span>
-                                                        </Link>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        <TrailCard trailData={systemOne} />
                     </div>
                     <div className="recommend-first ">
                         <p className="body1-medium text-primary-300 mb-3">其他步道系統</p>
-                        <div className="row">
-                            {systemOther.map((system) => {
-                                return (
-                                    <div className="col-md-4 mb-6 mb-lg-0" key={system.id}>
-                                        <div
-                                            className="card bg-dark text-white rounded-24 overflow-hidden border-0 position-relative recommend-card"
-                                            style={{ height: '300px' }}
-                                        >
-                                            <img
-                                                src={system.trail_image}
-                                                className="card-img object-fit-cover w-100 h-100"
-                                                alt={system.trail_name}
-                                            />
-                                            <div className="card-img-overlay d-flex flex-column">
-                                                <div className="d-flex align-items-start gap-3">
-                                                    <span className="badge bg-primary-50 text-primary-300 body2-bold detail-badge px-3 py-1 rounded-20">
-                                                        {system.trail_difficulty}
-                                                    </span>
-                                                    <span className="badge bg-primary-50 text-primary-300 body2-bold detail-badge px-3 py-1 rounded-20">
-                                                        {system.trail_system}
-                                                    </span>
-                                                </div>
-
-                                                <div className="mt-auto ">
-                                                    <div className="d-flex justify-content-between align-items-center">
-                                                        <div>
-                                                            <h5 className="sub1-medium detail-textshadow mb-1">
-                                                                {system.trail_name}
-                                                            </h5>
-                                                            <p className="body3-regular detail-textshadow">
-                                                                {system.trail_address}
-                                                            </p>
-                                                        </div>
-                                                        <Link
-                                                            to={`/detail/${system.id}`}
-                                                            className="btn btn-primary-100 text-primary-300 p-3 d-flex justify-content-center align-items-center stretched-link"
-                                                        >
-                                                            <span className="material-symbols-outlined">
-                                                                arrow_forward
-                                                            </span>
-                                                        </Link>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        <TrailCard trailData={systemOther} />
                     </div>
                 </div>
             </div>

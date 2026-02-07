@@ -4,26 +4,26 @@ import bg02 from '../assets/images/trailtheme/bg02.png';
 import axios from 'axios';
 import { useEffect, useState, useMemo } from 'react';
 
-// const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 const trailApi = axios.create({
     baseURL: 'https://yestep.zeabur.app/',
 });
 
+//每月活動內容
 const activityIntroData = [
     {
-        picUrl: 'https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        desc: '油​桐花​是​落葉​喬木，​花期​約​在​每​年​4月​至​5月，​盛開​時​花朵​如雪般​飄落，​因而​有​「五​月​雪」​的​美稱，​主要​品種​有​白花​桐樹​和​千年​桐。​',
+        picUrl: 'https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M',
+        desc: '油桐花是落葉喬木，花期約在每年4月至5月，盛開時花朵如雪般飄落，因而有「五月雪」的美稱，主要品種有白花桐樹和千年桐。',
     },
     {
-        picUrl: 'https://images.unsplash.com/photo-1746180339820-3d1741f52f4a?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        desc: '油桐花​因其經濟​價值​被​引進​台灣，​種子​可​榨取​桐​油​作​為防​水塗層​或​家具​原料。​',
+        picUrl: 'https://images.unsplash.com/photo-1746180339820-3d1741f52f4a?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M',
+        desc: '油桐花因其經濟價值被引進台灣，種子可榨取桐油作為防水塗層或家具原料。',
     },
     {
-        picUrl: 'https://images.unsplash.com/photo-1746180340318-873b8836e008?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        desc: '每​年​桐​花開​花時間​受到​溫度​及​降​雨量​影響，​一般​來說開​花期​在​每​年​的​4月份，​盛開期​在​4月​下旬​到​5月​上旬，​桐花​花期​為1~​3​星期',
+        picUrl: 'https://images.unsplash.com/photo-1746180340318-873b8836e008?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M',
+        desc: '每年桐花開花時間受到溫度及降雨量影響，一般來說開花期在每年的4月份，盛開期在4月下旬到5月上旬，桐花花期為1~3星期',
     },
 ];
-
+//四大主題內容
 const THEME_SECTIONS = [
     {
         id: 'fantasy',
@@ -58,7 +58,7 @@ const THEME_SECTIONS = [
         bg: 'url(https://images.unsplash.com/photo-1746180340407-1d7f647cf61c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
     },
 ];
-
+//取出API資料
 const useTrails = () => {
     const [trails, setTrails] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -82,8 +82,7 @@ const useTrails = () => {
 
     return { trails, loading };
 };
-
-// 依 theme 分組
+//工具－依主題分組
 const groupByType = (trails) =>
     trails.reduce((acc, t) => {
         const key = t.trail_type || '未分類';
@@ -91,35 +90,9 @@ const groupByType = (trails) =>
         return acc;
     }, {});
 
-const validate = () => {
-    const newErrors = {};
-
-    // 姓名
-    if (!form.name.trim()) {
-        newErrors.name = '請輸入姓名';
-    }
-
-    // 電話（允許 09xxxxxxxx 或 10 碼數字）
-    if (!form.phone.trim()) {
-        newErrors.phone = '請輸入聯絡電話';
-    } else if (!/^(\d{10}|09\d{8})$/.test(form.phone)) {
-        newErrors.phone = '電話格式不正確';
-    }
-
-    // Email
-    if (!form.email.trim()) {
-        newErrors.email = '請輸入 Email';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-        newErrors.email = 'Email 格式不正確';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-};
-// Form
+//元件-表單
 const RegistrationForm = () => {
     const sessions = useMemo(() => Array.from({ length: 7 }, (_, i) => i + 1), []);
-
     const [form, setForm] = useState({
         name: '',
         phone: '',
@@ -147,32 +120,31 @@ const RegistrationForm = () => {
         });
     };
 
-    /* ===== 驗證 ===== */
+    //表單驗證
     const validate = () => {
         const newErrors = {};
-
         // 姓名
         if (!form.name.trim()) {
-            newErrors.name = '請輸入姓名';
+            newErrors.name = '請輸入您的姓名';
         }
 
         // 電話（09xxxxxxxx 或 10 碼數字）
         if (!form.phone.trim()) {
-            newErrors.phone = '請輸入聯絡電話';
+            newErrors.phone = '請輸入您的聯絡電話';
         } else if (!/^(\d{10}|09\d{8})$/.test(form.phone)) {
-            newErrors.phone = '電話格式不正確';
+            newErrors.phone = '您的電話格式不正確';
         }
 
         // Email
         if (!form.email.trim()) {
-            newErrors.email = '請輸入 Email';
+            newErrors.email = '請輸入您的Email';
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-            newErrors.email = 'Email 格式不正確';
+            newErrors.email = '您的Email格式不正確';
         }
 
         // 場次
         if (!form.session) {
-            newErrors.session = '請選擇活動場次';
+            newErrors.session = '請您選擇想要參與的活動場次';
         }
 
         // 人數
@@ -190,11 +162,18 @@ const RegistrationForm = () => {
     };
 
     /* ===== 送出 ===== */
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
 
-        console.log('送出資料：', form);
+        try {
+            await trailApi.post('/registrations', form);
+            alert('報名成功！');
+            setForm({ name: '', phone: '', email: '', session: '', qty: 0, consent: false });
+        } catch (error) {
+            console.log(error);
+            alert('報名失敗，請稍後再試');
+        }
 
         // 成功後可清空
         setForm({ name: '', phone: '', email: '', session: '', qty: 0, consent: false });
@@ -356,6 +335,7 @@ const RegistrationForm = () => {
         </form>
     );
 };
+
 const Theme = () => {
     const { trails, loading: trailsLoading } = useTrails();
     const trailsByType = groupByType(trails);
@@ -531,7 +511,7 @@ const Theme = () => {
                 <section className="navigationAndRegistration d-grid gap-3 gap-md-6">
                     <div className="navigation bg-white p-4 p-md-6 rounded-24">
                         <h2 className="sub1-bold text-primary-300 text-center">
-                            桐花​漫遊導覽​｜帶​你​走入​桐​花​步道，​認識​油桐​花生態​與​文化​事
+                            桐花漫遊導覽｜帶你走入桐花步道，認識油桐花生態與文化事
                         </h2>
                         <img
                             src="https://images.unsplash.com/photo-1746180339820-3d1741f52f4a?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -544,36 +524,35 @@ const Theme = () => {
                                     活動名稱
                                 </h3>
                                 <p className="text-black-800">
-                                    桐花​漫遊導覽​｜帶​你​走入​桐​花​步道，​認識​油桐​花生態​與​文化​故事
+                                    桐花漫遊導覽｜帶你走入桐花步道，認識油桐花生態與文化故事
                                 </p>
                             </li>
                             <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
                                 <h3 className="body2-medium text-primary-300 flex-shrink-0">
                                     活動地點
                                 </h3>
-                                <p className="text-black-800">神棹山​桐​花​步道​</p>
+                                <p className="text-black-800">神棹山桐花步道</p>
                             </li>
                             <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
                                 <h3 className="body2-medium text-primary-300 flex-shrink-0">
                                     活動對象
                                 </h3>
                                 <p className="text-black-800">
-                                    親子​家庭、​朋友​同樂、​攝影愛​好者、​健行​愛好者​
+                                    親子家庭、朋友同樂、攝影愛好者、健行愛好者
                                 </p>
                             </li>
                             <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
                                 <h3 className="body2-medium text-primary-300 flex-shrink-0">
                                     活動內容
                                 </h3>
-                                <p className="text-black-800">桐花​步道​導​覽</p>
+                                <p className="text-black-800">桐花步道導覽</p>
                             </li>
                             <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
                                 <h3 className="body2-medium text-primary-300 flex-shrink-0">
                                     活動日期
                                 </h3>
                                 <p className="text-black-800">
-                                    2026年​4月​18日​~5月​9日​｜​每​週六、​週日​ ​上午​ 9​:00 –
-                                    ​上午​ ​1​1​:00
+                                    2026年4月18日~5月9日｜每週六、週日 上午 9:00 – 上午 11:00
                                 </p>
                             </li>
                             <li className="d-flex gap-6 py-3 border-bottom border-primary-100">
@@ -584,7 +563,7 @@ const Theme = () => {
                             </li>
                         </ul>
                         <p className="body3-regular text-black-700">
-                            報名​結果將以 ​E-​mail ​通知。如有任何疑問請洽
+                            報名結果將以 E-mail 通知。如有任何疑問請洽
                             <Link to="/contact" className="btn btn-textLink body3-regular ps-1">
                                 line官方客服
                             </Link>

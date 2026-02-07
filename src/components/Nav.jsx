@@ -11,8 +11,24 @@ import yestepDark from '../assets/images/logo/yestep.svg';
 // 元件
 import NavOffcanvas from './NavOffcanvas.jsx';
 
+//狀態管理
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../slices/authSlice';
+
 //預設nav的字一開始就是非綠色的
 const Nav = () => {
+    const isLogin = useSelector((state) => {
+        console.log(state);
+        return state.auth.isLogin;
+    });
+    const user = useSelector((state) => {
+        console.log(state);
+        return state.auth.user;
+    });
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const [scrolled, setScrolled] = useState(false);
     const [show, setShow] = useState(false);
 
@@ -24,6 +40,14 @@ const Nav = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    //處理登出
+    const handleLogout = (e) => {
+        e.preventDefault();
+        dispatch(logout());
+        alert('您已成功登出');
+        navigate('/'); // 回到首頁
+    };
 
     return (
         <>
@@ -75,25 +99,50 @@ const Nav = () => {
                                 <span className="material-symbols-outlined me-2">
                                     account_circle
                                 </span>
-                                <span>登入/註冊</span>
+                                <span>{isLogin ? `嗨，${user?.name || '會員'}` : '登入/註冊'}</span>
                             </button>
+
                             <ul className="dropdown-menu dropdown-menu-end px-3 py-2">
-                                <li>
-                                    <Link
-                                        className="dropdown-item text-primary-300 px-4 py-2"
-                                        to="/member"
-                                    >
-                                        會員中心
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className="dropdown-item text-primary-300 px-4 py-2"
-                                        to="/login"
-                                    >
-                                        登入
-                                    </Link>
-                                </li>
+                                {isLogin ? (
+                                    <>
+                                        <li>
+                                            <Link
+                                                className="dropdown-item text-primary-300 px-4 py-2"
+                                                to="/member"
+                                            >
+                                                會員中心
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="#"
+                                                onClick={handleLogout}
+                                                className="dropdown-item text-primary-300 px-4 py-2"
+                                            >
+                                                登出
+                                            </a>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <>
+                                        <li>
+                                            <Link
+                                                className="dropdown-item text-primary-300 px-4 py-2"
+                                                to="login"
+                                            >
+                                                會員登入
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                className="dropdown-item text-primary-300 px-4 py-2"
+                                                to="/register"
+                                            >
+                                                註冊帳號
+                                            </Link>
+                                        </li>
+                                    </>
+                                )}
                             </ul>
                         </div>
                         {/* 手機用 Nav */}
