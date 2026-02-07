@@ -339,10 +339,48 @@ const RegistrationForm = () => {
 const Theme = () => {
     const { trails, loading: trailsLoading } = useTrails();
     const trailsByType = groupByType(trails);
+    const [activeId, setActiveId] = useState('monthlyActivity');
+    const navItems = useMemo(
+        () => [
+            { id: 'monthlyActivity', label: '每月活動' },
+            { id: 'fantasy', label: '忙裡偷閒' },
+            { id: 'relaxing', label: '舒壓放鬆' },
+            { id: 'familyHiking', label: '親子步道' },
+        ],
+        [],
+    );
+
+    const scrollToId = (id) => {
+        setActiveId(id);
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     useEffect(() => {
         document.title = '主題活動 | YeStep';
-    }, []);
+
+        const sections = navItems.map((i) => document.getElementById(i.id)).filter(Boolean);
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                // 取最先進入視窗中心的那個 section
+                const visible = entries
+                    .filter((e) => e.isIntersecting)
+                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+                if (visible?.target?.id) {
+                    setActiveId(visible.target.id);
+                }
+            },
+            {
+                rootMargin: '-50% 0px -50% 0px',
+                threshold: [0.1, 0.25, 0.5, 0.75, 1],
+            },
+        );
+
+        sections.forEach((sec) => observer.observe(sec));
+
+        return () => observer.disconnect();
+    }, [navItems]);
 
     return (
         <>
@@ -372,110 +410,36 @@ const Theme = () => {
                         scrollbarWidth: 'none',
                     }}
                 >
-                    <li className="nav-item" style={{ minWidth: 'fit-content' }}>
-                        <button
-                            className="nav-link body1-medium active"
-                            aria-current="page"
-                            onClick={() => {
-                                document
-                                    .getElementById('monthlyActivity')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            每月活動
-                        </button>
-                    </li>
-                    <li className="nav-item" style={{ minWidth: 'fit-content' }}>
-                        <button
-                            className="nav-link body1-medium"
-                            onClick={() => {
-                                document
-                                    .getElementById('fantasy')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            忙裡偷閒
-                        </button>
-                    </li>
-                    <li className="nav-item" style={{ minWidth: 'fit-content' }}>
-                        <button
-                            className="nav-link body1-medium"
-                            onClick={() => {
-                                document
-                                    .getElementById('relaxing')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            舒壓放鬆
-                        </button>
-                    </li>
-                    <li className="nav-item" style={{ minWidth: 'fit-content' }}>
-                        <button
-                            className="nav-link body1-medium"
-                            onClick={() => {
-                                document
-                                    .getElementById('familyHiking')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            親子步道
-                        </button>
-                    </li>
+                    {navItems.map((item) => (
+                        <li key={item.id} className="nav-item" style={{ minWidth: 'fit-content' }}>
+                            <button
+                                type="button"
+                                className={`nav-link body1-medium ${
+                                    activeId === item.id ? 'active' : ''
+                                }`}
+                                aria-current={activeId === item.id ? 'page' : undefined}
+                                onClick={() => scrollToId(item.id)}
+                            >
+                                {item.label}
+                            </button>
+                        </li>
+                    ))}
                 </ul>
                 <ul className="nav nav-pills mt-8 d-none d-sm-flex">
-                    <li className="nav-item">
-                        <button
-                            className="nav-link body1-bold active"
-                            aria-current="page"
-                            type="button"
-                            onClick={() => {
-                                document
-                                    .getElementById('monthlyActivity')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            每月活動
-                        </button>
-                    </li>
-                    <li className="nav-item">
-                        <button
-                            className="nav-link body1-bold"
-                            type="button"
-                            onClick={() => {
-                                document
-                                    .getElementById('fantasy')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            忙裡偷閒
-                        </button>
-                    </li>
-                    <li className="nav-item">
-                        <button
-                            className="nav-link body1-bold"
-                            type="button"
-                            onClick={() => {
-                                document
-                                    .getElementById('relaxing')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            舒壓放鬆
-                        </button>
-                    </li>
-                    <li className="nav-item">
-                        <button
-                            className="nav-link body1-bold"
-                            type="button"
-                            onClick={() => {
-                                document
-                                    .getElementById('familyHiking')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            親子步道
-                        </button>
-                    </li>
+                    {navItems.map((item) => (
+                        <li key={item.id} className="nav-item">
+                            <button
+                                type="button"
+                                className={`nav-link body1-bold ${
+                                    activeId === item.id ? 'active' : ''
+                                }`}
+                                aria-current={activeId === item.id ? 'page' : undefined}
+                                onClick={() => scrollToId(item.id)}
+                            >
+                                {item.label}
+                            </button>
+                        </li>
+                    ))}
                 </ul>
             </header>
 
@@ -625,9 +589,8 @@ const Theme = () => {
                                                     className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
                                                     style={{
                                                         background: `url(${trail.trail_image})`,
-                                                        backgroundSize: 'cover',
                                                         width: '100%',
-                                                        height: '245px',
+                                                        height: '260px',
                                                         backgroundPosition: 'center',
                                                         gridTemplateColumns: 'auto auto',
                                                     }}
