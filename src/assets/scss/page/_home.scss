@@ -1,10 +1,17 @@
 /*  Slogan + Hero */
-// 🔸 影片滿版遮罩
+
 .hero {
+    width: 100%;
+    height: 90vh;
     position: relative;
     z-index: 0;
-}
 
+    @media (min-width: 992px) {
+        height: auto; /* 取消 90vh*/
+        aspect-ratio: 16 / 9;
+    }
+}
+// 🔸 影片滿版遮罩
 .hero::after {
     position: absolute;
     content: '';
