@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 // 第三方套件
 import axios from 'axios';
@@ -18,26 +18,47 @@ import SearchTheme from '../components/SearchTheme';
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 
 const TrailSearchPage = () => {
-    const [keyword, setKeyword] = useState('');
-    const [trailData, setTrailData] = useState([]);
+    // 取得與設定網址參數
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // 目前頁碼狀態
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalCount, setTotalCount] = useState(0);
     const limit = 8; // 每頁筆數
+    const urlKeyword = searchParams.get('q') || '';
+    const currentPage = parseInt(searchParams.get('_page')) || 1;
+
+    // 步道資料
+    const [keyword, setKeyword] = useState(urlKeyword);
+    const [trailData, setTrailData] = useState([]);
+    const [totalCount, setTotalCount] = useState(0);
+
     const totalPages = Math.ceil(totalCount / limit); // 計算總頁數
 
-    const onSearch = (e) => {
+    // 3. 當網址參數改變時（例如點擊回退鍵），同步更新 input 的文字
+    useEffect(() => {
+        setKeyword(urlKeyword);
+    }, [urlKeyword]);
+
+    // 4. 統一發送網址更新的函式
+    const updateRoute = (q, page) => {
+        setSearchParams({
+            q: q,
+            _page: page,
+        });
+    };
+
+    // 處理搜尋按鈕/Enter
+    const triggerSearch = () => {
+        updateRoute(keyword, 1); // 搜尋時強制回到第 1 頁
+    };
+
+    const onSearchKeyDown = (e) => {
         if (e.key === 'Enter') {
-            setKeyword(e.target.value);
-            setCurrentPage(1);
+            triggerSearch();
         }
     };
 
     // 網頁標題
-    useEffect(() => {
-        document.title = '步道總覽 | YeStep';
-    }, []);
+    useEffect(() => {}, []);
 
     // 步道列表
     useEffect(() => {
@@ -48,7 +69,7 @@ const TrailSearchPage = () => {
                     params: {
                         _page: currentPage,
                         _limit: limit,
-                        q: keyword,
+                        q: urlKeyword,
                     },
                 });
 
@@ -64,18 +85,22 @@ const TrailSearchPage = () => {
             }
         };
         getTrailScenery();
-    }, [currentPage, keyword]);
+    }, [currentPage, urlKeyword]);
 
     // 處理頁碼 Prev、Next
     const handlePageChange = (targetPage) => {
         // 邊界檢查：不能小於 1，不能大於總頁數
         if (targetPage < 1 || targetPage > totalPages) return;
 
-        // 更新狀態，觸發 useEffect 重新抓取 API
-        setCurrentPage(targetPage);
+        // 更新網址參數
+        updateRoute(urlKeyword, targetPage);
 
         // UX 優化：換頁後自動滾動回頂部
-        // window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({
+            top: 0,
+            // behavior: 'smooth',
+            behavior: 'instant',
+        });
     };
 
     // 處理頁碼點擊
@@ -84,7 +109,7 @@ const TrailSearchPage = () => {
         for (let i = 1; i <= totalPages; i++) {
             pages.push(
                 <li key={i} className={`page-item ${currentPage === i ? 'active' : ''}`}>
-                    <button className="page-link" onClick={() => setCurrentPage(i)}>
+                    <button className="page-link" onClick={() => handlePageChange(i)}>
                         {i}
                     </button>
                 </li>,
@@ -119,18 +144,21 @@ const TrailSearchPage = () => {
                         <div className="col-lg-8">
                             <h3 className="text-white text-center fw-medium fs-7 mb-8">步道總覽</h3>
                             <h1 className="text-white text-center mb-8">Next Step！想要去哪裡？</h1>
-                            <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
+                            <form
+                                className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill"
+                                onSubmit={(e) => e.preventDefault()}
+                            >
                                 <div className="input-group align-items-center">
                                     <select
                                         className="form-select px-4"
-                                        value={keyword}
-                                        onChange={onSearch}
+                                        value={urlKeyword}
+                                        onChange={(e) => updateRoute(e.target.value, 1)}
                                     >
-                                        +<option value="">請選擇地區</option>
-                                        <option value="1">北部</option>
-                                        <option value="2">中部</option>
-                                        <option value="3">南部</option>
-                                        <option value="4">東部</option>
+                                        <option value="">請選擇地區</option>
+                                        <option value="北部">北部</option>
+                                        <option value="中部">中部</option>
+                                        <option value="南部">南部</option>
+                                        <option value="東部">東部</option>
                                     </select>
                                     <span className="search-divider"></span>
                                     <input
@@ -138,9 +166,14 @@ const TrailSearchPage = () => {
                                         className="form-control px-4"
                                         placeholder="Next Step！想要去哪裡？"
                                         value={keyword}
-                                        onChange={onSearch}
+                                        onChange={(e) => setKeyword(e.target.value)}
+                                        onKeyDown={onSearchKeyDown}
                                     />
-                                    <button className="btn btn-primary" type="button">
+                                    <button
+                                        className="btn btn-primary"
+                                        type="button"
+                                        onClick={triggerSearch}
+                                    >
                                         搜尋
                                     </button>
                                 </div>
@@ -252,9 +285,7 @@ const TrailSearchPage = () => {
                         <div className="d-flex justify-content-center">
                             <ul className="pagination gap-1">
                                 {/* 上一頁 */}
-                                <li
-                                    className={`page-item me-2 ${currentPage === 1 ? 'disabled' : ''}`}
-                                >
+                                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                                     <button
                                         className="page-link"
                                         onClick={() => handlePageChange(currentPage - 1)}
@@ -270,7 +301,7 @@ const TrailSearchPage = () => {
 
                                 {/* 下一頁 */}
                                 <li
-                                    className={`page-item ms-2 ${currentPage === totalPages ? 'disabled' : ''}`}
+                                    className={`page-item ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''}`}
                                 >
                                     <button
                                         className="page-link"
@@ -286,80 +317,11 @@ const TrailSearchPage = () => {
                     </div>
                 </section>
 
+                {/* 熱門步道 */}
                 <PopularTrails onUpdate={handleAddPopular} hasBorder={true} />
 
+                {/* 主題限定活動 */}
                 <SearchTheme />
-                {/* <section className="search-theme py-20">
-                    <div className="container">
-                        <div className="row align-items-center row-gap-6">
-                            <div className="col-lg-4">
-                                <h3 className="text-primary-100 fs-7 fw-medium mb-2">春季限定</h3>
-                                <h2 className="text-white fs-1 mb-6">浪漫桐花雨</h2>
-                                <p className="text-white fs-8 opacity-75">
-                                    「讓我們一起走進，那片會下雪的春天。」
-                                    <br />
-                                    桐花盛開，我們規劃了專屬的桐花導覽，帶你用最輕鬆的方式欣賞春季美景。
-                                </p>
-                            </div>
-                            <div className="col-lg-8">
-                                <div className="themeInfoBanner swiper-container">
-                                    <div className="swiper-wrapper gap-4">
-                                        {themeInfoData.map((themeInfo, index) => {
-                                            return (
-                                                <div className="swiper-slide" key={index}>
-                                                    <div className="card h-100 rounded-16 overflow-hidden">
-                                                        <div className="card-img">
-                                                            <img
-                                                                src={themeInfo.image}
-                                                                alt={themeInfo.title}
-                                                            />
-                                                        </div>
-                                                        <div className="card-body d-flex flex-column justify-content-end">
-                                                            <h4 className="text-white fs-7 fw-medium mb-1">
-                                                                {themeInfo.title}
-                                                            </h4>
-                                                            <p className="text-black-100 fs-9 text-truncate">
-                                                                {themeInfo.text}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-4">
-                                <Link
-                                    to={`/theme`}
-                                    className="btn btn-primary rounded-pill fs-8 fw-bold"
-                                >
-                                    立即預約
-                                </Link>
-                            </div>
-                            <div className="col-lg-8">
-                                <div className="d-flex flex-nowrap gap-6 justify-content-center align-items-center">
-                                    <div className="d-flex gap-2">
-                                        <button type="button" className="btn btn-arrow btn-bn-prev">
-                                            <span className="material-symbols-outlined">
-                                                keyboard_arrow_left
-                                            </span>
-                                        </button>
-                                        <button type="button" className="btn btn-arrow btn-bn-next">
-                                            <span className="material-symbols-outlined">
-                                                keyboard_arrow_right
-                                            </span>
-                                        </button>
-                                    </div>
-                                    <div className="line"></div>
-                                    <div className="d-inline text-white fs-5 opacity-50">
-                                        <div className="swiper-pagination"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section> */}
             </main>
         </>
     );
