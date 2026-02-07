@@ -1,12 +1,8 @@
-import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 // 第三方套件
 import axios from 'axios';
-import Swiper from 'swiper';
-import { Navigation, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
 
 // 工具
 import { formatNumber } from '../utils/formatNumber';
@@ -16,33 +12,10 @@ import { getErrorMessage } from '../utils/error';
 import Nav from '../components/Nav';
 import StarRating from '../components/StarRating';
 import PopularTrails from '../components/PopularTrails';
+import SearchTheme from '../components/SearchTheme';
 
 // API
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
-
-// 桐花步道介紹
-const themeInfoData = [
-    {
-        title: '白花覆山林',
-        text: '桐花飄落鋪滿山徑',
-        image: 'https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    },
-    {
-        title: '愛​在​花雨​間',
-        text: '收集屬​於​彼此​的​風景​',
-        image: 'https://images.unsplash.com/photo-1602830919209-0b3f9cd4b17a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    },
-    {
-        title: '與桐​花行',
-        text: '享受​親子​共遊時​刻',
-        image: 'https://plus.unsplash.com/premium_photo-1661475916373-5aaaeb4a5393?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    },
-    {
-        title: '森林慢​呼​吸',
-        text: '花影山​風舒心​踏行​',
-        image: 'https://images.unsplash.com/photo-1667993259479-1a343cafe41d?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    },
-];
 
 const TrailSearchPage = () => {
     const [keyword, setKeyword] = useState('');
@@ -136,38 +109,6 @@ const TrailSearchPage = () => {
             console.error('更新失敗:', getErrorMessage(error));
         }
     };
-
-    // 主題活動 swiper
-    useEffect(() => {
-        if (!themeInfoData || themeInfoData.length === 0) return;
-
-        // 定義 swiper 變數以便後續銷毀
-        let swiperInstance = null;
-        // 使用 setTimeout 確保 React 已經把 DOM (卡片) 真的畫在螢幕上了
-        const initSwiper = setTimeout(() => {
-            swiperInstance = new Swiper('.themeInfoBanner', {
-                modules: [Navigation, Autoplay],
-                slidesPerView: 'auto',
-                spaceBetween: 16,
-                navigation: {
-                    nextEl: '.btn-bn-next',
-                    prevEl: '.btn-bn-prev',
-                },
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false, // 使用者互動後不停止自動播放
-                },
-                breakpoints: {},
-            });
-        }, 100);
-
-        return () => {
-            clearTimeout(initSwiper);
-            if (swiperInstance) {
-                swiperInstance.destroy();
-            }
-        };
-    }, []);
 
     return (
         <>
@@ -347,9 +288,10 @@ const TrailSearchPage = () => {
 
                 <PopularTrails onUpdate={handleAddPopular} hasBorder={true} />
 
-                <section className="search-theme py-20">
+                <SearchTheme />
+                {/* <section className="search-theme py-20">
                     <div className="container">
-                        <div className="row">
+                        <div className="row align-items-center row-gap-6">
                             <div className="col-lg-4">
                                 <h3 className="text-primary-100 fs-7 fw-medium mb-2">春季限定</h3>
                                 <h2 className="text-white fs-1 mb-6">浪漫桐花雨</h2>
@@ -360,8 +302,8 @@ const TrailSearchPage = () => {
                                 </p>
                             </div>
                             <div className="col-lg-8">
-                                <div className="themeInfoBanner swiper-container mb-6">
-                                    <div className="swiper-wrapper">
+                                <div className="themeInfoBanner swiper-container">
+                                    <div className="swiper-wrapper gap-4">
                                         {themeInfoData.map((themeInfo, index) => {
                                             return (
                                                 <div className="swiper-slide" key={index}>
@@ -386,7 +328,17 @@ const TrailSearchPage = () => {
                                         })}
                                     </div>
                                 </div>
-                                <div className="d-flex">
+                            </div>
+                            <div className="col-lg-4">
+                                <Link
+                                    to={`/theme`}
+                                    className="btn btn-primary rounded-pill fs-8 fw-bold"
+                                >
+                                    立即預約
+                                </Link>
+                            </div>
+                            <div className="col-lg-8">
+                                <div className="d-flex flex-nowrap gap-6 justify-content-center align-items-center">
                                     <div className="d-flex gap-2">
                                         <button type="button" className="btn btn-arrow btn-bn-prev">
                                             <span className="material-symbols-outlined">
@@ -399,19 +351,15 @@ const TrailSearchPage = () => {
                                             </span>
                                         </button>
                                     </div>
+                                    <div className="line"></div>
+                                    <div className="d-inline text-white fs-5 opacity-50">
+                                        <div className="swiper-pagination"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="go-theme">
-                                <Link
-                                    to={`/theme`}
-                                    className="btn btn-primary rounded-pill fs-8 fw-bold"
-                                >
-                                    立即預約
-                                </Link>
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> */}
             </main>
         </>
     );
