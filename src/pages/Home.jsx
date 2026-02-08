@@ -199,7 +199,7 @@ const Home = () => {
                         <div className="landscape__column">
                             {landscapeColumns.left.map((item) => (
                                 <Link
-                                    to={`/search?trail_landscape=${item.tag}`}
+                                    to={`/search?trail_landscape=${item.landscapeName}`}
                                     className="landscape__card"
                                     key={item.id}
                                 >
@@ -214,7 +214,7 @@ const Home = () => {
                         <div className="landscape__column">
                             {landscapeColumns.center.map((item) => (
                                 <Link
-                                    to={`/search?trail_landscape=${item.tag}`}
+                                    to={`/search?trail_landscape=${item.landscapeName}`}
                                     className="landscape__card"
                                     key={item.id}
                                 >
@@ -229,7 +229,7 @@ const Home = () => {
                         <div className="landscape__column">
                             {landscapeColumns.right.map((item) => (
                                 <Link
-                                    to={`/search?trail_landscape=${item.tag}`}
+                                    to={`/search?trail_landscape=${item.landscapeName}`}
                                     className="landscape__card"
                                     key={item.id}
                                 >
