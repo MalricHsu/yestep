@@ -1,7 +1,7 @@
 // 引入特色景觀步道圖片
 import flower from '../assets/images/home/landscape-flower.svg';
 import waterfall from '../assets/images/home/landscape-waterfall.svg';
-import stargazing from '../assets/images/home/landscape-stargazing.svg';
+import stargazing from '../assets/images/home/landscape-stargazing.png';
 import sunrise from '../assets/images/home/landscape-sunrise.svg';
 import sunset from '../assets/images/home/landscape-sunset.svg';
 import cloud from '../assets/images/home/landscape-cloud.svg';
