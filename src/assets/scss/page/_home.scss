@@ -72,6 +72,22 @@
         height: auto;
     }
 }
+/* 步道難度指南 */
+.diffcard__list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5欄 */
+    gap: 16px;
+}
+
+.diffcard__card {
+}
+
+.diffcard__img {
+    width: 100%;
+    aspect-ratio: 1 / 2;
+    object-fit: cover;
+    border-radius: 24px;
+}
 
 /* 特色景觀步道 feature */
 .landscape__gallery {

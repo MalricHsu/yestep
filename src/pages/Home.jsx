@@ -1,4 +1,5 @@
-// 難易度小卡、切換按鈕 hover 樣式、替換Swiper圖片、加上SWiper <> 按鈕
+// 改景觀小卡格式
+// 難易度小卡、切換按鈕 hover 樣式、替換Swiper圖片、加上SWiper <> 按鈕、手機版的 ThemeSwiper.jsx 圖片、搜尋欄簡化
 // fix: 選單active邏輯
 // 已修：預約按鈕Link
 
@@ -13,6 +14,13 @@ import HeroSwiper from '../components/HeroSwiper';
 
 // 引入 主題活動特輯 ThemeSwiper
 import ThemeSwiper from '../components/ThemeSwiper';
+
+// 引入 步道難度指南 diffcard 難易度圖片
+import diffCard01 from '../assets/images/home/diffcard-01.png';
+import diffCard02 from '../assets/images/home/diffcard-02.png';
+import diffCard03 from '../assets/images/home/diffcard-03.png';
+import diffCard04 from '../assets/images/home/diffcard-04.png';
+import diffCard05 from '../assets/images/home/diffcard-05.png';
 
 // 引入 特色景觀步道 landscape 資料
 import { landscapeColumns } from '../data/home-landscape';
@@ -107,7 +115,7 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                {/* 切換按鈕 */}
+                {/* HERO切換按鈕 */}
                 <div className="hero__bottom-wrap position-absolute start-50 translate-middle-x z-1">
                     <div className="d-flex bg-primary-300 rounded-pill">
                         <button className="btn rounded-pill" onClick={() => setHeroMode('video')}>
@@ -119,7 +127,6 @@ const Home = () => {
                     </div>
                 </div>
             </header>
-
             <main>
                 {/* 本月活動特輯 Swiper */}
                 <section className="py-8 py-lg-16 ">
@@ -138,12 +145,49 @@ const Home = () => {
                 </section>
                 {/* 熱門步道 */}
                 <PopularTrails onUpdate={handleAddPopular} hasBorder={false} />
-                {/* 難易度步道 */}
+                {/* 難易度步道介紹 */}
                 <section className="pt-16 pb-32">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
-                                <h2 className="fs-lg-2 fs-5">步道難度指南</h2>
+                                <h2 className="fs-lg-2 fs-5 mb-8">步道難度指南</h2>
+                                <ul className="diffcard__list list-unstyled">
+                                    <li className="diffcard__card ">
+                                        <img
+                                            src={diffCard01}
+                                            className="diffcard__img"
+                                            alt="圖片"
+                                        />
+                                    </li>
+                                    <li className="diffcard__card">
+                                        <img
+                                            src={diffCard02}
+                                            className="diffcard__img"
+                                            alt="圖片"
+                                        />
+                                    </li>
+                                    <li className="diffcard__card">
+                                        <img
+                                            src={diffCard03}
+                                            className="diffcard__img"
+                                            alt="圖片"
+                                        />
+                                    </li>
+                                    <li className="diffcard__card">
+                                        <img
+                                            src={diffCard04}
+                                            className="diffcard__img"
+                                            alt="圖片"
+                                        />
+                                    </li>
+                                    <li className="diffcard__card">
+                                        <img
+                                            src={diffCard05}
+                                            className="diffcard__img"
+                                            alt="圖片"
+                                        />
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
