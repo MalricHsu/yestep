@@ -151,7 +151,7 @@ const Home = () => {
                         <div className="row">
                             <div className="col-12">
                                 <h2 className="fs-lg-2 fs-5 mb-8">步道難度指南</h2>
-                                <ul className="diffcard__list list-unstyled">
+                                <ul className="diffcard__list list-unstyled gap-4">
                                     <li className="diffcard__card ">
                                         <img
                                             src={diffCard01}
