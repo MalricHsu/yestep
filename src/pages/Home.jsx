@@ -1,4 +1,4 @@
-// 難易度小卡、切換按鈕hover樣式
+// 難易度小卡、切換按鈕 hover 樣式、替換Swiper圖片
 // fix: 選單active邏輯
 // 已修：預約按鈕Link
 

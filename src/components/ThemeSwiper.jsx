@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 
@@ -83,9 +84,12 @@ function ThemeSwiper() {
                                                     {item.derscription}
                                                 </p>
                                             </div>
-                                            <button className="theme__btn px-6 py-3 border-0 bg-primary-100 text-primary-300 body1-bold rounded-100">
+                                            <Link
+                                                to="/theme"
+                                                className="theme__btn px-6 py-3 border-0 bg-primary-100 text-primary-300 body1-bold rounded-pill"
+                                            >
                                                 立即預約
-                                            </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
