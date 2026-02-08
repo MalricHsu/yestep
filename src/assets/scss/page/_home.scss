@@ -30,10 +30,17 @@
 }
 
 /* 本月活動特輯 Swiper */
+
+// 會破版.theme-visible-wrap {
+//     overflow: hidden;
+// }
+
 .theme-swiper {
+    // overflow: visible;
     padding-bottom: 144px;
 
     @media (min-width: 992px) {
+        // overflow: hidden;
         padding-left: 72px;
         padding-bottom: 20px;
     }

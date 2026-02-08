@@ -5,6 +5,8 @@ import 'swiper/css';
 
 // 引入圖片
 import themeImg01 from '../assets/images/home/theme-swiper-01.svg';
+import themeImg02 from '../assets/images/home/theme-swiper-02.png';
+import themeImg03 from '../assets/images/home/theme-swiper-03.png';
 import themeImgLg01 from '../assets/images/home/theme-swiper-lg-01.svg';
 import themeImgLg02 from '../assets/images/home/theme-swiper-lg-02.svg';
 import themeImgLg03 from '../assets/images/home/theme-swiper-lg-03.svg';
@@ -22,14 +24,14 @@ function ThemeSwiper() {
         },
         {
             id: 2,
-            image: themeImg01,
+            image: themeImg02,
             imageLg: themeImgLg02,
             title: '當​我​們​「桐」​在​一起​',
             derscription: '在​花間​小徑，​留​下歡笑​與足跡',
         },
         {
             id: 3,
-            image: themeImg01,
+            image: themeImg03,
             imageLg: themeImgLg03,
             title: '為​相遇​寫​下序章​​',
             derscription: '傳說，​在​桐花​雨下，​攜​手​走過​的​兩人，​會​一起​走得​更​遠',
@@ -39,7 +41,6 @@ function ThemeSwiper() {
     return (
         <>
             <Swiper
-                style={{ overflow: 'hidden' }}
                 className="theme-swiper"
                 loop={true}
                 spaceBetween={72}
