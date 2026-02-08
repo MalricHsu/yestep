@@ -466,7 +466,9 @@ const Theme = () => {
                                 }}
                             />
                             <div className="mt-3">
-                                <p className="text-black-700">{item.desc}</p>
+                                <p className="text-black-700" style={{ textAlign: 'justify' }}>
+                                    {item.desc}
+                                </p>
                             </div>
                         </li>
                     ))}
@@ -528,7 +530,12 @@ const Theme = () => {
                         </ul>
                         <p className="body3-regular text-black-700">
                             報名結果將以 E-mail 通知。如有任何疑問請洽
-                            <Link to="#" className="btn btn-textLink body3-regular ps-1" disabled>
+                            <Link
+                                to="https://www.line.me/tw/"
+                                target="_blank"
+                                className="btn btn-textLink body3-regular ps-1"
+                                disabled
+                            >
                                 line官方客服
                             </Link>
                         </p>
