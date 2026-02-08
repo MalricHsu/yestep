@@ -1,45 +1,47 @@
 .memberTabBtn {
-    transition: all 0.4s ease;
+    position: relative;
+    flex: 1 1 0;
+    transition: flex 0.4s ease;
+
     &:hover {
-        grid-column: 1/-1;
-        position: absolute;
-        top: 0;
-        left: 0;
-        transition: all 0.4s ease;
+        flex: 4 0 0;
     }
-    &:hover span {
-        transform: scale(1.06) translate(-50%, -50%);
-        z-index: 2;
-        transition: all 0.4s ease;
+
+    /* === SVG === */
+    svg {
+        transition:
+            transform 0.4s ease,
+            opacity 0.4s ease;
     }
-    & svg {
-        transition: all 0.4s ease;
-    }
+
     &:hover svg {
         transform: scale(1.5);
         opacity: 0;
-        transition: all 0.4s ease;
+    }
+
+    /* === Label === */
+    .memberTabLabel {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        pointer-events: none;
+        white-space: nowrap;
+        transition:
+            opacity 0.4s ease,
+            transform 0.4s ease;
+        z-index: 1;
+    }
+
+    &:hover .memberTabLabel,
+    &:focus-visible .memberTabLabel {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.06);
+        z-index: 2;
     }
 }
 
-.memberTabLabel {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    pointer-events: none;
-    white-space: nowrap;
-    transition: all 0.4s ease;
+.accordion-button:hover {
+    background-color: rgba($primary-200, 0.1);
 }
-.memberTabBtn:hover .memberTabLabel,
-.memberTabBtn:focus-visible .memberTabLabel {
-    opacity: 1;
-    transition: all 0.4s ease;
-}
-
-// @media (min-width: 576px) {
-//     nav {
-//         // position: fixed;
-//     }
-// }

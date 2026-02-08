@@ -1,5 +1,92 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Nav from '../components/Nav';
+import { Link } from 'react-router-dom';
+
+const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
+    return (
+        <div className="accordion" id="favoriteAccordion">
+            {favorites.map((item) => (
+                <div
+                    className="accordion-item border-0 border-primary-50 border-bottom"
+                    key={item.id}
+                >
+                    {/* Header */}
+                    <h2 className="accordion-header" id={`heading-${item.id}`}>
+                        <button
+                            className="accordion-button collapsed p-3 p-md-6"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target={`#collapse-${item.id}`}
+                            aria-expanded="false"
+                            aria-controls={`collapse-${item.id}`}
+                        >
+                            <div className="d-flex w-100 align-items-center gap-3">
+                                {/* 圖片 */}
+                                <img
+                                    src={item.image}
+                                    alt=""
+                                    style={{
+                                        width: 64,
+                                        height: 48,
+                                        borderRadius: 12,
+                                        objectFit: 'cover',
+                                        flexShrink: 0,
+                                    }}
+                                />
+
+                                {/* 標題 */}
+                                <div className="flex-grow-1 text-start">
+                                    <div className="fw-semibold">{item.name}</div>
+                                    <div className="small text-muted">
+                                        {item.length} • {item.altitude}
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+
+                    {/* Content */}
+                    <div
+                        id={`collapse-${item.id}`}
+                        className="accordion-collapse collapse"
+                        aria-labelledby={`heading-${item.id}`}
+                        data-bs-parent="#favoriteAccordion"
+                    >
+                        <div className="accordion-body  p-3 p-md-6">
+                            <div className="d-grid gap-2 mb-3">
+                                <div className="d-flex justify-content-between">
+                                    <span className="text-muted">長度</span>
+                                    <span className="fw-semibold">{item.length}</span>
+                                </div>
+                                <div className="d-flex justify-content-between">
+                                    <span className="text-muted">海拔</span>
+                                    <span className="fw-semibold">{item.altitude}</span>
+                                </div>
+                            </div>
+
+                            <div className="d-grid gap-2">
+                                <Link to={`/plan/${item.id}`} className="btn btn-secondary ">
+                                    前往規劃
+                                </Link>
+                                <button
+                                    type="button"
+                                    className="btn btn-text"
+                                    onClick={() => onRemove(item.id)}
+                                >
+                                    取消收藏
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ))}
+
+            {favorites.length === 0 && (
+                <div className="text-center py-5 text-muted">目前沒有收藏步道</div>
+            )}
+        </div>
+    );
+};
 
 const MEMBER_TABS = [
     {
@@ -68,42 +155,113 @@ const MEMBER_TABS = [
     },
 ];
 
-const MemberTabs = () => {
+const MemberTabs = ({ activeTab, onChange }) => {
     return (
-        <>
-            <ul
-                className="nav nav-underline opacity-75 d-grid position-fixed w-100"
-                style={{ top: '72px', zIndex: '991', gridTemplateColumns: 'repeat(4,1fr)' }}
-            >
-                {MEMBER_TABS.map((tab) => (
+        <ul className="nav nav-underline d-flex flex-nowrap position-fixed w-100 opacity-75">
+            {MEMBER_TABS.map((tab) => {
+                const isActive = activeTab === tab.key;
+
+                return (
                     <li
                         key={tab.key}
-                        className="nav-item w-100 memberTabBtn"
-                        style={{ minWidth: 'fit-content' }}
+                        className={`nav-item w-100 memberTabBtn ${isActive ? 'active' : ''}`}
                     >
                         <button
                             type="button"
-                            className="nav-link body1-medium w-100 d-flex align-items-center justify-content-center position-relative"
+                            className={`nav-link w-100 d-flex justify-content-center ${
+                                isActive ? 'active' : ''
+                            }`}
+                            onClick={() => onChange(tab.key)}
                         >
                             {tab.svg}
-                            <span className="memberTabLabel body2-medium">{tab.label}</span>
+                            <span className="memberTabLabel">{tab.label}</span>
                         </button>
                     </li>
-                ))}
-            </ul>
-        </>
+                );
+            })}
+        </ul>
     );
+};
+const scrollToTopMinus = (id, offset = 50) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+
+    window.scrollTo({
+        top: y,
+        behavior: 'smooth',
+    });
+};
+/* =====================
+   Tab Contents
+===================== */
+
+const MemberProfile = () => {
+    return <div>會員中心內容</div>;
+};
+
+// 暫時的假資料
+const MOCK_FAVORITES = [
+    {
+        id: 1,
+        name: '象山親山步道',
+        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+        length: '約 1.5 km',
+        altitude: '183 m',
+    },
+    {
+        id: 2,
+        name: '大坑步道 9 號',
+        image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e',
+        length: '約 2.3 km',
+        altitude: '395 m',
+    },
+];
+const MemberFavorite = () => {
+    const handleRemove = (id) => {
+        console.log('取消收藏 id:', id);
+    };
+
+    return <MobileFavoriteDropdown favorites={MOCK_FAVORITES} onRemove={handleRemove} />;
+};
+
+const MemberAnalytics = () => {
+    return <div>統計分析</div>;
+};
+
+const MemberRecommend = () => {
+    return <div>猜你喜歡</div>;
 };
 
 const Member = () => {
+    const [activeTab, setActiveTab] = useState('member');
     useEffect(() => {
         document.title = '會員中心 | YeStep';
     }, []);
+    const handleTabChange = (key) => {
+        setActiveTab(key);
+        scrollToTopMinus('member-main', 60);
+    };
     return (
         <>
             <Nav />
-            <section className="position-relative" style={{ minHeight: '500px' }}>
-                <MemberTabs />
+            <section
+                className="position-relative"
+                style={{ minHeight: '500px', padding: '72px 0 0' }}
+            >
+                <MemberTabs activeTab={activeTab} onChange={handleTabChange} />
+                <main
+                    id="member-main container-fluid"
+                    className="memberMain"
+                    style={{ padding: '105px 5% 0' }}
+                >
+                    <h2 className="fs-5 fs-md-2">我的收藏</h2>
+                    {activeTab === 'member' && <MemberProfile />}
+                    {activeTab === 'favorite' && <MemberFavorite />}
+                    {activeTab === 'analytics' && <MemberAnalytics />}
+                    {activeTab === 'recommend' && <MemberRecommend />}
+                </main>
             </section>
         </>
     );
