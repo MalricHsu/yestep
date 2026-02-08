@@ -7,8 +7,8 @@ const routeColorMap = {
     // '/search': 'btn-red',
     '/detail': 'btn-black-600',
     '/trails': 'btn-black-700',
-    '/theme': 'btn-black-900',
-    '/member': 'btn-black-800',
+    '/theme': 'btn-primary-200 opacity-75 text-white',
+    '/member': 'btn-primary-200 opacity-75 text-white',
 };
 
 function ScrollToTop() {
