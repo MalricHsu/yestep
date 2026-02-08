@@ -3,22 +3,28 @@ import { Autoplay, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 
+// 引入圖片
+import heroSwiper01 from '../assets/images/home/heroswiper-01.jpg';
+import heroSwiper02 from '../assets/images/home/heroswiper-02.jpg';
+import heroSwiper03 from '../assets/images/home/heroswiper-03.jpg';
+
 function HeroSwiper() {
     const carouselData = [
         {
             id: 1,
-            title: '圖片1',
-            image: 'https://images.unsplash.com/photo-1769745241584-be9b8227e126?q=80&w=800&height=450&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: '單人圖片',
+            image: heroSwiper01,
         },
         {
             id: 2,
-            title: '圖片2',
-            image: 'https://images.unsplash.com/photo-1769399287827-4b7d79d99e0d?q=80&w=800&height=450&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: '雙人圖片',
+            image: heroSwiper02,
         },
+
         {
             id: 3,
-            title: '圖片3',
-            image: 'https://images.unsplash.com/photo-1769745241584-be9b8227e126?q=80&w=800&height=450&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: '家庭圖片',
+            image: heroSwiper03,
         },
     ];
 
