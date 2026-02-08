@@ -1,10 +1,10 @@
-// 改景觀小卡格式
 // 難易度小卡、切換按鈕 hover 樣式、替換Swiper圖片、加上SWiper <> 按鈕、手機版的 ThemeSwiper.jsx 圖片、搜尋欄簡化
 // fix: 選單active邏輯
-// 已修：預約按鈕Link
+// 已修：預約按鈕Link、景觀小卡傳中文、更正成壓縮後圖片
 
 // 引入Nav
 import Nav from '../components/Nav';
+
 // 引入 Hero 影片
 import heroVideo from '../assets/videos/hero-video.mp4';
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
@@ -115,7 +115,7 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                {/* HERO切換按鈕 */}
+                {/* Hero切換按鈕 */}
                 <div className="hero__bottom-wrap position-absolute start-50 translate-middle-x z-1">
                     <div className="d-flex bg-primary-300 rounded-pill">
                         <button className="btn rounded-pill" onClick={() => setHeroMode('video')}>
@@ -145,7 +145,8 @@ const Home = () => {
                 </section>
                 {/* 熱門步道 */}
                 <PopularTrails onUpdate={handleAddPopular} hasBorder={false} />
-                {/* 難易度步道介紹 */}
+
+                {/* 難易度小卡介紹 */}
                 <section className="pt-16 pb-32">
                     <div className="container">
                         <div className="row">
@@ -192,6 +193,7 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
+
                 {/* 特色景觀步道 feature */}
                 <section className="py-5">
                     <div className="landscape__gallery text-primary-50 ">
@@ -242,6 +244,7 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
+
                 {/* 關於我們 about */}
                 <section className="py-16 py-lg-32 position-relative">
                     <div className="container">

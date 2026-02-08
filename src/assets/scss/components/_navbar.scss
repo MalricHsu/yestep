@@ -75,4 +75,14 @@ nav {
             --bs-btn-active-color: #4f6947;
         }
     }
+    // 修改懸浮選單 active 的 bg
+    .header__login {
+        .dropdown-item {
+            &:focus,
+            &:active,
+            &.active {
+                background-color: $black-100; // 設計稿是 $primary-200
+            }
+        }
+    }
 }
