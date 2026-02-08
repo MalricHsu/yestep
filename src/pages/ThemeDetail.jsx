@@ -17,12 +17,11 @@ import StarRating from '../components/StarRating';
 import ActionModal from '../components/ActionModal';
 import TrailCard from '../components/TrailCard';
 
-const TrailDetail = () => {
-    const [detailData, setDetailData] = useState({});
+const ThemeDetail = () => {
+    const [themeData, setThemeData] = useState({});
     const [reviewData, setReviewData] = useState([]);
-    const [systemOne, setSystemOne] = useState([]);
-    const [systemOther, setSystemOther] = useState([]);
-    const detailApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+    const [themeOne, setThemeOne] = useState([]);
+    const themeApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
     const useParam = useParams();
     const { id } = useParam;
 
@@ -40,15 +39,15 @@ const TrailDetail = () => {
 
     //標題名稱
     useEffect(() => {
-        document.title = `${detailData.trail_name} | YeStep`;
-    }, [detailData.trail_name]);
+        document.title = `${themeData.trail_name} | YeStep`;
+    }, [themeData.trail_name]);
 
-    //取得步道資料 //取得有關中央山脈脊梁國家步道系統資料 //取得與中央山脈無關
+    //取得步道資料 //取得步道型別
     useEffect(() => {
         const handleDetailData = async () => {
             try {
-                const res = await detailApi.get(`/trails/${id}`);
-                setDetailData(res.data);
+                const res = await themeApi.get(`/theme/${id}`);
+                setThemeData(res.data);
                 // 重點：使用 behavior: 'instant' 實現「直接跳轉」的感覺
                 window.scrollTo({ top: 0, behavior: 'instant' });
             } catch (error) {
@@ -56,34 +55,19 @@ const TrailDetail = () => {
             }
         };
         handleDetailData();
-        const getSystemData = async () => {
+        const getThemeOne = async () => {
             try {
-                const res = await detailApi.get('/trails?trail_system_like=中央山脈');
+                const res = await themeApi.get('/theme');
                 console.log(res.data);
-                const allCentralTrails = res.data;
-                const randomTrail = [...allCentralTrails].sort(() => 0.5 - Math.random());
+                const allTrails = res.data;
+                const randomTrail = [...allTrails].sort(() => 0.5 - Math.random());
+                setThemeOne(randomTrail.slice(0, 6));
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getThemeOne();
 
-                setSystemOne(randomTrail.slice(0, 3));
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        getSystemData();
-        const getOtherData = async () => {
-            try {
-                const res = await detailApi.get('/trails');
-                console.log(res.data);
-                const filterSystem = res.data.filter((trail) => {
-                    return !trail.trail_system.includes('中央山脈');
-                });
-                //  console.log(filterSystem);
-                const randomTrail = [...filterSystem].sort(() => 0.5 - Math.random());
-                setSystemOther(randomTrail.slice(0, 3));
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        getOtherData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
@@ -91,7 +75,7 @@ const TrailDetail = () => {
     useEffect(() => {
         const handleReviewData = async () => {
             try {
-                const res = await detailApi.get(`/reviews`);
+                const res = await themeApi.get(`/reviews`);
                 setReviewData(res.data);
             } catch (error) {
                 console.log(error);
@@ -146,7 +130,7 @@ const TrailDetail = () => {
         return (
             <iframe
                 className="rounded-24 detail-map"
-                src={detailData.trail_map_html}
+                src={themeData.trail_map_html}
                 width="100%"
                 height="270px"
                 style={{ border: '0' }}
@@ -196,16 +180,14 @@ const TrailDetail = () => {
             if (isLogin && user && id) {
                 try {
                     //檢查收藏
-                    const favRes = await detailApi.get(
-                        `/favorites?userId=${user.id}&trailId=${id}`,
-                    );
+                    const favRes = await themeApi.get(`/favorites?userId=${user.id}&trailId=${id}`);
                     if (favRes.data.length > 0) {
                         setFavoriteId(favRes.data[0].id);
                     } else {
                         setFavoriteId(null);
                     }
 
-                    const planRes = await detailApi.get(
+                    const planRes = await themeApi.get(
                         `/itinerary?userId=${user.id}&trailId=${id}`,
                     );
                     if (planRes.data.length > 0) {
@@ -223,7 +205,7 @@ const TrailDetail = () => {
             }
         };
         checkStatus();
-    }, [isLogin, user, id, detailApi]);
+    }, [isLogin, user, id, themeApi]);
 
     //處理按鈕點擊
     const handleAction = async (type) => {
@@ -235,14 +217,14 @@ const TrailDetail = () => {
             if (type === 'like') {
                 if (favoriteId) {
                     //取消收藏
-                    await detailApi.delete(`/favorites/${favoriteId}`);
+                    await themeApi.delete(`/favorites/${favoriteId}`);
                     setFavoriteId(null);
                 } else {
-                    const res = await detailApi.post('/favorites', {
+                    const res = await themeApi.post('/favorites', {
                         userId: user.id,
                         trailId: id, // 使用 URL 參數的 ID
-                        trailName: detailData.trail_name, // 存入名稱方便以後顯示
-                        trailImage: detailData.trail_image,
+                        trailName: themeData.trail_name, // 存入名稱方便以後顯示
+                        trailImage: themeData.trail_image,
                     });
                     setFavoriteId(res.data.id);
                     ModalRef.current.open('like_auth');
@@ -251,15 +233,15 @@ const TrailDetail = () => {
             if (type === 'plan') {
                 if (planId) {
                     // --- 取消行程 (Delete) ---
-                    await detailApi.delete(`/itinerary/${planId}`);
+                    await themeApi.delete(`/itinerary/${planId}`);
                     setPlanId(null);
                 } else {
                     // --- 加入行程 (Post) ---
-                    const res = await detailApi.post('/itinerary', {
+                    const res = await themeApi.post('/itinerary', {
                         userId: user.id,
                         trailId: id,
-                        trailName: detailData.trail_name,
-                        trailImage: detailData.trail_image,
+                        trailName: themeData.trail_name,
+                        trailImage: themeData.trail_image,
                         date: new Date().toISOString(),
                     });
                     setPlanId(res.data.id);
@@ -271,7 +253,6 @@ const TrailDetail = () => {
             alert('連線錯誤，請稍後再試');
         }
     };
-
     return (
         <div>
             <header className="detail-header">
@@ -284,8 +265,8 @@ const TrailDetail = () => {
                         <div className="row">
                             <div className="col-lg-5">
                                 <img
-                                    src={detailData.trail_image}
-                                    alt={detailData.trail_address}
+                                    src={themeData.trail_image}
+                                    alt={themeData.trail_address}
                                     className="img-fluid object-fit-cover detail-img rounded-24 mb-3 mb-lg-4"
                                 />
                                 <div className="d-none d-lg-block">
@@ -298,10 +279,10 @@ const TrailDetail = () => {
                                         <div className="d-flex justify-content-between align-items-start mb-6 mb-lg-12">
                                             <div>
                                                 <p className="sub1-medium fs-8 fs-lg-7 text-primary-300 mb-2  ">
-                                                    {detailData.trail_address}
+                                                    {themeData.trail_address}
                                                 </p>
                                                 <h1 className="fs-5 fs-lg-1">
-                                                    {detailData.trail_name}
+                                                    {themeData.trail_name}
                                                 </h1>
                                             </div>
                                             {/*按鈕 */}
@@ -318,13 +299,13 @@ const TrailDetail = () => {
                                                             難度
                                                         </p>
                                                         <div className="d-lg-flex align-items-lg-center ">
-                                                            <p className="sub1-medium me-lg-1 mb-1 mb-lg-0">
-                                                                {detailData.trail_difficulty}
+                                                            <p className="sub1-medium me-lg-1 mb-1 mb-lg-0 fs-8">
+                                                                {themeData.trail_difficulty}
                                                             </p>
                                                             <div className="d-flex justify-content-center ">
                                                                 <StarRating
                                                                     rating={
-                                                                        detailData.trail_difficulty
+                                                                        themeData.trail_difficulty
                                                                     }
                                                                     fontSize={12}
                                                                     color={'text-primary-300'}
@@ -333,26 +314,26 @@ const TrailDetail = () => {
                                                         </div>
                                                     </div>
                                                     <div className="col border-end border-black-100 text-center text-lg-start">
-                                                        <p className="mb-2 body3-regular text-primary-300">
+                                                        <p className="mb-2 body3-regular  text-primary-300">
                                                             長度
                                                         </p>
-                                                        <p className="sub1-medium">
-                                                            {detailData.trail_length}
+                                                        <p className="sub1-medium fs-8">
+                                                            {themeData.trail_length}
                                                         </p>
                                                     </div>
                                                     <div className="col text-center text-lg-start">
-                                                        <p className="mb-2 body3-regular text-primary-300">
+                                                        <p className="mb-2 body3-regular  text-primary-300">
                                                             建議時間
                                                         </p>
-                                                        <p className="sub1-medium ">
-                                                            {detailData.trail_hour}
+                                                        <p className="sub1-medium fs-8 ">
+                                                            {themeData.trail_hour}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="pb-lg-6 pb-3 border-bottom border-black-100">
                                                 <p className="body1-regular text-black-700">
-                                                    {detailData.trail_description}
+                                                    {themeData.trail_description}
                                                 </p>
                                             </div>
                                             {/*表格 */}
@@ -366,7 +347,7 @@ const TrailDetail = () => {
                                                         </div>
                                                         <div className="col-lg-9">
                                                             <p className="body2-medium text-black-800">
-                                                                {detailData.trail_altitude} 公尺
+                                                                {themeData.trail_altitude} 公尺
                                                             </p>
                                                         </div>
                                                     </div>
@@ -380,35 +361,7 @@ const TrailDetail = () => {
                                                         </div>
                                                         <div className="col-lg-9">
                                                             <p className="body2-medium text-black-800">
-                                                                {detailData.trail_road_condition}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="border-bottom border-black-100">
-                                                    <div className="row py-3 ">
-                                                        <div className="col-lg-3">
-                                                            <p className="body2-medium text-primary-300">
-                                                                所屬系統
-                                                            </p>
-                                                        </div>
-                                                        <div className="col-lg-9">
-                                                            <p className="body2-medium text-black-800">
-                                                                {detailData.trail_system}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="border-bottom border-black-100">
-                                                    <div className="row py-3 ">
-                                                        <div className="col-lg-3">
-                                                            <p className="body2-medium text-primary-300">
-                                                                管理單位
-                                                            </p>
-                                                        </div>
-                                                        <div className="col-lg-9">
-                                                            <p className="body2-medium text-black-800">
-                                                                {detailData.trail_office}
+                                                                {themeData.trail_road_condition}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -422,7 +375,7 @@ const TrailDetail = () => {
                                                         </div>
                                                         <div className="col-lg-9">
                                                             <p className="body2-medium text-black-800">
-                                                                {detailData.trail_tel}
+                                                                {themeData.trail_tel}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -431,25 +384,19 @@ const TrailDetail = () => {
                                             {/* 標籤*/}
                                             <div className="d-flex flex-wrap gap-1 mb-6 mb-lg-0 ">
                                                 <Link
-                                                    to={`/trails?trail_system=${detailData.trail_system}`}
+                                                    to={`/trails?trail_region=${themeData.trail_region}`}
                                                     className="bg-primary-50 text-primary-300 body2-bold px-3 py-1 rounded-20 me-2 mb-1"
                                                 >
-                                                    {detailData.trail_system}
+                                                    {themeData.trail_region}
                                                 </Link>
                                                 <Link
-                                                    to={`/trails?trail_region=${detailData.trail_region}`}
+                                                    to={`/trails?trail_landscape=${themeData.trail_landscape}`}
                                                     className="bg-primary-50 text-primary-300 body2-bold px-3 py-1 rounded-20 me-2 mb-1"
                                                 >
-                                                    {detailData.trail_region}
-                                                </Link>
-                                                <Link
-                                                    to={`/trails?trail_landscape=${detailData.trail_landscape}`}
-                                                    className="bg-primary-50 text-primary-300 body2-bold px-3 py-1 rounded-20 me-2 mb-1"
-                                                >
-                                                    {detailData.trail_landscape}
+                                                    {themeData.trail_landscape}
                                                 </Link>
 
-                                                {detailData.trail_tags?.map((item, index) => {
+                                                {themeData.trail_tags?.map((item, index) => {
                                                     return (
                                                         <Link
                                                             key={index}
@@ -578,14 +525,7 @@ const TrailDetail = () => {
                 <div className="container">
                     <h2 className="mb-4 mb-lg-8">推薦步道</h2>
                     <div className="recommend-first mb-6">
-                        <p className="body1-medium text-primary-300 mb-3">
-                            中央山脈脊梁國家步道系統
-                        </p>
-                        <TrailCard trailData={systemOne} />
-                    </div>
-                    <div className="recommend-first ">
-                        <p className="body1-medium text-primary-300 mb-3">其他步道系統</p>
-                        <TrailCard trailData={systemOther} />
+                        <TrailCard trailData={themeOne} />
                     </div>
                 </div>
             </div>
@@ -595,4 +535,4 @@ const TrailDetail = () => {
     );
 };
 
-export default TrailDetail;
+export default ThemeDetail;

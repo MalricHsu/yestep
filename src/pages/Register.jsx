@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../slices/authSlice';
 import axios from 'axios';
+import Info from '../components/Info';
+import { createMessage } from '../slices/infoSlice';
 
 // API
 // const RegisterApi = axios.create({ baseURL: 'http://localhost:3000/' });
@@ -33,27 +35,37 @@ const Register = () => {
             const { accessToken, user } = res.data;
 
             dispatch(loginSuccess({ accessToken, user }));
-            alert(`${data.name} 歡迎加入YeStep`);
+            dispatch(
+                createMessage({
+                    text: `${user.name} 歡迎加入YeStep`,
+                    type: 'success',
+                }),
+            );
             navigate('/');
         } catch (error) {
-            console.error('登入失敗', error);
-            // 處理錯誤訊息
-
             if (error.response) {
                 // json-server-auth 通常回傳 "Email already exists"
-                alert(
-                    error.response.data === 'Email already exists'
-                        ? '此 Email 已被註冊過'
-                        : '註冊失敗',
+                dispatch(
+                    createMessage({
+                        text:
+                            error.response.data === 'Email already exists'
+                                ? '此 Email 已被註冊過'
+                                : '註冊失敗',
+                        type: 'red',
+                    }),
                 );
-            } else {
-                alert('伺服器連線失敗');
             }
+            dispatch(
+                createMessage({
+                    text: '伺服器連線失敗',
+                    type: 'red',
+                }),
+            );
         }
     };
-
     return (
         <>
+            <Info />
             <section
                 className=""
                 style={{

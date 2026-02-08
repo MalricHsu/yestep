@@ -5,9 +5,37 @@ import Offcanvas from 'bootstrap/js/dist/offcanvas';
 import logoDark from '../assets/images/logo/logo.png';
 import yestepDark from '../assets/images/logo/yestep.svg';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../slices/authSlice';
+import { createMessage } from '../slices/infoSlice.js';
+
 const NavOffcanvas = ({ show, onClose }) => {
     const offcanvasRef = useRef(null);
     const instanceRef = useRef(null);
+
+    const isLogin = useSelector((state) => {
+        console.log(state);
+        return state.auth.isLogin;
+    });
+    const user = useSelector((state) => {
+        console.log(state);
+        return state.auth.user;
+    });
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        dispatch(logout());
+        dispatch(
+            createMessage({
+                text: `${user.name}，登入成功`,
+                type: 'success',
+            }),
+        );
+        navigate('/'); // 回到首頁
+    };
 
     useEffect(() => {
         if (!offcanvasRef.current) return;
@@ -68,15 +96,38 @@ const NavOffcanvas = ({ show, onClose }) => {
                     </ul>
                 </div>
                 {/* 登入註冊 */}
-                <div className="d-flex justify-content-center mt-auto">
-                    <Link
-                        to="/login"
-                        className="d-flex align-items-center text-decoration-none link-primary-300"
-                    >
-                        <i className="material-symbols-outlined me-2">account_circle</i>
-                        <span>登入/註冊</span>
-                    </Link>
-                </div>
+                {isLogin ? (
+                    <>
+                        <div className="d-flex justify-content-center mt-auto">
+                            <Link
+                                to="/login"
+                                className="d-flex align-items-center text-decoration-none link-primary-300"
+                            >
+                                <span>會員中心</span>
+                            </Link>
+                            <span className="mx-2">｜</span>
+                            <a
+                                href="#"
+                                onClick={handleLogout}
+                                className="d-flex align-items-center text-decoration-none link-primary-300"
+                            >
+                                <span>登出</span>
+                            </a>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="d-flex justify-content-center mt-auto">
+                            <Link
+                                to="/login"
+                                className="d-flex align-items-center text-decoration-none link-primary-300"
+                            >
+                                <i className="material-symbols-outlined me-2">account_circle</i>
+                                <span>登入/註冊</span>
+                            </Link>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

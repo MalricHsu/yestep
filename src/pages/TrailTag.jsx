@@ -1,22 +1,22 @@
-import axios from 'axios';
+//react套件
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+//第三方套件
+import axios from 'axios';
+//元件
 import Nav from '../components/Nav';
 
 const tagApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
-
 const TrailTag = () => {
     const [trails, setTrails] = useState([]);
-
     //抓取那個網頁？後面的字
     const [searchParams] = useSearchParams(); //拿到網址物件
-
-    // console.log(useSearchParams());
     //從物件中取出相對應的key，就會給出值
     const tagName =
         searchParams.get('trail_tags') ||
         searchParams.get('trail_region') ||
         searchParams.get('trail_system') ||
+        searchParams.get('trail_landscape') ||
         '搜尋結果';
 
     useEffect(() => {
@@ -31,9 +31,15 @@ const TrailTag = () => {
                     //換成路由看得懂的樣子（可以加很多的參數）
                     queryName = searchParams.toString();
                 }
-                const res = await tagApi.get(`/trails?${queryName}`);
-                console.log(res.data);
-                setTrails(res.data);
+                const [res1, res2] = await Promise.all([
+                    tagApi.get(`/trails?${queryName}`),
+                    tagApi.get(`/theme?${queryName}`),
+                ]);
+                // 使用 ES6 的展開運算子 (...) 把兩個陣列合併成一個
+                const combinedData = [...res1.data, ...res2.data];
+
+                // 把合併後的資料存進去，React 就會自動渲染這整包資料
+                setTrails(combinedData);
             } catch (error) {
                 console.log(error);
             }

@@ -58,7 +58,7 @@ function ScrollToTop() {
             {isVisible && (
                 <button
                     type="button"
-                    className={`to-top-btn p-0 btn ${getButtonColor()} rounded-100`}
+                    className={`to-top-btn p-0 btn ${getButtonColor()} rounded-pill`}
                     onClick={handleScrollToTop}
                 >
                     <span className="material-symbols-outlined p-3">keyboard_arrow_up</span>

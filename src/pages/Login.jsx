@@ -3,7 +3,9 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../slices/authSlice';
+import { createMessage } from '../slices/infoSlice';
 import axios from 'axios';
+import Info from '../components/Info';
 
 // API
 // const LoginApi = axios.create({ baseURL: 'http://localhost:3000/' });
@@ -28,21 +30,36 @@ const Login = () => {
             const res = await LoginApi.post('/login', data);
             const { accessToken, user } = res.data;
             dispatch(loginSuccess({ accessToken, user }));
-            alert(`歡迎回來，${user.name} YeStep`);
+            dispatch(
+                createMessage({
+                    text: `${user.name}，歡迎回來 YeStep`,
+                    type: 'success',
+                }),
+            );
             navigate('/');
         } catch (error) {
-            console.error('登入失敗', error);
             // 處理錯誤訊息
             if (error.response) {
-                alert(error.response.data || '帳號或密碼錯誤');
+                dispatch(
+                    createMessage({
+                        text: error.response.data || '帳號或密碼錯誤',
+                        type: 'red',
+                    }),
+                );
             } else {
-                alert('伺服器連線失敗');
+                dispatch(
+                    createMessage({
+                        text: '伺服器連線失敗',
+                        type: 'red',
+                    }),
+                );
             }
         }
     };
 
     return (
         <>
+            <Info />
             <section
                 className=""
                 style={{
@@ -120,7 +137,10 @@ const Login = () => {
                     >
                         登入
                     </button>
-                    <Link className="btn btn-text align-self-end body1-medium px-4 py-3">
+                    <Link
+                        to="/register"
+                        className="btn btn-text align-self-end body1-medium px-4 py-3"
+                    >
                         立即註冊
                     </Link>
                     <p
