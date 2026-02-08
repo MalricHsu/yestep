@@ -1,6 +1,8 @@
-// 難易度小卡、切換按鈕 hover 樣式、替換Swiper圖片、加上SWiper <> 按鈕、手機版的 ThemeSwiper.jsx 圖片、搜尋欄簡化
+// 最優先：難易度小卡、切換按鈕 hover 樣式
+// 待討論：搜尋欄簡化
+// 替換Swiper圖片、加上SWiper <> 按鈕、手機版的 ThemeSwiper.jsx 圖片
 // fix: 選單active邏輯
-// 已修：預約按鈕Link、景觀小卡傳中文、更正成壓縮後圖片
+// fix: 預約按鈕Link、景觀小卡傳中文、更正成壓縮後圖片
 
 // 引入Nav
 import Nav from '../components/Nav';
