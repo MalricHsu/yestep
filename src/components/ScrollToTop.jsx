@@ -7,8 +7,8 @@ const routeColorMap = {
     // '/search': 'btn-red',
     '/detail': 'btn-black-600',
     '/trails': 'btn-black-700',
-    '/theme': 'btn-black-900',
-    '/member': 'btn-black-800',
+    '/theme': 'btn-primary-200 opacity-75 text-white',
+    '/member': 'btn-primary-200 opacity-75 text-white',
 };
 
 function ScrollToTop() {
@@ -58,7 +58,7 @@ function ScrollToTop() {
             {isVisible && (
                 <button
                     type="button"
-                    className={`to-top-btn p-0 btn ${getButtonColor()} rounded-100`}
+                    className={`to-top-btn p-0 btn ${getButtonColor()} rounded-pill`}
                     onClick={handleScrollToTop}
                 >
                     <span className="material-symbols-outlined p-3">keyboard_arrow_up</span>

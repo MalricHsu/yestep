@@ -4,6 +4,9 @@ import Nav from '../components/Nav';
 import heroVideo from '../assets/videos/hero-video.mp4';
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 
+// 引入 HeroSwiper.jsx
+import HeroSwiper from '../components/HeroSwiper';
+
 // 引入 HomeSwiper.jsx
 import HomeSwiper from '../components/HomeSwiper';
 
@@ -57,12 +60,14 @@ const Home = () => {
                         <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
                         <source src={heroVideo} type="video/mp4" />
                     </video>
+                    {/* Hero-Swiper */}
+                    <div className="w-100 h-100"></div>
                 </div>
                 {/* slogan+搜尋欄 */}
                 <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
                     <div className="container">
                         <div className="row ">
-                            <div className="col-lg-8 mx-auto">
+                            <div className="col-12 col-lg-8 mx-auto">
                                 <h1 className="fs-2 fs-lg-1 text-white text-center mb-8">
                                     Yes to taking the next step !
                                 </h1>
@@ -80,6 +85,13 @@ const Home = () => {
                                 </form>
                             </div>
                         </div>
+                    </div>
+                </div>
+                {/* 切換按鈕 */}
+                <div className="hero__bottom-wrap position-absolute start-50 translate-middle-x z-1">
+                    <div className="d-flex gap-5 bg-black-700 rounded-pill">
+                        <button className="btn btn-white">影片</button>
+                        <button className="btn btn-red">輪播</button>
                     </div>
                 </div>
             </header>

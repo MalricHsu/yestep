@@ -11,6 +11,7 @@
         aspect-ratio: 16 / 9;
     }
 }
+
 // 🔸 影片滿版遮罩
 .hero::after {
     position: absolute;
@@ -20,8 +21,16 @@
     z-index: 1;
 }
 
+.hero__bottom-wrap {
+    bottom: 24px;
+
+    @media (min-width: 992px) {
+        bottom: 36px;
+    }
+}
+
 /* 本月活動特輯 Swiper */
-.swiper {
+.home-swiper {
     padding-bottom: 144px;
 
     @media (min-width: 992px) {

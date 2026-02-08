@@ -1,0 +1,47 @@
+.memberTabBtn {
+    position: relative;
+    flex: 1 1 0;
+    transition: flex 0.4s ease;
+
+    &:hover {
+        flex: 4 0 0;
+    }
+
+    /* === SVG === */
+    svg {
+        transition:
+            transform 0.4s ease,
+            opacity 0.4s ease;
+    }
+
+    &:hover svg {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+
+    /* === Label === */
+    .memberTabLabel {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        pointer-events: none;
+        white-space: nowrap;
+        transition:
+            opacity 0.4s ease,
+            transform 0.4s ease;
+        z-index: 1;
+    }
+
+    &:hover .memberTabLabel,
+    &:focus-visible .memberTabLabel {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.06);
+        z-index: 2;
+    }
+}
+
+.accordion-button:hover {
+    background-color: rgba($primary-200, 0.1);
+}

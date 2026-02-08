@@ -34,7 +34,6 @@ const StarRating = ({ rating, fontSize, color }) => {
             ))}
         </div>
     );
-    text - primary - 300;
 };
 
 export default StarRating;
