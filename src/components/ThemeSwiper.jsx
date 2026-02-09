@@ -1,16 +1,19 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 
 // 引入圖片
 import themeImg01 from '../assets/images/home/theme-swiper-01.svg';
+import themeImg02 from '../assets/images/home/theme-swiper-02.png';
+import themeImg03 from '../assets/images/home/theme-swiper-03.png';
 import themeImgLg01 from '../assets/images/home/theme-swiper-lg-01.svg';
 import themeImgLg02 from '../assets/images/home/theme-swiper-lg-02.svg';
 import themeImgLg03 from '../assets/images/home/theme-swiper-lg-03.svg';
 import swiperDecor from '../assets/images/home/swiper-decor.svg';
 import swiperDecorLg from '../assets/images/home/swiper-decor-lg.svg';
 
-function HomeSwiper() {
+function ThemeSwiper() {
     const [carouselData] = useState([
         {
             id: 1,
@@ -21,14 +24,14 @@ function HomeSwiper() {
         },
         {
             id: 2,
-            image: themeImg01,
+            image: themeImg02,
             imageLg: themeImgLg02,
             title: '當​我​們​「桐」​在​一起​',
             derscription: '在​花間​小徑，​留​下歡笑​與足跡',
         },
         {
             id: 3,
-            image: themeImg01,
+            image: themeImg03,
             imageLg: themeImgLg03,
             title: '為​相遇​寫​下序章​​',
             derscription: '傳說，​在​桐花​雨下，​攜​手​走過​的​兩人，​會​一起​走得​更​遠',
@@ -38,8 +41,7 @@ function HomeSwiper() {
     return (
         <>
             <Swiper
-                style={{ overflow: 'hidden' }}
-                className="home-swiper"
+                className="theme-swiper"
                 loop={true}
                 spaceBetween={72}
                 slidesPerView={1} //手機版、電腦版顯示 1 張
@@ -83,9 +85,12 @@ function HomeSwiper() {
                                                     {item.derscription}
                                                 </p>
                                             </div>
-                                            <button className="theme__btn px-6 py-3 border-0 bg-primary-100 text-primary-300 body1-bold rounded-100">
+                                            <Link
+                                                to="/theme"
+                                                className="theme__btn px-6 py-3 border-0 bg-primary-100 text-primary-300 body1-bold rounded-pill"
+                                            >
                                                 立即預約
-                                            </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
@@ -98,4 +103,4 @@ function HomeSwiper() {
     );
 }
 
-export default HomeSwiper;
+export default ThemeSwiper;

@@ -1,5 +1,11 @@
+// 待討論：搜尋欄簡化
+// 最優先：難易度小卡、切換按鈕 hover 樣式、加上SWiper < > 按鈕
+// fix: 選單active bg底色、預約按鈕Link、景觀小卡傳中文
+// fix: 更正成壓縮後圖片、替換手機版的 ThemeSwiper.jsx 圖片、替換 HeroSwiper 圖片
+
 // 引入Nav
 import Nav from '../components/Nav';
+
 // 引入 Hero 影片
 import heroVideo from '../assets/videos/hero-video.mp4';
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
@@ -7,8 +13,20 @@ import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 // 引入 HeroSwiper.jsx
 import HeroSwiper from '../components/HeroSwiper';
 
-// 引入 HomeSwiper.jsx
-import HomeSwiper from '../components/HomeSwiper';
+// 引入 主題活動特輯 ThemeSwiper
+import ThemeSwiper from '../components/ThemeSwiper';
+
+// 引入 步道難度指南 diffcard 難易度圖片
+import diffCard01Sm from '../assets/images/home/diffcard-01-sm.png';
+import diffCard01 from '../assets/images/home/diffcard-01.png';
+import diffCard02Sm from '../assets/images/home/diffcard-02-sm.png';
+import diffCard02 from '../assets/images/home/diffcard-02.png';
+import diffCard03Sm from '../assets/images/home/diffcard-03-sm.png';
+import diffCard03 from '../assets/images/home/diffcard-03.png';
+import diffCard04Sm from '../assets/images/home/diffcard-04-sm.png';
+import diffCard04 from '../assets/images/home/diffcard-04.png';
+import diffCard05Sm from '../assets/images/home/diffcard-05-sm.png';
+import diffCard05 from '../assets/images/home/diffcard-05.png';
 
 // 引入 特色景觀步道 landscape 資料
 import { landscapeColumns } from '../data/home-landscape';
@@ -17,11 +35,11 @@ import { landscapeColumns } from '../data/home-landscape';
 import aboutImg from '../assets/images/home/about-img.svg';
 import aboutImgLg from '../assets/images/home/about-img-lg.svg';
 
-// 引入關於我們-背景山脈圖
+// 引入 關於我們-背景山脈圖
 import aboutBgLg from '../assets/images/home/about-bg-lg.svg';
 import aboutBg from '../assets/images/home/about-bg.svg';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PopularTrails from '../components/PopularTrails';
 
@@ -50,18 +68,34 @@ const Home = () => {
         }
     };
 
+    // Hero顯示邏輯
+    const [heroMode, setHeroMode] = useState('video');
+
     return (
         <>
             <header className="position-relative">
                 <Nav />
                 {/* HERO:手機90vh、桌機16:9 */}
                 <div className="hero">
-                    <video className="object-fit-cover w-100 h-100" autoPlay loop muted playsInline>
-                        <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
-                        <source src={heroVideo} type="video/mp4" />
-                    </video>
-                    {/* Hero-Swiper */}
-                    <div className="w-100 h-100"></div>
+                    {/* 值為video */}
+                    {heroMode === 'video' && (
+                        <video
+                            className="object-fit-cover w-100 h-100"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                        >
+                            <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
+                            <source src={heroVideo} type="video/mp4" />
+                        </video>
+                    )}
+                    {/* 值為swiper */}
+                    {heroMode === 'swiper' && (
+                        <div className="w-100 h-100">
+                            <HeroSwiper />
+                        </div>
+                    )}
                 </div>
                 {/* slogan+搜尋欄 */}
                 <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
@@ -87,15 +121,24 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                {/* 切換按鈕 */}
+                {/* Hero切換按鈕 */}
                 <div className="hero__bottom-wrap position-absolute start-50 translate-middle-x z-1">
-                    <div className="d-flex gap-5 bg-black-700 rounded-pill">
-                        <button className="btn btn-white">影片</button>
-                        <button className="btn btn-red">輪播</button>
+                    <div className="d-flex bg-primary-300 rounded-pill p-2">
+                        <button
+                            className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'video' ? 'active' : ''}`}
+                            onClick={() => setHeroMode('video')}
+                        >
+                            <span className="material-symbols-outlined">animated_images</span>
+                        </button>
+                        <button
+                            className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'swiper' ? 'active' : ''}`}
+                            onClick={() => setHeroMode('swiper')}
+                        >
+                            <span className="material-symbols-outlined ">filter</span>
+                        </button>
                     </div>
                 </div>
             </header>
-
             <main>
                 {/* 本月活動特輯 Swiper */}
                 <section className="py-8 py-lg-16 ">
@@ -106,7 +149,7 @@ const Home = () => {
                                     <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
                                 </div>
                                 <div className="theme__swiper">
-                                    <HomeSwiper />
+                                    <ThemeSwiper />
                                 </div>
                             </div>
                         </div>
@@ -114,16 +157,237 @@ const Home = () => {
                 </section>
                 {/* 熱門步道 */}
                 <PopularTrails onUpdate={handleAddPopular} hasBorder={false} />
-                {/* 難易度步道 */}
+
+                {/* 步道難度指南 */}
                 <section className="pt-16 pb-32">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
-                                <h2 className="fs-lg-2 fs-5">步道難度指南</h2>
+                                <h2 className="fs-lg-2 fs-5 mb-8">步道難度指南</h2>
+                                <ul className="diffcard__list list-unstyled gap-4">
+                                    <li className="diffcard__card">
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard01}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard01Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        休閒級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">1,000 公尺以下</p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">帶水與少許糧食</p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        全家皆宜，坡度平緩且設施完善，路面平緩輕鬆好走。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li className="diffcard__card">
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard02}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard02Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        入門級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        1,000 公尺 ~ 2,000 公尺
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">帶水與適量糧食</p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        有些稍難路段，設施相對完善，路面平整。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li className="diffcard__card">
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard03}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard03Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        健行級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        2,000 公尺 ~ 3,000 公尺
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">
+                                                        需具備登山裝備如糧食、睡袋、炊煮設備
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        有些路段需要事先申請許可，設施相對完善。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li className="diffcard__card">
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard04}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard04Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        挑戰級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        2,000 公尺 ~ 3,000 公尺
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">
+                                                        需具備登山裝備如糧食、睡袋、炊煮設備
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        坡度陡峭，多條路段需要申請許可，氣溫變化大。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li className="diffcard__card">
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard05}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard05Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        專業級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">3,000 公尺以上</p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">
+                                                        需具備登山裝備如糧食、睡袋、炊煮設備
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        路況不佳，有許多困難和危險路段，需事先申請許可，氣溫變化大。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </section>
+
                 {/* 特色景觀步道 feature */}
                 <section className="py-5">
                     <div className="landscape__gallery text-primary-50 ">
@@ -131,7 +395,7 @@ const Home = () => {
                         <div className="landscape__column">
                             {landscapeColumns.left.map((item) => (
                                 <Link
-                                    to={`/search?trail_landscape=${item.tag}`}
+                                    to={`/search?trail_landscape=${item.landscapeName}`}
                                     className="landscape__card"
                                     key={item.id}
                                 >
@@ -146,7 +410,7 @@ const Home = () => {
                         <div className="landscape__column">
                             {landscapeColumns.center.map((item) => (
                                 <Link
-                                    to={`/search?trail_landscape=${item.tag}`}
+                                    to={`/search?trail_landscape=${item.landscapeName}`}
                                     className="landscape__card"
                                     key={item.id}
                                 >
@@ -161,7 +425,7 @@ const Home = () => {
                         <div className="landscape__column">
                             {landscapeColumns.right.map((item) => (
                                 <Link
-                                    to={`/search?trail_landscape=${item.tag}`}
+                                    to={`/search?trail_landscape=${item.landscapeName}`}
                                     className="landscape__card"
                                     key={item.id}
                                 >
@@ -174,6 +438,7 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
+
                 {/* 關於我們 about */}
                 <section className="py-16 py-lg-32 position-relative">
                     <div className="container">
