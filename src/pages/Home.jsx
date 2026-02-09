@@ -17,6 +17,7 @@ import HeroSwiper from '../components/HeroSwiper';
 import ThemeSwiper from '../components/ThemeSwiper';
 
 // 引入 步道難度指南 diffcard 難易度圖片
+import diffCard01Sm from '../assets/images/home/diffcard-01-sm.png';
 import diffCard01 from '../assets/images/home/diffcard-01.png';
 import diffCard02 from '../assets/images/home/diffcard-02.png';
 import diffCard03 from '../assets/images/home/diffcard-03.png';
@@ -122,7 +123,7 @@ const Home = () => {
                         <button className="btn rounded-pill" onClick={() => setHeroMode('video')}>
                             <span class="material-symbols-outlined">animated_images</span>
                         </button>
-                        <button className="btn  rounded-pill" onClick={() => setHeroMode('swiper')}>
+                        <button className="btn rounded-pill" onClick={() => setHeroMode('swiper')}>
                             <span class="material-symbols-outlined">filter</span>
                         </button>
                     </div>
@@ -147,47 +148,229 @@ const Home = () => {
                 {/* 熱門步道 */}
                 <PopularTrails onUpdate={handleAddPopular} hasBorder={false} />
 
-                {/* 難易度小卡介紹 */}
+                {/* 步道難度指南 */}
                 <section className="pt-16 pb-32">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
                                 <h2 className="fs-lg-2 fs-5 mb-8">步道難度指南</h2>
                                 <ul className="diffcard__list list-unstyled gap-4">
-                                    <li className="diffcard__card ">
-                                        <img
-                                            src={diffCard01}
-                                            className="diffcard__img"
-                                            alt="圖片"
-                                        />
+                                    <li className="diffcard__card">
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard01}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard01Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        休閒級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">1,000 公尺以下</p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">帶水與少許糧食</p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        全家皆宜，坡度平緩且設施完善，路面平緩輕鬆好走。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </li>
                                     <li className="diffcard__card">
-                                        <img
-                                            src={diffCard02}
-                                            className="diffcard__img"
-                                            alt="圖片"
-                                        />
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard02}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard01Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        入門級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        1,000 公尺 ~ 2,000 公尺
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">帶水與適量糧食</p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        有些稍難路段，設施相對完善，路面平整。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </li>
                                     <li className="diffcard__card">
-                                        <img
-                                            src={diffCard03}
-                                            className="diffcard__img"
-                                            alt="圖片"
-                                        />
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard03}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard01Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        健行級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        2,000 公尺 ~ 3,000 公尺
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">
+                                                        需具備登山裝備如糧食、睡袋、炊煮設備
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        坡度較陡，有些路段需要事先申請許可，基本設施完善。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </li>
                                     <li className="diffcard__card">
-                                        <img
-                                            src={diffCard04}
-                                            className="diffcard__img"
-                                            alt="圖片"
-                                        />
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard04}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard01Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        挑戰級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        2,000 公尺 ~ 3,000 公尺
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">
+                                                        需具備登山裝備如糧食、睡袋、炊煮設備
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        坡度陡峭，多條路段需要申請許可，氣溫變化大。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </li>
                                     <li className="diffcard__card">
-                                        <img
-                                            src={diffCard05}
-                                            className="diffcard__img"
-                                            alt="圖片"
-                                        />
+                                        <div className="diffcard__content">
+                                            <img
+                                                src={diffCard05}
+                                                className="diffcard__img"
+                                                alt="圖片"
+                                            />
+                                            <div className="diffcard__overlay">
+                                                <div className="w-100 text-center">
+                                                    <img
+                                                        src={diffCard01Sm}
+                                                        className="diffcard__img-sm mb-3"
+                                                        alt="小圖"
+                                                    />
+                                                    <h3 className="fs-3 mb-3 text-primary-300">
+                                                        專業級
+                                                    </h3>
+                                                </div>
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">
+                                                        海拔高度
+                                                    </span>
+                                                    <p className="diffcard__text">3,000 公尺以上</p>
+                                                </div>
+
+                                                <div className="diffcard__row">
+                                                    <span className="diffcard__label">裝備</span>
+                                                    <p className="diffcard__text">
+                                                        需具備登山裝備如糧食、睡袋、炊煮設備
+                                                    </p>
+                                                </div>
+
+                                                <div className="diffcard__row border-0">
+                                                    <span className="diffcard__label">
+                                                        步道描述
+                                                    </span>
+                                                    <p className="diffcard__text">
+                                                        路況不佳，有許多困難和危險路段，需事先申請許可，氣溫變化大。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>

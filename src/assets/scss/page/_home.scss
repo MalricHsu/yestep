@@ -79,24 +79,125 @@
         height: auto;
     }
 }
-/* 步道難度指南 */
+/* 步道難度指南 diffcard */
+
 .diffcard__list {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5欄 */
-    gap: 16px;
+    display: flex; /* 手機版：水平排列 */
+    /* flex-wrap: nowrap;  手機版：不換行 */
+    overflow-x: auto; /* 手機版：開啟水平滑動 */
+
+    /* 隱藏橫向捲軸 */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    @media (min-width: 992px) {
+        display: grid;
+        flex-wrap: unset;
+        grid-template-columns: repeat(5, 1fr);
+        overflow-x: visible;
+    }
 }
 
 .diffcard__card {
-}
+    flex: 0 0 200px;
+    scroll-snap-align: start;
 
+    @media (min-width: 992px) {
+        flex: unset; // 取消flex
+        width: auto;
+    }
+
+    //難易度小卡遮罩
+    &:hover {
+        .diffcard__overlay {
+            opacity: 1; /* 滑鼠移過去時顯示 */
+        }
+    }
+}
 .diffcard__img {
     width: 100%;
+    height: 400px;
     object-fit: cover;
     border-radius: 24px;
-    // aspect-ratio: 1 / 2;
+
+    @media (min-width: 992px) {
+        height: auto;
+    }
+}
+
+// 遮罩顯示層
+.diffcard__content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 24px; /* 圓角設在這裡 */
+    overflow: hidden;
+}
+
+/* 新增遮罩層 */
+.diffcard__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(226, 211, 169); /* 米色背景 */
+    opacity: 0; /* 預設隱藏 */
+    transition: opacity 0.3s ease;
+
+    /* 文字排版置中 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 16px;
+    text-align: left;
+}
+
+.diffcard__img-sm {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    object-fit: contain;
+
+    @media (min-width: 992px) {
+        display: none;
+    }
+    @media (min-width: 1400px) {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* 覆蓋層內的文字樣式  */
+.diffcard__title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: $primary-300;
+}
+
+.diffcard__row {
+    font-size: 14px;
+    line-height: 1.5;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.diffcard__label {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: $primary-300;
+    margin-bottom: 4px; /* 標題與內文的間距 */
+    letter-spacing: 1px; /* 字距稍微拉開，增加質感 */
 }
 
 /* 特色景觀步道 feature */
+
 .landscape__gallery {
     display: grid;
     grid-template-columns: 1fr 1fr; // 🔸 手機版 grid 雙欄
