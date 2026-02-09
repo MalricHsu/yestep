@@ -19,9 +19,13 @@ import ThemeSwiper from '../components/ThemeSwiper';
 // 引入 步道難度指南 diffcard 難易度圖片
 import diffCard01Sm from '../assets/images/home/diffcard-01-sm.png';
 import diffCard01 from '../assets/images/home/diffcard-01.png';
+import diffCard02Sm from '../assets/images/home/diffcard-02-sm.png';
 import diffCard02 from '../assets/images/home/diffcard-02.png';
+import diffCard03Sm from '../assets/images/home/diffcard-03-sm.png';
 import diffCard03 from '../assets/images/home/diffcard-03.png';
+import diffCard04Sm from '../assets/images/home/diffcard-04-sm.png';
 import diffCard04 from '../assets/images/home/diffcard-04.png';
+import diffCard05Sm from '../assets/images/home/diffcard-05-sm.png';
 import diffCard05 from '../assets/images/home/diffcard-05.png';
 
 // 引入 特色景觀步道 landscape 資料
@@ -206,7 +210,7 @@ const Home = () => {
                                             <div className="diffcard__overlay">
                                                 <div className="w-100 text-center">
                                                     <img
-                                                        src={diffCard01Sm}
+                                                        src={diffCard02Sm}
                                                         className="diffcard__img-sm mb-3"
                                                         alt="小圖"
                                                     />
@@ -249,7 +253,7 @@ const Home = () => {
                                             <div className="diffcard__overlay">
                                                 <div className="w-100 text-center">
                                                     <img
-                                                        src={diffCard01Sm}
+                                                        src={diffCard03Sm}
                                                         className="diffcard__img-sm mb-3"
                                                         alt="小圖"
                                                     />
@@ -278,7 +282,7 @@ const Home = () => {
                                                         步道描述
                                                     </span>
                                                     <p className="diffcard__text">
-                                                        坡度較陡，有些路段需要事先申請許可，基本設施完善。
+                                                        有些路段需要事先申請許可，設施相對完善。
                                                     </p>
                                                 </div>
                                             </div>
@@ -294,7 +298,7 @@ const Home = () => {
                                             <div className="diffcard__overlay">
                                                 <div className="w-100 text-center">
                                                     <img
-                                                        src={diffCard01Sm}
+                                                        src={diffCard04Sm}
                                                         className="diffcard__img-sm mb-3"
                                                         alt="小圖"
                                                     />
@@ -339,7 +343,7 @@ const Home = () => {
                                             <div className="diffcard__overlay">
                                                 <div className="w-100 text-center">
                                                     <img
-                                                        src={diffCard01Sm}
+                                                        src={diffCard05Sm}
                                                         className="diffcard__img-sm mb-3"
                                                         alt="小圖"
                                                     />

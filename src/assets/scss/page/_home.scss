@@ -158,15 +158,17 @@
 }
 
 .diffcard__img-sm {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     margin: 0 auto;
     object-fit: contain;
+    border-radius: 50%;
 
     @media (min-width: 992px) {
         display: none;
     }
     @media (min-width: 1400px) {
+        display: block;
         width: 120px;
         height: 120px;
     }
@@ -174,7 +176,7 @@
 
 /* 覆蓋層內的文字樣式  */
 .diffcard__title {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     margin-bottom: 12px;
     color: $primary-300;
