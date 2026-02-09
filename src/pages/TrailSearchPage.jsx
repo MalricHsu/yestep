@@ -238,18 +238,16 @@ const TrailSearchPage = () => {
                                     </p>
                                 </div>
                                 <div className="checkbox-filter d-flex column-gap-2">
-                                    <div class="dropdown">
+                                    <div className="dropdown">
                                         <button
-                                            class="btn btn-primary dropdown-toggle"
+                                            className="btn btn-primary dropdown-toggle"
                                             type="button"
                                             data-bs-toggle="dropdown"
                                             aria-expanded="false"
                                         >
-                                            <span className="ms-1">
-                                                {urlDifficulty || '所有難度'}
-                                            </span>
+                                            <span className="ms-1">{urlDifficulty || '難度'}</span>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-start shadow mt-2">
+                                        <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
                                             <li>
                                                 <button
                                                     className="dropdown-item"
@@ -260,7 +258,7 @@ const TrailSearchPage = () => {
                                                         })
                                                     }
                                                 >
-                                                    所有難度
+                                                    難度
                                                 </button>
                                             </li>
                                             {difficulty.map((level, index) => (
@@ -280,28 +278,28 @@ const TrailSearchPage = () => {
                                             ))}
                                         </ul>
                                     </div>
-                                    <div class="dropdown">
+                                    <div className="dropdown">
                                         <button
-                                            class="btn btn-primary dropdown-toggle"
+                                            className="btn btn-primary dropdown-toggle"
                                             type="button"
                                             data-bs-toggle="dropdown"
                                             aria-expanded="false"
                                         >
                                             <span className="ms-1">時間</span>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-start shadow mt-2">
+                                        <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
                                             {estimatedDuration.map((time, index) => {
                                                 return (
-                                                    <div class="form-check" key={index}>
+                                                    <div className="form-check" key={index}>
                                                         <input
-                                                            class="form-check-input"
+                                                            className="form-check-input"
                                                             type="checkbox"
                                                             value=""
                                                             id={`checkDefault${index}`}
                                                         />
                                                         <label
-                                                            class="form-check-label"
-                                                            for={`checkDefault${index}`}
+                                                            className="form-check-label"
+                                                            htmlFor={`checkDefault${index}`}
                                                         >
                                                             {time}
                                                         </label>
@@ -310,28 +308,28 @@ const TrailSearchPage = () => {
                                             })}
                                         </ul>
                                     </div>
-                                    <div class="dropdown">
+                                    <div className="dropdown">
                                         <button
-                                            class="btn btn-primary dropdown-toggle"
+                                            className="btn btn-primary dropdown-toggle"
                                             type="button"
                                             data-bs-toggle="dropdown"
                                             aria-expanded="false"
                                         >
                                             <span className="ms-1">景觀</span>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-start shadow mt-2">
+                                        <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
                                             {landscape.map((type, index) => {
                                                 return (
-                                                    <div class="form-check" key={index}>
+                                                    <div className="form-check" key={index}>
                                                         <input
-                                                            class="form-check-input"
+                                                            className="form-check-input"
                                                             type="checkbox"
                                                             value=""
                                                             id={`checkDefault${index}`}
                                                         />
                                                         <label
-                                                            class="form-check-label"
-                                                            for={`checkDefault${index}`}
+                                                            className="form-check-label"
+                                                            htmlFor={`checkDefault${index}`}
                                                         >
                                                             {type}
                                                         </label>
