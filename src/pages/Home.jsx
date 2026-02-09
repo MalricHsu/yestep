@@ -1,8 +1,7 @@
 // 待討論：搜尋欄簡化
-// 最優先：難易度小卡、切換按鈕 hover 樣式
-// 替換Swiper圖片、加上SWiper <> 按鈕、
-// fix: 選單active bg底色
-// fix: 預約按鈕Link、景觀小卡傳中文、更正成壓縮後圖片、手機版的 ThemeSwiper.jsx 圖片
+// 最優先：難易度小卡、切換按鈕 hover 樣式、加上SWiper < > 按鈕
+// fix: 選單active bg底色、預約按鈕Link、景觀小卡傳中文
+// fix: 更正成壓縮後圖片、替換手機版的 ThemeSwiper.jsx 圖片、替換 HeroSwiper 圖片
 
 // 引入Nav
 import Nav from '../components/Nav';
@@ -31,7 +30,7 @@ import { landscapeColumns } from '../data/home-landscape';
 import aboutImg from '../assets/images/home/about-img.svg';
 import aboutImgLg from '../assets/images/home/about-img-lg.svg';
 
-// 引入關於我們-背景山脈圖
+// 引入 關於我們-背景山脈圖
 import aboutBgLg from '../assets/images/home/about-bg-lg.svg';
 import aboutBg from '../assets/images/home/about-bg.svg';
 
