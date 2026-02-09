@@ -1,23 +1,60 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, EffectFade } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/effect-fade';
+
+// 引入圖片
+import heroSwiper01 from '../assets/images/home/heroswiper-01.jpg';
+import heroSwiper02 from '../assets/images/home/heroswiper-02.jpg';
+import heroSwiper03 from '../assets/images/home/heroswiper-03.jpg';
 
 function HeroSwiper() {
-    const [carouselData] = useState([
+    const carouselData = [
         {
             id: 1,
-            image: 'https://images.unsplash.com/photo-1769745241584-be9b8227e126?q=80&w=800&hight=450&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: '單人圖片',
+            image: heroSwiper01,
         },
         {
             id: 2,
-            image: 'https://images.unsplash.com/photo-1769745241584-be9b8227e126?q=80&w=800&hight=450&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: '雙人圖片',
+            image: heroSwiper02,
         },
+
         {
             id: 3,
-            image: 'https://images.unsplash.com/photo-1769745241584-be9b8227e126?q=80&w=800&hight=450&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: '家庭圖片',
+            image: heroSwiper03,
         },
-    ]);
+    ];
 
-    return <></>;
+    return (
+        <>
+            <Swiper
+                className="w-100 h-100"
+                loop={true}
+                effect="fade"
+                modules={[Autoplay, EffectFade]}
+                autoplay={{
+                    delay: 3000,
+                    disableOnInteraction: false,
+                }}
+                fadeEffect={{
+                    crossFade: true, //轉暗特效
+                }}
+            >
+                {carouselData.map((item) => (
+                    <SwiperSlide key={item.id} className="w-100 h-100">
+                        <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-100 h-100 object-fit-cover"
+                        />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+        </>
+    );
 }
 
 export default HeroSwiper;
