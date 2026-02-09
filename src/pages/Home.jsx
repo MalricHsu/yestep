@@ -128,13 +128,13 @@ const Home = () => {
                             className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'video' ? 'active' : ''}`}
                             onClick={() => setHeroMode('video')}
                         >
-                            <span className="material-symbols-outlined">animated_images</span>
+                            <span className=" material-symbols-outlined">animated_images</span>
                         </button>
                         <button
                             className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'swiper' ? 'active' : ''}`}
                             onClick={() => setHeroMode('swiper')}
                         >
-                            <span className="material-symbols-outlined ">filter</span>
+                            <span className=" material-symbols-outlined ">filter</span>
                         </button>
                     </div>
                 </div>
