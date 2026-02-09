@@ -282,7 +282,7 @@ const RegistrationForm = () => {
                     <input
                         className={`form-control text-center ${errors.qty ? 'is-invalid' : ''}`}
                         name="qty"
-                        type="number"
+                        type="text"
                         min="0"
                         max="10"
                         value={form.qty}
@@ -339,10 +339,48 @@ const RegistrationForm = () => {
 const Theme = () => {
     const { trails, loading: trailsLoading } = useTrails();
     const trailsByType = groupByType(trails);
+    const [activeId, setActiveId] = useState('monthlyActivity');
+    const navItems = useMemo(
+        () => [
+            { id: 'monthlyActivity', label: '每月活動' },
+            { id: 'fantasy', label: '忙裡偷閒' },
+            { id: 'relaxing', label: '舒壓放鬆' },
+            { id: 'familyHiking', label: '親子步道' },
+        ],
+        [],
+    );
+
+    const scrollToId = (id) => {
+        setActiveId(id);
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     useEffect(() => {
         document.title = '主題活動 | YeStep';
-    }, []);
+
+        const sections = navItems.map((i) => document.getElementById(i.id)).filter(Boolean);
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                // 取最先進入視窗中心的那個 section
+                const visible = entries
+                    .filter((e) => e.isIntersecting)
+                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+                if (visible?.target?.id) {
+                    setActiveId(visible.target.id);
+                }
+            },
+            {
+                rootMargin: '-50% 0px -50% 0px',
+                threshold: [0.1, 0.25, 0.5, 0.75, 1],
+            },
+        );
+
+        sections.forEach((sec) => observer.observe(sec));
+
+        return () => observer.disconnect();
+    }, [navItems]);
 
     return (
         <>
@@ -351,7 +389,7 @@ const Theme = () => {
                 style={{
                     backgroundImage: `url("${bg02}"), url("https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")`,
                     backgroundRepeat: 'no-repeat',
-                    height: 'clamp(300px, calc(200px + 20vw), 600px)',
+                    height: 'clamp(300px, calc(310px + 15.5vw), 600px)',
                     backgroundSize: 'contain, cover',
                     backgroundPosition: '50% 103%, 50% 80%',
                 }}
@@ -365,117 +403,43 @@ const Theme = () => {
                 <p className="text-primary-100 sub1-medium">讓自然成為你的休息室</p>
 
                 <ul
-                    className="nav nav-underline position-absolute bottom-0 d-sm-none"
+                    className="nav nav-underline position-absolute bottom-0 d-sm-none opacity-75"
                     style={{
                         flexWrap: 'nowrap',
                         overflowX: 'scroll',
                         scrollbarWidth: 'none',
                     }}
                 >
-                    <li className="nav-item" style={{ minWidth: 'fit-content' }}>
-                        <button
-                            className="nav-link body1-medium active"
-                            aria-current="page"
-                            onClick={() => {
-                                document
-                                    .getElementById('monthlyActivity')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            每月活動
-                        </button>
-                    </li>
-                    <li className="nav-item" style={{ minWidth: 'fit-content' }}>
-                        <button
-                            className="nav-link body1-medium"
-                            onClick={() => {
-                                document
-                                    .getElementById('fantasy')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            忙裡偷閒
-                        </button>
-                    </li>
-                    <li className="nav-item" style={{ minWidth: 'fit-content' }}>
-                        <button
-                            className="nav-link body1-medium"
-                            onClick={() => {
-                                document
-                                    .getElementById('relaxing')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            舒壓放鬆
-                        </button>
-                    </li>
-                    <li className="nav-item" style={{ minWidth: 'fit-content' }}>
-                        <button
-                            className="nav-link body1-medium"
-                            onClick={() => {
-                                document
-                                    .getElementById('familyHiking')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            親子步道
-                        </button>
-                    </li>
+                    {navItems.map((item) => (
+                        <li key={item.id} className="nav-item" style={{ minWidth: 'fit-content' }}>
+                            <button
+                                type="button"
+                                className={`nav-link body1-medium ${
+                                    activeId === item.id ? 'active' : ''
+                                }`}
+                                aria-current={activeId === item.id ? 'page' : undefined}
+                                onClick={() => scrollToId(item.id)}
+                            >
+                                {item.label}
+                            </button>
+                        </li>
+                    ))}
                 </ul>
-                <ul className="nav nav-pills mt-8 d-none d-sm-flex">
-                    <li className="nav-item">
-                        <button
-                            className="nav-link body1-bold active"
-                            aria-current="page"
-                            type="button"
-                            onClick={() => {
-                                document
-                                    .getElementById('monthlyActivity')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            每月活動
-                        </button>
-                    </li>
-                    <li className="nav-item">
-                        <button
-                            className="nav-link body1-bold"
-                            type="button"
-                            onClick={() => {
-                                document
-                                    .getElementById('fantasy')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            忙裡偷閒
-                        </button>
-                    </li>
-                    <li className="nav-item">
-                        <button
-                            className="nav-link body1-bold"
-                            type="button"
-                            onClick={() => {
-                                document
-                                    .getElementById('relaxing')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            舒壓放鬆
-                        </button>
-                    </li>
-                    <li className="nav-item">
-                        <button
-                            className="nav-link body1-bold"
-                            type="button"
-                            onClick={() => {
-                                document
-                                    .getElementById('familyHiking')
-                                    ?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                        >
-                            親子步道
-                        </button>
-                    </li>
+                <ul className="nav nav-pills mt-8 d-none d-sm-flex gap-2">
+                    {navItems.map((item) => (
+                        <li key={item.id} className="nav-item">
+                            <button
+                                type="button"
+                                className={`nav-link body1-bold ${
+                                    activeId === item.id ? 'active' : ''
+                                }`}
+                                aria-current={activeId === item.id ? 'page' : undefined}
+                                onClick={() => scrollToId(item.id)}
+                            >
+                                {item.label}
+                            </button>
+                        </li>
+                    ))}
                 </ul>
             </header>
 
@@ -564,7 +528,7 @@ const Theme = () => {
                         </ul>
                         <p className="body3-regular text-black-700">
                             報名結果將以 E-mail 通知。如有任何疑問請洽
-                            <Link to="/contact" className="btn btn-textLink body3-regular ps-1">
+                            <Link to="#" className="btn btn-textLink body3-regular ps-1" disabled>
                                 line官方客服
                             </Link>
                         </p>
@@ -590,7 +554,7 @@ const Theme = () => {
                                     key={sec.id}
                                     className="px-3 py-8 p-md-16 list-unstyled d-grid gap-6"
                                     style={{
-                                        background: sec.bg,
+                                        background: `linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), ${sec.bg}`,
                                         backgroundSize: 'cover',
                                         backgroundRepeat: 'no-repeat',
                                         scrollMarginTop: '75px',
@@ -614,7 +578,9 @@ const Theme = () => {
                                         <h2 className="text-white fs-5 fs-md-2 py-3">
                                             {sec.title}
                                         </h2>
-                                        <p className="text-white mt-auto">{sec.desc}</p>
+                                        <p className="text-white my-auto body1-regular">
+                                            {sec.desc}
+                                        </p>
                                     </aside>
 
                                     <ul className="list-unstyled d-grid gap-3 gap-md-4 themeList">
@@ -625,9 +591,8 @@ const Theme = () => {
                                                     className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
                                                     style={{
                                                         background: `url(${trail.trail_image})`,
-                                                        backgroundSize: 'cover',
                                                         width: '100%',
-                                                        height: '245px',
+                                                        height: '260px',
                                                         backgroundPosition: 'center',
                                                         gridTemplateColumns: 'auto auto',
                                                     }}
