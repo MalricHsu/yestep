@@ -1,5 +1,5 @@
 // 待討論：搜尋欄簡化
-// 最優先：難易度小卡、切換按鈕 hover 樣式、加上SWiper < > 按鈕
+// 最優先：難易度小卡元件化、加上SWiper < > 按鈕
 // fix: 選單active bg底色、預約按鈕Link、景觀小卡傳中文
 // fix: 更正成壓縮後圖片、替換手機版的 ThemeSwiper.jsx 圖片、替換 HeroSwiper 圖片
 
