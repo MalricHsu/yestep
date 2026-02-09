@@ -14,6 +14,17 @@ import StarRating from '../components/StarRating';
 import PopularTrails from '../components/PopularTrails';
 import SearchTheme from '../components/SearchTheme';
 
+// 篩選、排序
+const difficulty = ['休閒級', '入門級', '健行級', '挑戰級', '專業級'];
+const estimatedDuration = ['3小時內', '3-6小時', '6-12小時', '12小時-兩天', '兩天以上'];
+const landscape = ['瀑布', '日出', '雲海', '晚霞', '觀星', '神木', '賞花', '賞鳥'];
+const sortOptions = [
+    { label: '難易度由高到低', sort: 'trail_difficulty', order: 'desc' },
+    { label: '難易度由低到高', sort: 'trail_difficulty', order: 'asc' },
+    { label: '熱門程度由高到低', sort: 'trail_popular', order: 'desc' },
+    { label: '熱門程度由低到高', sort: 'trail_popular', order: 'asc' },
+];
+
 // API
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 
@@ -23,6 +34,10 @@ const TrailSearchPage = () => {
 
     // 目前頁碼狀態
     const limit = 8; // 每頁筆數
+    const urlArea = searchParams.get('trail_region') || ''; // 改對應 API 欄位
+    const urlDifficulty = searchParams.get('trail_difficulty') || '';
+    const urlSort = searchParams.get('_sort') || '';
+    const urlOrder = searchParams.get('_order') || 'desc';
     const urlKeyword = searchParams.get('q') || '';
     const currentPage = parseInt(searchParams.get('_page')) || 1;
 
@@ -33,22 +48,36 @@ const TrailSearchPage = () => {
 
     const totalPages = Math.ceil(totalCount / limit); // 計算總頁數
 
-    // 3. 當網址參數改變時（例如點擊回退鍵），同步更新 input 的文字
+    // 當網址參數改變時
     useEffect(() => {
         setKeyword(urlKeyword);
     }, [urlKeyword]);
 
-    // 4. 統一發送網址更新的函式
-    const updateRoute = (q, page) => {
-        setSearchParams({
-            q: q,
-            _page: page,
+    // 統一發送網址更新的函式
+    const updateRoute = (params) => {
+        const currentParams = Object.fromEntries(searchParams.entries());
+
+        const newParams = {
+            area: searchParams.get('area') || '',
+            q: searchParams.get('q') || '',
+            _page: searchParams.get('_page') || 1,
+            ...currentParams,
+            ...params, // 覆蓋更新的部分
+        };
+
+        // 過濾掉空值，保持網址乾淨
+        Object.keys(newParams).forEach((key) => {
+            if (newParams[key] === '' || newParams[key] == null) {
+                delete newParams[key];
+            }
         });
+
+        setSearchParams(newParams);
     };
 
     // 處理搜尋按鈕/Enter
     const triggerSearch = () => {
-        updateRoute(keyword, 1); // 搜尋時強制回到第 1 頁
+        updateRoute({ q: keyword, _page: 1 });
     };
 
     const onSearchKeyDown = (e) => {
@@ -58,7 +87,9 @@ const TrailSearchPage = () => {
     };
 
     // 網頁標題
-    useEffect(() => {}, []);
+    useEffect(() => {
+        document.title = '步道總覽 | YeStep';
+    }, []);
 
     // 步道列表
     useEffect(() => {
@@ -67,13 +98,17 @@ const TrailSearchPage = () => {
                 // 帶入分頁參數與關鍵字
                 const res = await searchApi.get(`/trails`, {
                     params: {
-                        _page: currentPage,
-                        _limit: limit,
-                        q: urlKeyword,
+                        _page: currentPage, // 當前頁數
+                        _limit: limit, // 筆數
+                        q: urlKeyword, // 關鍵字
+                        trail_region: urlArea || undefined, // 地區篩選
+                        trail_difficulty: urlDifficulty || undefined, // 難度篩選
+                        _sort: urlSort || undefined, // 排序欄位
+                        _order: urlOrder || undefined,
                     },
                 });
 
-                // 從 Header 抓取總數（這取決於後端設定，JSON Server 預設是這個名稱）
+                // 從 Header 抓取總數
                 const countFromHeader = res.headers['x-total-count'];
                 if (countFromHeader) {
                     setTotalCount(parseInt(countFromHeader));
@@ -85,21 +120,18 @@ const TrailSearchPage = () => {
             }
         };
         getTrailScenery();
-    }, [currentPage, urlKeyword]);
+    }, [currentPage, urlKeyword, urlArea, urlDifficulty, urlSort, urlOrder]);
 
     // 處理頁碼 Prev、Next
     const handlePageChange = (targetPage) => {
-        // 邊界檢查：不能小於 1，不能大於總頁數
         if (targetPage < 1 || targetPage > totalPages) return;
 
-        // 更新網址參數
-        updateRoute(urlKeyword, targetPage);
+        // 修正：傳入物件而非單一字串
+        updateRoute({ _page: targetPage });
 
-        // UX 優化：換頁後自動滾動回頂部
         window.scrollTo({
-            top: 0,
-            // behavior: 'smooth',
-            behavior: 'instant',
+            top: 200,
+            behavior: 'smooth',
         });
     };
 
@@ -142,17 +174,23 @@ const TrailSearchPage = () => {
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-lg-8">
-                            <h3 className="text-white text-center fw-medium fs-7 mb-8">步道總覽</h3>
-                            <h1 className="text-white text-center mb-8">Next Step！想要去哪裡？</h1>
+                            <h3 className="text-white text-center fw-medium fs-7 mb-4 mb-sm-8">
+                                步道總覽
+                            </h3>
+                            <h1 className="text-white text-center fs-4 fs-sm-1 mb-8">
+                                Next Step！想要去哪裡？
+                            </h1>
                             <form
                                 className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill"
                                 onSubmit={(e) => e.preventDefault()}
                             >
                                 <div className="input-group align-items-center">
                                     <select
-                                        className="form-select px-4"
-                                        value={urlKeyword}
-                                        onChange={(e) => updateRoute(e.target.value, 1)}
+                                        className="form-select px-4 d-none d-sm-block"
+                                        value={urlArea}
+                                        onChange={(e) =>
+                                            updateRoute({ trail_region: e.target.value, _page: 1 })
+                                        }
                                     >
                                         <option value="">請選擇地區</option>
                                         <option value="北部">北部</option>
@@ -160,7 +198,7 @@ const TrailSearchPage = () => {
                                         <option value="南部">南部</option>
                                         <option value="東部">東部</option>
                                     </select>
-                                    <span className="search-divider"></span>
+                                    <span className="search-divider d-none d-sm-block"></span>
                                     <input
                                         type="text"
                                         className="form-control px-4"
@@ -185,15 +223,157 @@ const TrailSearchPage = () => {
             <main>
                 <section className="search bg-primary-50 py-8">
                     <div className="container">
-                        <div className="d-flex flex-column flex-sm-row align-items-start align-items-sm-center column-gap-4 mb-3">
-                            <h2 className="text-black-900 mb-2 mb-sm-0 fs-5 fs-sm-2">步道列表</h2>
-                            <p className="text-black-700 fw-medium">
-                                找到
-                                <span className="text-primary-300 fw-bold mx-1">
-                                    {totalCount}筆
-                                </span>
-                                你可能喜歡的步道景觀
-                            </p>
+                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-end row-gap-3 mb-3 mb-md-6">
+                            <div className="d-flex flex-column">
+                                <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center column-gap-4 mb-3">
+                                    <h2 className="text-black-900 mb-2 mb-sm-0 fs-5 fs-sm-2">
+                                        步道列表
+                                    </h2>
+                                    <p className="text-black-700 fw-medium">
+                                        找到
+                                        <span className="text-primary-300 fw-bold mx-1">
+                                            {totalCount}筆
+                                        </span>
+                                        你可能喜歡的步道景觀
+                                    </p>
+                                </div>
+                                <div className="checkbox-filter d-flex column-gap-2">
+                                    <div class="dropdown">
+                                        <button
+                                            class="btn btn-primary dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            <span className="ms-1">
+                                                {urlDifficulty || '所有難度'}
+                                            </span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-start shadow mt-2">
+                                            <li>
+                                                <button
+                                                    className="dropdown-item"
+                                                    onClick={() =>
+                                                        updateRoute({
+                                                            trail_difficulty: '',
+                                                            _page: 1,
+                                                        })
+                                                    }
+                                                >
+                                                    所有難度
+                                                </button>
+                                            </li>
+                                            {difficulty.map((level, index) => (
+                                                <li key={index}>
+                                                    <button
+                                                        className={`dropdown-item ${urlDifficulty === level ? 'active' : ''}`}
+                                                        onClick={() =>
+                                                            updateRoute({
+                                                                trail_difficulty: level,
+                                                                _page: 1,
+                                                            })
+                                                        }
+                                                    >
+                                                        {level}
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div class="dropdown">
+                                        <button
+                                            class="btn btn-primary dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            <span className="ms-1">時間</span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-start shadow mt-2">
+                                            {estimatedDuration.map((time, index) => {
+                                                return (
+                                                    <div class="form-check" key={index}>
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="checkbox"
+                                                            value=""
+                                                            id={`checkDefault${index}`}
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for={`checkDefault${index}`}
+                                                        >
+                                                            {time}
+                                                        </label>
+                                                    </div>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                    <div class="dropdown">
+                                        <button
+                                            class="btn btn-primary dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            <span className="ms-1">景觀</span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-start shadow mt-2">
+                                            {landscape.map((type, index) => {
+                                                return (
+                                                    <div class="form-check" key={index}>
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="checkbox"
+                                                            value=""
+                                                            id={`checkDefault${index}`}
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for={`checkDefault${index}`}
+                                                        >
+                                                            {type}
+                                                        </label>
+                                                    </div>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="dropdown">
+                                <button
+                                    className="btn btn-primary dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                >
+                                    <i className="material-symbols-outlined">swap_vert</i>
+                                    <span className="ms-1">
+                                        {sortOptions.find(
+                                            (opt) => opt.sort === urlSort && opt.order === urlOrder,
+                                        )?.label || '排序方式'}
+                                    </span>
+                                </button>
+                                <ul className="dropdown-menu dropdown-menu-end shadow mt-2">
+                                    {sortOptions.map((opt, index) => (
+                                        <li key={index}>
+                                            <button
+                                                className={`dropdown-item ${urlSort === opt.sort && urlOrder === opt.order ? 'active' : ''}`}
+                                                onClick={() =>
+                                                    updateRoute({
+                                                        _sort: opt.sort,
+                                                        _order: opt.order,
+                                                        _page: 1,
+                                                    })
+                                                }
+                                            >
+                                                {opt.label}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                         <div className="mb-8">
                             <div className="row row-gap-3 row-gap-sm-6">
