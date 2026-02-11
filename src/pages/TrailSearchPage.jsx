@@ -34,7 +34,7 @@ const TrailSearchPage = () => {
 
     // 目前頁碼狀態
     const limit = 8; // 每頁筆數
-    const urlArea = searchParams.get('trail_region') || ''; // 改對應 API 欄位
+    const urlArea = searchParams.get('trail_region') || '';
     const urlDifficulty = searchParams.get('trail_difficulty') || '';
     const urlSort = searchParams.get('_sort') || '';
     const urlOrder = searchParams.get('_order') || 'desc';
