@@ -48,11 +48,13 @@ const Nav = () => {
         dispatch(logout());
         dispatch(
             createMessage({
-                text: `${user.name}，登入成功`,
+                text: `${user.name}，登出成功`,
                 type: 'success',
             }),
         );
-        navigate('/'); // 回到首頁
+        setTimeout(() => {
+            navigate('/');
+        }, 1500);
     };
 
     return (
