@@ -55,7 +55,7 @@ const diffData = [
 const DiffCardList = () => (
     <ul className="diffcard__list list-unstyled gap-4 gap-lg-6 ">
         {diffData.map((item) => (
-            <li className="diffcard__card">
+            <li className="diffcard__card" key={item.id}>
                 <div className="diffcard__content bg-primary-100">
                     <div className="d-flex flex-column justify-content-center align-items-center p-4">
                         <img src={item.image} className=" mb-3" alt={item.alt} />
