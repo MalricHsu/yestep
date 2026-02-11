@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 // 第三方套件
 import axios from 'axios';
@@ -14,23 +14,75 @@ import StarRating from '../components/StarRating';
 import PopularTrails from '../components/PopularTrails';
 import SearchTheme from '../components/SearchTheme';
 
+// 篩選、排序
+const difficulty = ['休閒級', '入門級', '健行級', '挑戰級', '專業級'];
+const estimatedDuration = ['3小時內', '3-6小時', '6-12小時', '12小時-兩天', '兩天以上'];
+const landscape = ['瀑布', '日出', '雲海', '晚霞', '觀星', '神木', '賞花', '賞鳥'];
+const sortOptions = [
+    { label: '難易度由高到低', sort: 'trail_difficulty', order: 'desc' },
+    { label: '難易度由低到高', sort: 'trail_difficulty', order: 'asc' },
+    { label: '熱門程度由高到低', sort: 'trail_popular', order: 'desc' },
+    { label: '熱門程度由低到高', sort: 'trail_popular', order: 'asc' },
+];
+
 // API
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 
 const TrailSearchPage = () => {
-    const [keyword, setKeyword] = useState('');
-    const [trailData, setTrailData] = useState([]);
+    // 取得與設定網址參數
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // 目前頁碼狀態
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalCount, setTotalCount] = useState(0);
     const limit = 8; // 每頁筆數
+    const urlArea = searchParams.get('trail_region') || ''; // 改對應 API 欄位
+    const urlDifficulty = searchParams.get('trail_difficulty') || '';
+    const urlSort = searchParams.get('_sort') || '';
+    const urlOrder = searchParams.get('_order') || 'desc';
+    const urlKeyword = searchParams.get('q') || '';
+    const currentPage = parseInt(searchParams.get('_page')) || 1;
+
+    // 步道資料
+    const [keyword, setKeyword] = useState(urlKeyword);
+    const [trailData, setTrailData] = useState([]);
+    const [totalCount, setTotalCount] = useState(0);
+
     const totalPages = Math.ceil(totalCount / limit); // 計算總頁數
 
-    const onSearch = (e) => {
+    // 當網址參數改變時
+    useEffect(() => {
+        setKeyword(urlKeyword);
+    }, [urlKeyword]);
+
+    // 統一發送網址更新的函式
+    const updateRoute = (params) => {
+        const currentParams = Object.fromEntries(searchParams.entries());
+
+        const newParams = {
+            area: searchParams.get('area') || '',
+            q: searchParams.get('q') || '',
+            _page: searchParams.get('_page') || 1,
+            ...currentParams,
+            ...params, // 覆蓋更新的部分
+        };
+
+        // 過濾掉空值，保持網址乾淨
+        Object.keys(newParams).forEach((key) => {
+            if (newParams[key] === '' || newParams[key] == null) {
+                delete newParams[key];
+            }
+        });
+
+        setSearchParams(newParams);
+    };
+
+    // 處理搜尋按鈕/Enter
+    const triggerSearch = () => {
+        updateRoute({ q: keyword, _page: 1 });
+    };
+
+    const onSearchKeyDown = (e) => {
         if (e.key === 'Enter') {
-            setKeyword(e.target.value);
-            setCurrentPage(1);
+            triggerSearch();
         }
     };
 
@@ -46,13 +98,17 @@ const TrailSearchPage = () => {
                 // 帶入分頁參數與關鍵字
                 const res = await searchApi.get(`/trails`, {
                     params: {
-                        _page: currentPage,
-                        _limit: limit,
-                        q: keyword,
+                        _page: currentPage, // 當前頁數
+                        _limit: limit, // 筆數
+                        q: urlKeyword, // 關鍵字
+                        trail_region: urlArea || undefined, // 地區篩選
+                        trail_difficulty: urlDifficulty || undefined, // 難度篩選
+                        _sort: urlSort || undefined, // 排序欄位
+                        _order: urlOrder || undefined,
                     },
                 });
 
-                // 從 Header 抓取總數（這取決於後端設定，JSON Server 預設是這個名稱）
+                // 從 Header 抓取總數
                 const countFromHeader = res.headers['x-total-count'];
                 if (countFromHeader) {
                     setTotalCount(parseInt(countFromHeader));
@@ -64,18 +120,19 @@ const TrailSearchPage = () => {
             }
         };
         getTrailScenery();
-    }, [currentPage, keyword]);
+    }, [currentPage, urlKeyword, urlArea, urlDifficulty, urlSort, urlOrder]);
 
     // 處理頁碼 Prev、Next
     const handlePageChange = (targetPage) => {
-        // 邊界檢查：不能小於 1，不能大於總頁數
         if (targetPage < 1 || targetPage > totalPages) return;
 
-        // 更新狀態，觸發 useEffect 重新抓取 API
-        setCurrentPage(targetPage);
+        // 修正：傳入物件而非單一字串
+        updateRoute({ _page: targetPage });
 
-        // UX 優化：換頁後自動滾動回頂部
-        // window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({
+            top: 200,
+            behavior: 'smooth',
+        });
     };
 
     // 處理頁碼點擊
@@ -84,7 +141,7 @@ const TrailSearchPage = () => {
         for (let i = 1; i <= totalPages; i++) {
             pages.push(
                 <li key={i} className={`page-item ${currentPage === i ? 'active' : ''}`}>
-                    <button className="page-link" onClick={() => setCurrentPage(i)}>
+                    <button className="page-link" onClick={() => handlePageChange(i)}>
                         {i}
                     </button>
                 </li>,
@@ -117,30 +174,44 @@ const TrailSearchPage = () => {
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-lg-8">
-                            <h3 className="text-white text-center fw-medium fs-7 mb-8">步道總覽</h3>
-                            <h1 className="text-white text-center mb-8">Next Step！想要去哪裡？</h1>
-                            <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill">
+                            <h3 className="text-white text-center fw-medium fs-7 mb-4 mb-sm-8">
+                                步道總覽
+                            </h3>
+                            <h1 className="text-white text-center fs-4 fs-sm-1 mb-8">
+                                Next Step！想要去哪裡？
+                            </h1>
+                            <form
+                                className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill"
+                                onSubmit={(e) => e.preventDefault()}
+                            >
                                 <div className="input-group align-items-center">
                                     <select
-                                        className="form-select px-4"
-                                        value={keyword}
-                                        onChange={onSearch}
+                                        className="form-select px-4 d-none d-sm-block"
+                                        value={urlArea}
+                                        onChange={(e) =>
+                                            updateRoute({ trail_region: e.target.value, _page: 1 })
+                                        }
                                     >
-                                        +<option value="">請選擇地區</option>
-                                        <option value="1">北部</option>
-                                        <option value="2">中部</option>
-                                        <option value="3">南部</option>
-                                        <option value="4">東部</option>
+                                        <option value="">請選擇地區</option>
+                                        <option value="北部">北部</option>
+                                        <option value="中部">中部</option>
+                                        <option value="南部">南部</option>
+                                        <option value="東部">東部</option>
                                     </select>
-                                    <span className="search-divider"></span>
+                                    <span className="search-divider d-none d-sm-block"></span>
                                     <input
                                         type="text"
                                         className="form-control px-4"
                                         placeholder="Next Step！想要去哪裡？"
                                         value={keyword}
-                                        onChange={onSearch}
+                                        onChange={(e) => setKeyword(e.target.value)}
+                                        onKeyDown={onSearchKeyDown}
                                     />
-                                    <button className="btn btn-primary" type="button">
+                                    <button
+                                        className="btn btn-primary"
+                                        type="button"
+                                        onClick={triggerSearch}
+                                    >
                                         搜尋
                                     </button>
                                 </div>
@@ -152,15 +223,155 @@ const TrailSearchPage = () => {
             <main>
                 <section className="search bg-primary-50 py-8">
                     <div className="container">
-                        <div className="d-flex flex-column flex-sm-row align-items-start align-items-sm-center column-gap-4 mb-3">
-                            <h2 className="text-black-900 mb-2 mb-sm-0 fs-5 fs-sm-2">步道列表</h2>
-                            <p className="text-black-700 fw-medium">
-                                找到
-                                <span className="text-primary-300 fw-bold mx-1">
-                                    {totalCount}筆
-                                </span>
-                                你可能喜歡的步道景觀
-                            </p>
+                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-end row-gap-3 mb-3 mb-md-6">
+                            <div className="d-flex flex-column">
+                                <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center column-gap-4 mb-3">
+                                    <h2 className="text-black-900 mb-2 mb-sm-0 fs-5 fs-sm-2">
+                                        步道列表
+                                    </h2>
+                                    <p className="text-black-700 fw-medium">
+                                        找到
+                                        <span className="text-primary-300 fw-bold mx-1">
+                                            {totalCount}筆
+                                        </span>
+                                        你可能喜歡的步道景觀
+                                    </p>
+                                </div>
+                                <div className="checkbox-filter d-flex column-gap-2">
+                                    <div className="dropdown">
+                                        <button
+                                            className="btn btn-primary dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            <span className="ms-1">{urlDifficulty || '難度'}</span>
+                                        </button>
+                                        <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
+                                            <li>
+                                                <button
+                                                    className="dropdown-item"
+                                                    onClick={() =>
+                                                        updateRoute({
+                                                            trail_difficulty: '',
+                                                            _page: 1,
+                                                        })
+                                                    }
+                                                >
+                                                    難度
+                                                </button>
+                                            </li>
+                                            {difficulty.map((level, index) => (
+                                                <li key={index}>
+                                                    <button
+                                                        className={`dropdown-item ${urlDifficulty === level ? 'active' : ''}`}
+                                                        onClick={() =>
+                                                            updateRoute({
+                                                                trail_difficulty: level,
+                                                                _page: 1,
+                                                            })
+                                                        }
+                                                    >
+                                                        {level}
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div className="dropdown">
+                                        <button
+                                            className="btn btn-primary dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            <span className="ms-1">時間</span>
+                                        </button>
+                                        <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
+                                            {estimatedDuration.map((time, index) => {
+                                                return (
+                                                    <div className="form-check" key={index}>
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="checkbox"
+                                                            value=""
+                                                            id={`checkDefault${index}`}
+                                                        />
+                                                        <label
+                                                            className="form-check-label"
+                                                            htmlFor={`checkDefault${index}`}
+                                                        >
+                                                            {time}
+                                                        </label>
+                                                    </div>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                    <div className="dropdown">
+                                        <button
+                                            className="btn btn-primary dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            <span className="ms-1">景觀</span>
+                                        </button>
+                                        <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
+                                            {landscape.map((type, index) => {
+                                                return (
+                                                    <div className="form-check" key={index}>
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="checkbox"
+                                                            value=""
+                                                            id={`checkDefault${index}`}
+                                                        />
+                                                        <label
+                                                            className="form-check-label"
+                                                            htmlFor={`checkDefault${index}`}
+                                                        >
+                                                            {type}
+                                                        </label>
+                                                    </div>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="dropdown">
+                                <button
+                                    className="btn btn-primary dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                >
+                                    <i className="material-symbols-outlined">swap_vert</i>
+                                    <span className="ms-1">
+                                        {sortOptions.find(
+                                            (opt) => opt.sort === urlSort && opt.order === urlOrder,
+                                        )?.label || '排序方式'}
+                                    </span>
+                                </button>
+                                <ul className="dropdown-menu dropdown-menu-end shadow mt-2">
+                                    {sortOptions.map((opt, index) => (
+                                        <li key={index}>
+                                            <button
+                                                className={`dropdown-item ${urlSort === opt.sort && urlOrder === opt.order ? 'active' : ''}`}
+                                                onClick={() =>
+                                                    updateRoute({
+                                                        _sort: opt.sort,
+                                                        _order: opt.order,
+                                                        _page: 1,
+                                                    })
+                                                }
+                                            >
+                                                {opt.label}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                         <div className="mb-8">
                             <div className="row row-gap-3 row-gap-sm-6">
@@ -252,9 +463,7 @@ const TrailSearchPage = () => {
                         <div className="d-flex justify-content-center">
                             <ul className="pagination gap-1">
                                 {/* 上一頁 */}
-                                <li
-                                    className={`page-item me-2 ${currentPage === 1 ? 'disabled' : ''}`}
-                                >
+                                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                                     <button
                                         className="page-link"
                                         onClick={() => handlePageChange(currentPage - 1)}
@@ -270,7 +479,7 @@ const TrailSearchPage = () => {
 
                                 {/* 下一頁 */}
                                 <li
-                                    className={`page-item ms-2 ${currentPage === totalPages ? 'disabled' : ''}`}
+                                    className={`page-item ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''}`}
                                 >
                                     <button
                                         className="page-link"
@@ -286,80 +495,11 @@ const TrailSearchPage = () => {
                     </div>
                 </section>
 
+                {/* 熱門步道 */}
                 <PopularTrails onUpdate={handleAddPopular} hasBorder={true} />
 
+                {/* 主題限定活動 */}
                 <SearchTheme />
-                {/* <section className="search-theme py-20">
-                    <div className="container">
-                        <div className="row align-items-center row-gap-6">
-                            <div className="col-lg-4">
-                                <h3 className="text-primary-100 fs-7 fw-medium mb-2">春季限定</h3>
-                                <h2 className="text-white fs-1 mb-6">浪漫桐花雨</h2>
-                                <p className="text-white fs-8 opacity-75">
-                                    「讓我們一起走進，那片會下雪的春天。」
-                                    <br />
-                                    桐花盛開，我們規劃了專屬的桐花導覽，帶你用最輕鬆的方式欣賞春季美景。
-                                </p>
-                            </div>
-                            <div className="col-lg-8">
-                                <div className="themeInfoBanner swiper-container">
-                                    <div className="swiper-wrapper gap-4">
-                                        {themeInfoData.map((themeInfo, index) => {
-                                            return (
-                                                <div className="swiper-slide" key={index}>
-                                                    <div className="card h-100 rounded-16 overflow-hidden">
-                                                        <div className="card-img">
-                                                            <img
-                                                                src={themeInfo.image}
-                                                                alt={themeInfo.title}
-                                                            />
-                                                        </div>
-                                                        <div className="card-body d-flex flex-column justify-content-end">
-                                                            <h4 className="text-white fs-7 fw-medium mb-1">
-                                                                {themeInfo.title}
-                                                            </h4>
-                                                            <p className="text-black-100 fs-9 text-truncate">
-                                                                {themeInfo.text}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-4">
-                                <Link
-                                    to={`/theme`}
-                                    className="btn btn-primary rounded-pill fs-8 fw-bold"
-                                >
-                                    立即預約
-                                </Link>
-                            </div>
-                            <div className="col-lg-8">
-                                <div className="d-flex flex-nowrap gap-6 justify-content-center align-items-center">
-                                    <div className="d-flex gap-2">
-                                        <button type="button" className="btn btn-arrow btn-bn-prev">
-                                            <span className="material-symbols-outlined">
-                                                keyboard_arrow_left
-                                            </span>
-                                        </button>
-                                        <button type="button" className="btn btn-arrow btn-bn-next">
-                                            <span className="material-symbols-outlined">
-                                                keyboard_arrow_right
-                                            </span>
-                                        </button>
-                                    </div>
-                                    <div className="line"></div>
-                                    <div className="d-inline text-white fs-5 opacity-50">
-                                        <div className="swiper-pagination"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section> */}
             </main>
         </>
     );
