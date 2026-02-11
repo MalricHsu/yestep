@@ -12,7 +12,7 @@
     }
 }
 
-// 🔸 影片滿版遮罩
+// 🔸 影片滿版遮罩 - 問題在這
 .hero::after {
     position: absolute;
     content: '';
@@ -50,7 +50,7 @@
     &.active {
         background-color: $primary-100;
         color: $primary-300;
-        font-weight: bold; /* 讓選中的 Icon 稍微厚實一點 (選用) */
+        font-weight: bold;
     }
 }
 
