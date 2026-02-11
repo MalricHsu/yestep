@@ -1,6 +1,7 @@
 // 待討論：搜尋欄簡化
-// 最優先：難易度小卡元件化、加上SWiper < > 按鈕、Hero 容器問題
-// 待嘗試：ThemeSwiper.jsx 改成滿版，讓他的裝飾可以突顯出來
+// 最優先：、加上SWiper < > 按鈕、Hero 容器問題
+// 待嘗試：ThemeSwiper.jsx 改成滿版，讓他的裝飾可以突顯出來、播放鍵問題
+// 0211 fix: 難易度小卡元件化
 // fix: 選單active bg底色、預約按鈕Link、景觀小卡傳中文
 // fix: 更正成壓縮後圖片、替換手機版的 ThemeSwiper.jsx 圖片、替換 HeroSwiper 圖片
 
