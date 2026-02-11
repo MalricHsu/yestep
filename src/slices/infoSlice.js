@@ -1,13 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = { isShow: false, text: '', type: '', time: '' };
+
 export const infoSlice = createSlice({
     name: 'info',
-    initialState: {
-        isShow: false,
-        text: '',
-        type: 'success',
-        time: '',
-    },
+    initialState: initialState,
     reducers: {
         createMessage: (state, action) => {
             const { text, type } = action.payload;
@@ -22,9 +19,12 @@ export const infoSlice = createSlice({
         removeMessage: (state) => {
             state.isShow = false;
         },
+        clearMessage: () => {
+            return initialState;
+        },
     },
 });
 
 export default infoSlice.reducer;
 
-export const { createMessage, removeMessage } = infoSlice.actions;
+export const { createMessage, removeMessage, clearMessage } = infoSlice.actions;
