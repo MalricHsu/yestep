@@ -99,3 +99,13 @@ a {
     line-height: 1.5;
     font-weight: 400;
 }
+
+// 強制消除播放鍵
+video::-webkit-media-controls {
+    display: none;
+}
+
+.video-no-controls::-webkit-media-controls-start-playback-button {
+    display: none;
+    -webkit-appearance: none;
+}
