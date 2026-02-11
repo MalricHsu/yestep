@@ -243,6 +243,12 @@ const TrailDetail = () => {
                         trailId: id, // 使用 URL 參數的 ID
                         trailName: detailData.trail_name, // 存入名稱方便以後顯示
                         trailImage: detailData.trail_image,
+                        trail_region: detailData.trail_region,
+                        trail_altitude: detailData.trail_altitude,
+                        trail_length: detailData.trail_length,
+                        trail_landscape: detailData.trail_landscape,
+                        trail_difficulty: detailData.trail_difficulty,
+                        trail_popular: detailData.trail_popular,
                     });
                     setFavoriteId(res.data.id);
                     ModalRef.current.open('like_auth');

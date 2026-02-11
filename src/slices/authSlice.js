@@ -24,6 +24,7 @@ export const authSlice = createSlice({
             // 為了方便前端顯示 User 名稱，我們先把 user 資訊也存 cookie (實務上通常只存 token)
             Cookies.set('user', JSON.stringify(user), { expires: 7 });
         },
+        //登出
         logout: (state) => {
             state.isLogin = false;
             state.user = null;

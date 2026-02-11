@@ -3,65 +3,19 @@ import { Link } from 'react-router-dom';
 import bg02 from '../assets/images/trailtheme/bg02.png';
 import axios from 'axios';
 import { useEffect, useState, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { createMessage } from '../slices/infoSlice';
 
 const trailApi = axios.create({
     baseURL: 'https://yestep.zeabur.app/',
 });
 
-//每月活動內容
-const activityIntroData = [
-    {
-        picUrl: 'https://images.unsplash.com/photo-1746180339336-a07e5106cb87?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M',
-        desc: '油桐花是落葉喬木，花期約在每年4月至5月，盛開時花朵如雪般飄落，因而有「五月雪」的美稱，主要品種有白花桐樹和千年桐。',
-    },
-    {
-        picUrl: 'https://images.unsplash.com/photo-1746180339820-3d1741f52f4a?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M',
-        desc: '油桐花因其經濟價值被引進台灣，種子可榨取桐油作為防水塗層或家具原料。',
-    },
-    {
-        picUrl: 'https://images.unsplash.com/photo-1746180340318-873b8836e008?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M',
-        desc: '每年桐花開花時間受到溫度及降雨量影響，一般來說開花期在每年的4月份，盛開期在4月下旬到5月上旬，桐花花期為1~3星期',
-    },
-];
-//四大主題內容
-const THEME_SECTIONS = [
-    {
-        id: 'fantasy',
-        type: '忙裡偷閒',
-        chips: ['交通便利', '時程短', '無需裝備'],
-        title: '忙裡偷閒',
-        desc: '在城市與山林之間，不用遠行、不必準備太多，就能走進自然、放慢腳步。挑一條適合今天心情的步道，讓呼吸回到剛剛好的節奏。',
-        bg: 'url(https://images.unsplash.com/photo-1572715381359-002b1eabd56b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
-    },
-    {
-        id: 'relaxing',
-        type: '舒壓放鬆',
-        chips: ['瀑布', '森林', '芬多精'],
-        title: '舒壓放鬆',
-        desc: '把壓力留在山下，跟著水聲與樹影慢慢走，讓呼吸變深、心情變輕。',
-        bg: 'url(https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1470&auto=format&fit=crop)',
-    },
-    {
-        id: 'familyHiking',
-        type: '親子步道',
-        chips: ['平緩', '好走', '全家同樂'],
-        title: '親子步道',
-        desc: '大手牽小手一起出發，選一條不累又有風景的路，讓孩子也愛上戶外。',
-        bg: 'url(https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1470&auto=format&fit=crop)',
-    },
-    {
-        id: 'tungBlossom',
-        type: '桐花步道',
-        chips: ['四月雪', '春季限定', '浪漫花雨'],
-        title: '桐花步道',
-        desc: '走進會下雪的春天，沿路都是白色花毯與微風的香氣。',
-        bg: 'url(https://images.unsplash.com/photo-1746180340407-1d7f647cf61c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
-    },
-];
 //取出API資料
 const useTrails = () => {
     const [trails, setTrails] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [activity, setActivity] = useState([]);
+    const [themeSection, setThemeSection] = useState([]);
 
     useEffect(() => {
         const getTrails = async () => {
@@ -69,18 +23,38 @@ const useTrails = () => {
                 setLoading(true);
                 const res = await trailApi.get('/theme');
                 setTrails(res.data);
-                console.log(res.data);
             } catch (error) {
                 console.log('API 錯誤：', error);
             } finally {
                 setLoading(false);
             }
         };
-
         getTrails();
+        //每月活動內容
+        const activityIntroData = async () => {
+            try {
+                const res = await trailApi.get('/activity');
+                setActivity(res.data);
+                console.log(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        activityIntroData();
+
+        //四大主題內容
+        const themeSectionData = async () => {
+            try {
+                const res = await trailApi.get('/themeSections ');
+                setThemeSection(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        themeSectionData();
     }, []);
 
-    return { trails, loading };
+    return { trails, loading, activity, themeSection };
 };
 //工具－依主題分組
 const groupByType = (trails) =>
@@ -102,6 +76,7 @@ const RegistrationForm = () => {
         consent: false,
     });
     const [errors, setErrors] = useState({});
+    const dispatch = useDispatch();
 
     // 共用 input change
     const handleChange = (e) => {
@@ -164,15 +139,25 @@ const RegistrationForm = () => {
     /* ===== 送出 ===== */
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (!validate()) return;
 
         try {
             await trailApi.post('/registrations', form);
-            alert('報名成功！');
+            dispatch(
+                createMessage({
+                    text: '已成功報名',
+                    type: 'success',
+                }),
+            );
             setForm({ name: '', phone: '', email: '', session: '', qty: 0, consent: false });
         } catch (error) {
-            console.log(error);
-            alert('報名失敗，請稍後再試');
+            dispatch(
+                createMessage({
+                    text: error.response || '報名失敗，請重新輸入',
+                    type: 'red',
+                }),
+            );
         }
 
         // 成功後可清空
@@ -337,7 +322,7 @@ const RegistrationForm = () => {
 };
 
 const Theme = () => {
-    const { trails, loading: trailsLoading } = useTrails();
+    const { trails, loading: trailsLoading, activity, themeSection } = useTrails();
     const trailsByType = groupByType(trails);
     const [activeId, setActiveId] = useState('monthlyActivity');
     const navItems = useMemo(
@@ -453,7 +438,7 @@ const Theme = () => {
                 <h3 className="fs-5 fs-md-2 mb-4">油桐花季</h3>
 
                 <ul className="activityIntro list-unstyled bg-white p-4 p-md-6 rounded-24 d-grid mb-3 mb-md-6 gap-5 gap-md-6">
-                    {activityIntroData.map((item, index) => (
+                    {activity.map((item, index) => (
                         <li key={index}>
                             <img
                                 src={item.picUrl}
@@ -552,7 +537,7 @@ const Theme = () => {
                     <p className="text-center py-10">載入中...</p>
                 ) : (
                     <ol className="p-0 m-0 border-0 d-grid">
-                        {THEME_SECTIONS.map((sec) => {
+                        {themeSection.map((sec) => {
                             const list = trailsByType[sec.type] || [];
                             const cards = list.slice(0, 4);
 

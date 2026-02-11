@@ -222,9 +222,15 @@ const ThemeDetail = () => {
                 } else {
                     const res = await themeApi.post('/favorites', {
                         userId: user.id,
-                        trailId: id, // 使用 URL 參數的 ID
+                        themeId: id, // 使用 URL 參數的 ID
                         trailName: themeData.trail_name, // 存入名稱方便以後顯示
                         trailImage: themeData.trail_image,
+                        trail_region: themeData.trail_region,
+                        trail_altitude: themeData.trail_altitude,
+                        trail_length: themeData.trail_length,
+                        trail_landscape: themeData.trail_landscape,
+                        trail_difficulty: themeData.trail_difficulty,
+                        trail_popular: themeData.trail_popular,
                     });
                     setFavoriteId(res.data.id);
                     ModalRef.current.open('like_auth');

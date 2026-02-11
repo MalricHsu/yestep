@@ -1,5 +1,13 @@
+// 待討論：搜尋欄簡化
+// 最優先：、加上SWiper < > 按鈕、Hero 容器問題、難易度小卡裝飾圖
+// 待嘗試：ThemeSwiper.jsx 改成滿版，讓他的裝飾可以突顯出來、播放鍵問題
+// 0211 fix: 難易度小卡元件化
+// fix: 選單active bg底色、預約按鈕Link、景觀小卡傳中文
+// fix: 更正成壓縮後圖片、替換手機版的 ThemeSwiper.jsx 圖片、替換 HeroSwiper 圖片
+
 // 引入Nav
 import Nav from '../components/Nav';
+
 // 引入 Hero 影片
 import heroVideo from '../assets/videos/hero-video.mp4';
 import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
@@ -7,8 +15,11 @@ import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 // 引入 HeroSwiper.jsx
 import HeroSwiper from '../components/HeroSwiper';
 
-// 引入 HomeSwiper.jsx
-import HomeSwiper from '../components/HomeSwiper';
+// 引入 主題活動特輯 ThemeSwiper
+import ThemeSwiper from '../components/ThemeSwiper';
+
+// 引入 步道難度指南 diffcard 難易度小卡
+import DiffCardList from '../components/DiffcardList';
 
 // 引入 特色景觀步道 landscape 資料
 import { landscapeColumns } from '../data/home-landscape';
@@ -17,11 +28,11 @@ import { landscapeColumns } from '../data/home-landscape';
 import aboutImg from '../assets/images/home/about-img.svg';
 import aboutImgLg from '../assets/images/home/about-img-lg.svg';
 
-// 引入關於我們-背景山脈圖
+// 引入 關於我們-背景山脈圖
 import aboutBgLg from '../assets/images/home/about-bg-lg.svg';
 import aboutBg from '../assets/images/home/about-bg.svg';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PopularTrails from '../components/PopularTrails';
 
@@ -50,18 +61,34 @@ const Home = () => {
         }
     };
 
+    // Hero顯示邏輯
+    const [heroMode, setHeroMode] = useState('video');
+
     return (
         <>
             <header className="position-relative">
                 <Nav />
                 {/* HERO:手機90vh、桌機16:9 */}
                 <div className="hero">
-                    <video className="object-fit-cover w-100 h-100" autoPlay loop muted playsInline>
-                        <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
-                        <source src={heroVideo} type="video/mp4" />
-                    </video>
-                    {/* Hero-Swiper */}
-                    <div className="w-100 h-100"></div>
+                    {/* 值為video */}
+                    {heroMode === 'video' && (
+                        <video
+                            className="object-fit-cover w-100 h-100"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                        >
+                            <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
+                            <source src={heroVideo} type="video/mp4" />
+                        </video>
+                    )}
+                    {/* 值為swiper */}
+                    {heroMode === 'swiper' && (
+                        <div className="w-100 h-100">
+                            <HeroSwiper />
+                        </div>
+                    )}
                 </div>
                 {/* slogan+搜尋欄 */}
                 <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
@@ -87,15 +114,24 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                {/* 切換按鈕 */}
+                {/* Hero切換按鈕 */}
                 <div className="hero__bottom-wrap position-absolute start-50 translate-middle-x z-1">
-                    <div className="d-flex gap-5 bg-black-700 rounded-pill">
-                        <button className="btn btn-white">影片</button>
-                        <button className="btn btn-red">輪播</button>
+                    <div className="d-flex bg-primary-300 rounded-pill p-2">
+                        <button
+                            className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'video' ? 'active' : ''}`}
+                            onClick={() => setHeroMode('video')}
+                        >
+                            <span className=" material-symbols-outlined">animated_images</span>
+                        </button>
+                        <button
+                            className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'swiper' ? 'active' : ''}`}
+                            onClick={() => setHeroMode('swiper')}
+                        >
+                            <span className=" material-symbols-outlined ">filter</span>
+                        </button>
                     </div>
                 </div>
             </header>
-
             <main>
                 {/* 本月活動特輯 Swiper */}
                 <section className="py-8 py-lg-16 ">
@@ -106,7 +142,7 @@ const Home = () => {
                                     <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
                                 </div>
                                 <div className="theme__swiper">
-                                    <HomeSwiper />
+                                    <ThemeSwiper />
                                 </div>
                             </div>
                         </div>
@@ -114,16 +150,22 @@ const Home = () => {
                 </section>
                 {/* 熱門步道 */}
                 <PopularTrails onUpdate={handleAddPopular} hasBorder={false} />
-                {/* 難易度步道 */}
+
+                {/* 步道難度指南 */}
                 <section className="pt-16 pb-32">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
-                                <h2 className="fs-lg-2 fs-5">步道難度指南</h2>
+                                <h2 className="fs-lg-2 fs-5 mb-2">步道難度指南</h2>
+                                <h5 className="body3-medium mb-8 text-black-400">
+                                    了解各種步道的難易度分級
+                                </h5>
+                                <DiffCardList />
                             </div>
                         </div>
                     </div>
                 </section>
+
                 {/* 特色景觀步道 feature */}
                 <section className="py-5">
                     <div className="landscape__gallery text-primary-50 ">
@@ -131,7 +173,7 @@ const Home = () => {
                         <div className="landscape__column">
                             {landscapeColumns.left.map((item) => (
                                 <Link
-                                    to={`/search?trail_landscape=${item.tag}`}
+                                    to={`/search?trail_landscape=${item.landscapeName}`}
                                     className="landscape__card"
                                     key={item.id}
                                 >
@@ -146,7 +188,7 @@ const Home = () => {
                         <div className="landscape__column">
                             {landscapeColumns.center.map((item) => (
                                 <Link
-                                    to={`/search?trail_landscape=${item.tag}`}
+                                    to={`/search?trail_landscape=${item.landscapeName}`}
                                     className="landscape__card"
                                     key={item.id}
                                 >
@@ -161,7 +203,7 @@ const Home = () => {
                         <div className="landscape__column">
                             {landscapeColumns.right.map((item) => (
                                 <Link
-                                    to={`/search?trail_landscape=${item.tag}`}
+                                    to={`/search?trail_landscape=${item.landscapeName}`}
                                     className="landscape__card"
                                     key={item.id}
                                 >
@@ -174,6 +216,7 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
+
                 {/* 關於我們 about */}
                 <section className="py-16 py-lg-32 position-relative">
                     <div className="container">
