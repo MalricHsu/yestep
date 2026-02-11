@@ -104,3 +104,8 @@ a {
 video::-webkit-media-controls {
     display: none;
 }
+
+.video-no-controls::-webkit-media-controls-start-playback-button {
+    display: none;
+    -webkit-appearance: none;
+}
