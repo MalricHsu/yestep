@@ -1,5 +1,5 @@
 // 待討論：搜尋欄簡化
-// 最優先：、加上SWiper < > 按鈕、Hero 容器問題
+// 最優先：、加上SWiper < > 按鈕、Hero 容器問題、難易度小卡裝飾圖
 // 待嘗試：ThemeSwiper.jsx 改成滿版，讓他的裝飾可以突顯出來、播放鍵問題
 // 0211 fix: 難易度小卡元件化
 // fix: 選單active bg底色、預約按鈕Link、景觀小卡傳中文
@@ -156,7 +156,10 @@ const Home = () => {
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
-                                <h2 className="fs-lg-2 fs-5 mb-8">步道難度指南</h2>
+                                <h2 className="fs-lg-2 fs-5 mb-2">步道難度指南</h2>
+                                <h5 className="body3-medium mb-8 text-black-400">
+                                    了解各種步道的難易度分級
+                                </h5>
                                 <DiffCardList />
                             </div>
                         </div>
