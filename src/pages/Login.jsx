@@ -3,158 +3,178 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../slices/authSlice';
-import { createMessage } from '../slices/infoSlice';
+import { createMessage, clearMessage } from '../slices/infoSlice';
 import axios from 'axios';
-import Info from '../components/Info';
 
 // API
-// const LoginApi = axios.create({ baseURL: 'http://localhost:3000/' });
 const LoginApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
-const Login = () => {
-    useEffect(() => {
-        document.title = '登入 | YeStep';
-    }, []);
 
+const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = '登入 | YeStep';
+        dispatch(clearMessage());
+    }, [dispatch]);
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm();
+    } = useForm({ mode: 'onChange' });
 
     const onSubmit = async (data) => {
-        console.log(data);
         try {
             const res = await LoginApi.post('/login', data);
             const { accessToken, user } = res.data;
             dispatch(loginSuccess({ accessToken, user }));
-            dispatch(
-                createMessage({
-                    text: `${user.name}，歡迎回來 YeStep`,
-                    type: 'success',
-                }),
-            );
-            navigate('/');
+            dispatch(createMessage({ text: `${user.name}，歡迎回來 YeStep`, type: 'success' }));
+            setTimeout(() => navigate('/'), 500);
         } catch (error) {
-            // 處理錯誤訊息
-            if (error.response) {
-                dispatch(
-                    createMessage({
-                        text: error.response.data || '帳號或密碼錯誤',
-                        type: 'red',
-                    }),
-                );
-            } else {
-                dispatch(
-                    createMessage({
-                        text: '伺服器連線失敗',
-                        type: 'red',
-                    }),
-                );
-            }
+            const text = error.response ? '帳號或密碼錯誤' : '伺服器連線失敗';
+            dispatch(createMessage({ text, type: 'danger' }));
         }
     };
 
     return (
-        <>
-            <Info />
-            <section
-                className=""
+        <section
+            className="d-flex align-items-center min-vh-100 position-relative"
+            style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1920&auto=format&fit=crop&sat=-20')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }}
+        >
+            <div
+                className="position-absolute top-0 start-0 w-100 h-100"
                 style={{
-                    background: `linear-gradient(to bottom,rgb(0,0,0,0.2)), url('https://images.unsplash.com/photo-1587951326187-c9baa4606bff?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
-                    minHeight: '100vh',
-                    width: '100%',
-                    backgroundSize: 'auto, cover',
-                    backgroundPosition: '50% 25%',
-                    backgroundRepeat: 'auto, no-repeat',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    background:
+                        'linear-gradient(to right, rgba(44, 46, 48, 0.15), rgba(44, 46, 48, 0.05))',
                 }}
-            >
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="loginContainer rounded-5 position-relative d-flex flex-column"
-                    style={{
-                        maxWidth: '500px',
-                        width: '100%',
-                        backgroundColor: 'rgba(0,0,0, 0.2)',
-                        padding: 'calc(3em + 2vw) calc(1em + 2vw) 2em',
-                        margin: '0 2em 0 3em',
-                    }}
-                >
-                    <div className="form-floating mb-3">
-                        <input
-                            {...register('email', {
-                                required: 'Email 是必填項目',
-                                pattern: {
-                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                    message: '請輸入有效的 Email 格式',
-                                },
-                            })}
-                            type="email"
-                            className="form-control bg-transparent text-white"
-                            id="floatingInput"
-                            placeholder="name@example.com"
-                        />
-                        {errors.email ? <p className="text-red"> {errors?.email?.message}</p> : ''}
-                        <label htmlFor="floatingInput" className="text-white">
-                            帳號
-                        </label>
+            ></div>
+            <div className="container position-relative z-1">
+                <div className="row justify-content-center align-items-center">
+                    {/* 左側：品牌標語區 */}
+                    <div className="col-lg-6 mb-5 mb-lg-0 text-white px-4">
+                        <div className="d-flex flex-column align-items-center align-items-lg-start text-center text-lg-start">
+                            <h1
+                                className="fs-1 fw-bold mb-3 text-white"
+                                style={{ textShadow: '0 4px 15px rgba(0,0,0,0.8)' }}
+                            >
+                                YeStep
+                            </h1>
+                            <h2
+                                className="fs-lg-3 fs-5 fw-bold mb-4 text-white"
+                                style={{
+                                    letterSpacing: '0.1em',
+                                    textShadow: '0 2px 10px rgba(0,0,0,0.8)',
+                                }}
+                            >
+                                每一步 都是為出發做準備
+                            </h2>
+                            <p
+                                className="lead text-white fw-medium d-none d-md-block"
+                                style={{
+                                    maxWidth: '400px',
+                                    textShadow: '0 2px 5px rgba(0,0,0,0.8)',
+                                }}
+                            >
+                                紀錄你的軌跡，探索未知的路徑。
+                                <br />
+                                讓每一次的啟程，都充滿意義。
+                            </p>
+                        </div>
                     </div>
-                    <div className="form-floating">
-                        <input
-                            {...register('password', {
-                                required: '密碼是必填項目',
-                                minLength: {
-                                    value: 6,
-                                    message: '密碼長度至少需為 6 個字元',
-                                },
-                                maxLength: {
-                                    value: 12,
-                                    message: '密碼長度不得超過 12 個字元',
-                                },
-                            })}
-                            type="password"
-                            className="form-control bg-transparent text-white"
-                            id="floatingPassword"
-                            placeholder="Password"
-                        />
-                        {errors.password ? (
-                            <p className="text-red"> {errors?.password?.message}</p>
-                        ) : (
-                            ''
-                        )}
-                        <label htmlFor="floatingPassword" className="text-white">
-                            密碼
-                        </label>
+
+                    {/* 右側：登入表單區 */}
+                    <div className="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                        <div
+                            className="p-4 p-md-5 rounded-4 shadow-lg rounded-20"
+                            style={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                backdropFilter: 'blur(20px)',
+                                border: '1px solid rgba(255, 255, 255, 0.3)',
+                            }}
+                        >
+                            <h3 className="fs-5 text-white text-center mb-4 fw-bold ls-2">
+                                啟程登入
+                            </h3>
+
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <div className="form-floating mb-3">
+                                    <input
+                                        {...register('email', {
+                                            required: 'Email 是必填項目',
+                                            pattern: {
+                                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                                message: 'Email 格式錯誤',
+                                            },
+                                        })}
+                                        type="email"
+                                        className={`form-control bg-transparent text-white border-primary-100 ${errors.email ? 'is-invalid' : ''}`}
+                                        id="floatingInput"
+                                        placeholder="name@example.com"
+                                    />
+                                    <label htmlFor="floatingInput" className="text-primary-100">
+                                        帳號 (Email)
+                                    </label>
+                                    {errors.email && (
+                                        <div className="invalid-feedback text-red">
+                                            {errors.email.message}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="form-floating mb-4">
+                                    <input
+                                        {...register('password', {
+                                            required: '密碼是必填項目',
+                                            minLength: { value: 6, message: '至少 6 個字元' },
+                                        })}
+                                        type="password"
+                                        className={`form-control bg-transparent text-white border-primary-100 ${errors.password ? 'is-invalid' : ''}`}
+                                        id="floatingPassword"
+                                        placeholder="Password"
+                                    />
+                                    <label htmlFor="floatingPassword" className="text-primary-100">
+                                        密碼
+                                    </label>
+                                    {errors.password && (
+                                        <div className="invalid-feedback text-red">
+                                            {errors.password.message}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary-200 text-white w-100 py-3 rounded-3 fw-bold mb-4 shadow-sm"
+                                    style={{
+                                        letterSpacing: '1px',
+                                        cursor: 'pointer',
+                                        transform: 'scale(1.05)',
+                                        transition: 'transform 0.2s',
+                                    }}
+                                >
+                                    立即登入
+                                </button>
+
+                                <div className="d-flex justify-content-end align-items-center mt-3 border-top border-primary-100 border-opacity-25 pt-4 gap-2">
+                                    <span className="text-primary-100 small">還沒有帳號嗎？</span>
+                                    <Link
+                                        to="/register"
+                                        className="text-white fw-bold text-decoration-none px-3 py-1 rounded-pill border border-primary-100"
+                                    >
+                                        註冊帳號
+                                    </Link>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <button
-                        type="submit"
-                        className="btn btn-primary body2-bold fs-sm-7 fs-md-5 p-1 rounded-3 mt-5 w-100"
-                    >
-                        登入
-                    </button>
-                    <Link
-                        to="/register"
-                        className="btn btn-text align-self-end body1-medium px-4 py-3"
-                    >
-                        立即註冊
-                    </Link>
-                    <p
-                        className="slg position-absolute body1-medium fs-sm-5 fs-md-4 text-white"
-                        style={{
-                            textShadow: '1px 1px 2px rgba(2px, -2px, 0, 1px)',
-                        }}
-                    >
-                        每 一 步 ，{' '}
-                        <span className="d-inline-block">都 是 為 出 發 做 準 備 。</span>
-                    </p>
-                </form>
-            </section>
-        </>
+                </div>
+            </div>
+        </section>
     );
 };
 

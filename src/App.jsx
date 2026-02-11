@@ -3,6 +3,7 @@ import { useLocation, Outlet } from 'react-router-dom';
 // import Nav from './components/Nav';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import Info from './components/Info';
 
 function App() {
     const { pathname } = useLocation();
@@ -17,7 +18,7 @@ function App() {
 
     return (
         <>
-            {/* <Nav /> */}
+            <Info />
             <Outlet />
             <Footer />
 

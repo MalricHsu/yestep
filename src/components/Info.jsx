@@ -21,7 +21,7 @@ const Info = () => {
             // 2. 設定「新的」計時器
             timeoutRef.current = setTimeout(() => {
                 dispatch(removeMessage());
-            }, 5000);
+            }, 2000);
         }
         return () => clearTimeout(timeoutRef.current);
     }, [isShow, dispatch]);
@@ -40,13 +40,6 @@ const Info = () => {
                     <strong className={`me-auto text-white`}>YeStep</strong>
 
                     <small className="text-white">{time}</small>
-
-                    {/* <button
-                        type="button"
-                        className="btn-close"
-                        onClick={() => dispatch(removeMessage())}
-                        aria-label="Close"
-                    ></button> */}
                 </div>
                 <div className={`toast-body `}>{text}</div>
             </div>
