@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 
 const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
     return (
-        <div className="accordion" id="favoriteAccordion">
+        <div className="accordion rounded-md-24 overflow-hidden" id="favoriteAccordion">
             {favorites.map((item) => (
                 <div
-                    className="accordion-item border-0 border-primary-50 border-bottom"
+                    className="accordion-item border-0 border-primary-50 border-bottom overflow-hidden"
                     key={item.id}
                 >
                     {/* Header */}
@@ -65,7 +65,11 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
                             </div>
 
                             <div className="d-grid gap-2">
-                                <Link to={`/plan/${item.id}`} className="btn btn-secondary ">
+                                <Link
+                                    to={`/plan/${item.id}`}
+                                    className="btn btn-primary mx-auto"
+                                    style={{ width: 'fit-content' }}
+                                >
                                     前往規劃
                                 </Link>
                                 <button
@@ -157,10 +161,9 @@ const MEMBER_TABS = [
 
 const MemberTabs = ({ activeTab, onChange }) => {
     return (
-        <ul className="nav nav-underline d-flex flex-nowrap position-fixed w-100 opacity-75">
+        <ul className="nav nav-underline flex-nowrap  w-100 opacity-75">
             {MEMBER_TABS.map((tab) => {
                 const isActive = activeTab === tab.key;
-
                 return (
                     <li
                         key={tab.key}
@@ -198,7 +201,96 @@ const scrollToTopMinus = (id, offset = 50) => {
 ===================== */
 
 const MemberProfile = () => {
-    return <div>會員中心內容</div>;
+    const [nickname, setNickname] = useState('YeStep 用戶');
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setIsEditing(false);
+        console.log('更新暱稱為:', nickname);
+    };
+
+    return (
+        <div className="bg-white rounded-24 p-4 p-md-6" style={{ maxWidth: 520 }}>
+            <h3 className="mb-4">會員資料</h3>
+
+            <form onSubmit={handleSubmit}>
+                {/* 帳號 */}
+                <div className="form-floating mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="account"
+                        value="yestep_user01"
+                        readOnly
+                    />
+                    <label htmlFor="account">帳號</label>
+                </div>
+
+                {/* 密碼 */}
+                <div className="form-floating mb-3">
+                    <input
+                        type="password"
+                        className="form-control"
+                        id="password"
+                        value="12345678"
+                        readOnly
+                    />
+                    <label htmlFor="password">密碼</label>
+                </div>
+
+                {/* Email */}
+                <div className="form-floating mb-3">
+                    <input
+                        type="email"
+                        className="form-control"
+                        id="emailProfile"
+                        value="user@yestep.com"
+                        readOnly
+                    />
+                    <label htmlFor="emailProfile">Email</label>
+                </div>
+
+                {/* 暱稱（可編輯） */}
+                <div className="form-floating mb-4">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="nickname"
+                        value={nickname}
+                        disabled={!isEditing}
+                        onChange={(e) => setNickname(e.target.value)}
+                    />
+                    <label htmlFor="nickname">暱稱</label>
+                </div>
+
+                <div className="d-flex gap-2">
+                    {!isEditing ? (
+                        <button
+                            type="button"
+                            className="btn btn-outline-primary"
+                            onClick={() => setIsEditing(true)}
+                        >
+                            編輯暱稱
+                        </button>
+                    ) : (
+                        <>
+                            <button type="submit" className="btn btn-primary">
+                                儲存變更
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                onClick={() => setIsEditing(false)}
+                            >
+                                取消
+                            </button>
+                        </>
+                    )}
+                </div>
+            </form>
+        </div>
+    );
 };
 
 // 暫時的假資料
@@ -230,8 +322,57 @@ const MemberAnalytics = () => {
     return <div>統計分析</div>;
 };
 
+const RECOMMEND_MOCK = [
+    {
+        id: 101,
+        name: '合歡山主峰步道',
+        image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470',
+        region: '南投縣仁愛鄉',
+        length: '約 1.8 km',
+    },
+    {
+        id: 102,
+        name: '抹茶山聖母登山步道',
+        image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429',
+        region: '宜蘭縣礁溪鄉',
+        length: '約 5 km',
+    },
+    {
+        id: 103,
+        name: '金面山親山步道',
+        image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e',
+        region: '台北市內湖區',
+        length: '約 2.6 km',
+    },
+];
+
 const MemberRecommend = () => {
-    return <div>猜你喜歡</div>;
+    return (
+        <div className="py-6">
+            <div className="row g-4">
+                {RECOMMEND_MOCK.map((item) => (
+                    <div className="col-12 col-sm-6 col-xl-4" key={item.id}>
+                        <div className="card border-0 rounded-24 shadow-sm h-100 overflow-hidden">
+                            <img
+                                src={item.image}
+                                className="card-img-top rounded-top-24"
+                                alt={item.name}
+                                style={{ height: 180, objectFit: 'cover' }}
+                            />
+                            <div className="card-body d-flex flex-column">
+                                <h5 className="card-title mb-2">{item.name}</h5>
+                                <p className="text-muted small mb-1">{item.region}</p>
+                                <p className="text-muted small mb-3">{item.length}</p>
+                                <Link to={`/detail/${item.id}`} className="btn btn-primary mt-auto">
+                                    查看步道
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 };
 
 const Member = () => {
@@ -241,28 +382,25 @@ const Member = () => {
     }, []);
     const handleTabChange = (key) => {
         setActiveTab(key);
-        scrollToTopMinus('member-main', 60);
+        scrollToTopMinus('member-main', 120);
     };
     return (
         <>
-            <Nav />
-            <section
-                className="position-relative"
-                style={{ minHeight: '500px', padding: '72px 0 0' }}
-            >
+            <div className="memberPage">
+                <Nav />
                 <MemberTabs activeTab={activeTab} onChange={handleTabChange} />
                 <main
-                    id="member-main container-fluid"
-                    className="memberMain"
-                    style={{ padding: '105px 5% 0' }}
+                    id="member-main"
+                    className="memberMain container-fluid"
+                    style={{ padding: '0 5%' }}
                 >
-                    <h2 className="fs-5 fs-md-2">我的收藏</h2>
+                    <h2 className="fs-5 fs-md-2 pt-8 pb-4 pt-md-0 pb-md-8">我的收藏</h2>
                     {activeTab === 'member' && <MemberProfile />}
                     {activeTab === 'favorite' && <MemberFavorite />}
                     {activeTab === 'analytics' && <MemberAnalytics />}
                     {activeTab === 'recommend' && <MemberRecommend />}
                 </main>
-            </section>
+            </div>
         </>
     );
 };
