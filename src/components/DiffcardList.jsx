@@ -53,7 +53,7 @@ const diffData = [
 ];
 
 const DiffCardList = () => (
-    <ul className="diffcard__list list-unstyled gap-6">
+    <ul className="diffcard__list list-unstyled gap-4 gap-lg-6 ">
         {diffData.map((item) => (
             <li className="diffcard__card">
                 <div className="diffcard__content bg-primary-100">
@@ -62,19 +62,19 @@ const DiffCardList = () => (
                         <h4 className="fs-4 mb-3 text-primary-300">{item.title}</h4>
                     </div>
                     <div className="diffcard__overlay bg-primary-100">
-                        <div className="diffcard__row body3-regular">
+                        <div className="diffcard__row body3-regular mb-2">
                             <span className="diffcard__label fw-bold fs-8">海拔高度</span>
                             <p className="diffcard__text">{item.altitude}</p>
                         </div>
 
-                        <div className="diffcard__row body3-regular">
+                        <div className="diffcard__row body3-regular mb-2">
                             <span className="diffcard__label fw-bold fs-8">裝備</span>
-                            <p className="diffcard__text">{item.equipment}</p>
+                            <p className="diffcard__equip">{item.equipment}</p>
                         </div>
 
                         <div className="diffcard__row body3-regular">
                             <span className="diffcard__label fw-bold fs-8">步道描述</span>
-                            <p className="diffcard__text">{item.description}</p>
+                            <p className="diffcard__desc">{item.description}</p>
                         </div>
                     </div>
                 </div>
