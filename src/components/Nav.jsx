@@ -1,5 +1,5 @@
 // 引入Link
-import { Link } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 // 引入 logo
@@ -19,6 +19,8 @@ import { createMessage } from '../slices/infoSlice.js';
 
 //預設nav的字一開始就是非綠色的
 const Nav = () => {
+    const location = useLocation();
+
     const isLogin = useSelector((state) => {
         console.log(state);
         return state.auth.isLogin;
@@ -76,22 +78,26 @@ const Nav = () => {
                                     alt="logo圖片"
                                 />
                             </Link>
-                            <ul className="list-unstyled d-none d-lg-flex gap-8">
+                            <ul className="list-unstyled d-none d-lg-flex gap-16">
                                 <li className="decor-lined">
-                                    <Link to="/theme" className="text-decoration-none">
-                                        主題活動
-                                    </Link>
+                                    <NavLink to="/theme">主題活動</NavLink>
                                 </li>
                                 <li className="decor-lined">
-                                    <Link to="/search" className="text-decoration-none">
-                                        步道總覽
-                                    </Link>
+                                    <NavLink to="/search">步道總覽</NavLink>
                                 </li>
                                 {/* 熱門步道要連到首頁的點擊率小卡 */}
-                                <li>
-                                    <Link to="/" className="text-decoration-none ">
+                                <li className="decor-lined">
+                                    <NavLink
+                                        to="/#popular-trails"
+                                        className={() =>
+                                            location.pathname === '/' &&
+                                            location.hash === '#popular-trails'
+                                                ? 'active'
+                                                : ''
+                                        }
+                                    >
                                         熱門步道
-                                    </Link>
+                                    </NavLink>
                                 </li>
                             </ul>
                         </div>
@@ -114,10 +120,7 @@ const Nav = () => {
                                 {isLogin ? (
                                     <>
                                         <li>
-                                            <Link
-                                                className="dropdown-item text-primary-300 px-4 py-2"
-                                                to="/member"
-                                            >
+                                            <Link className="dropdown-item px-4 py-2" to="/member">
                                                 會員中心
                                             </Link>
                                         </li>
@@ -125,7 +128,7 @@ const Nav = () => {
                                             <a
                                                 href="#"
                                                 onClick={handleLogout}
-                                                className="dropdown-item text-primary-300 px-4 py-2"
+                                                className="dropdown-item px-4 py-2"
                                             >
                                                 登出
                                             </a>
@@ -134,16 +137,13 @@ const Nav = () => {
                                 ) : (
                                     <>
                                         <li>
-                                            <Link
-                                                className="dropdown-item text-primary-300 px-4 py-2"
-                                                to="/login"
-                                            >
+                                            <Link className="dropdown-item px-4 py-2" to="/login">
                                                 會員登入
                                             </Link>
                                         </li>
                                         <li>
                                             <Link
-                                                className="dropdown-item text-primary-300 px-4 py-2"
+                                                className="dropdown-item px-4 py-2"
                                                 to="/register"
                                             >
                                                 註冊帳號
