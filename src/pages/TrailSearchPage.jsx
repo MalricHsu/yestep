@@ -34,11 +34,12 @@ const TrailSearchPage = () => {
 
     // 目前頁碼狀態
     const limit = 8; // 每頁筆數
-    const urlArea = searchParams.get('trail_region') || ''; // 改對應 API 欄位
+    const urlArea = searchParams.get('trail_region') || '';
+    const urlKeyword = searchParams.get('q') || '';
     const urlDifficulty = searchParams.get('trail_difficulty') || '';
+    const urlLandscape = searchParams.get('trail_landscape') || '';
     const urlSort = searchParams.get('_sort') || '';
     const urlOrder = searchParams.get('_order') || 'desc';
-    const urlKeyword = searchParams.get('q') || '';
     const currentPage = parseInt(searchParams.get('_page')) || 1;
 
     // 步道資料
@@ -103,6 +104,7 @@ const TrailSearchPage = () => {
                         q: urlKeyword, // 關鍵字
                         trail_region: urlArea || undefined, // 地區篩選
                         trail_difficulty: urlDifficulty || undefined, // 難度篩選
+                        trail_landscape: urlLandscape || undefined, // 景觀
                         _sort: urlSort || undefined, // 排序欄位
                         _order: urlOrder || undefined,
                     },
@@ -120,7 +122,7 @@ const TrailSearchPage = () => {
             }
         };
         getTrailScenery();
-    }, [currentPage, urlKeyword, urlArea, urlDifficulty, urlSort, urlOrder]);
+    }, [currentPage, urlKeyword, urlArea, urlDifficulty, urlLandscape, urlSort, urlOrder]);
 
     // 處理頁碼 Prev、Next
     const handlePageChange = (targetPage) => {
@@ -315,27 +317,37 @@ const TrailSearchPage = () => {
                                             data-bs-toggle="dropdown"
                                             aria-expanded="false"
                                         >
-                                            <span className="ms-1">景觀</span>
+                                            <span className="ms-1">{urlLandscape || '景觀'}</span>
                                         </button>
                                         <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
-                                            {landscape.map((type, index) => {
-                                                return (
-                                                    <div className="form-check" key={index}>
-                                                        <input
-                                                            className="form-check-input"
-                                                            type="checkbox"
-                                                            value=""
-                                                            id={`checkDefault${index}`}
-                                                        />
-                                                        <label
-                                                            className="form-check-label"
-                                                            htmlFor={`checkDefault${index}`}
-                                                        >
-                                                            {type}
-                                                        </label>
-                                                    </div>
-                                                );
-                                            })}
+                                            <li>
+                                                <button
+                                                    className="dropdown-item"
+                                                    onClick={() =>
+                                                        updateRoute({
+                                                            trail_landscape: '',
+                                                            _page: 1,
+                                                        })
+                                                    }
+                                                >
+                                                    全部景觀
+                                                </button>
+                                            </li>
+                                            {landscape.map((type, index) => (
+                                                <li key={index}>
+                                                    <button
+                                                        className={`dropdown-item ${urlLandscape === type ? 'active' : ''}`}
+                                                        onClick={() =>
+                                                            updateRoute({
+                                                                trail_landscape: type,
+                                                                _page: 1,
+                                                            })
+                                                        }
+                                                    >
+                                                        {type}
+                                                    </button>
+                                                </li>
+                                            ))}
                                         </ul>
                                     </div>
                                 </div>
