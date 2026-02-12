@@ -101,7 +101,8 @@ const Home = () => {
                         <div className="row ">
                             <div className="col-12 col-lg-8 mx-auto">
                                 <h1 className="fs-2 fs-lg-1 text-white text-center mb-8">
-                                    Yes to taking the next step !
+                                    Yes to taking the next{' '}
+                                    <span className="d-inline-flex">step !</span>
                                 </h1>
                                 <SearchBar />
                             </div>
