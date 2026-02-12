@@ -109,7 +109,7 @@ const PopularTrails = ({ onUpdateSuccess, hasBorder = false }) => {
     };
 
     return (
-        <section className="popularTrails pb-8 py-sm-16">
+        <section className="popularTrails pb-8 py-sm-16" id="popular-trails">
             <div className="container">
                 <div
                     className={`pt-8 ${hasBorder ? 'border-1 border-top border-primary-200' : ''}`}
