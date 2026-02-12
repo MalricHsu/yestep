@@ -1,13 +1,30 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Nav from '../components/Nav';
 import { Link } from 'react-router-dom';
 
+import axios from 'axios';
+import {
+    Chart as ChartJS,
+    ArcElement,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Doughnut, Bar } from 'react-chartjs-2';
+
+ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+
 const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
     return (
-        <div className="accordion" id="favoriteAccordion">
+        <div className="accordion rounded-md-24 overflow-hidden" id="favoriteAccordion">
             {favorites.map((item) => (
                 <div
-                    className="accordion-item border-0 border-primary-50 border-bottom"
+                    className="accordion-item border-0 border-primary-50 border-bottom overflow-hidden"
                     key={item.id}
                 >
                     {/* Header */}
@@ -65,7 +82,11 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
                             </div>
 
                             <div className="d-grid gap-2">
-                                <Link to={`/plan/${item.id}`} className="btn btn-secondary ">
+                                <Link
+                                    to={`/plan/${item.trailId ?? item.id}`}
+                                    className="btn btn-primary mx-auto"
+                                    style={{ width: 'fit-content' }}
+                                >
                                     前往規劃
                                 </Link>
                                 <button
@@ -91,7 +112,7 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
 const MEMBER_TABS = [
     {
         key: 'member',
-        label: '會員中心',
+        label: '會員資料',
         svg: (
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -157,10 +178,9 @@ const MEMBER_TABS = [
 
 const MemberTabs = ({ activeTab, onChange }) => {
     return (
-        <ul className="nav nav-underline d-flex flex-nowrap position-fixed w-100 opacity-75">
+        <ul className="nav nav-underline flex-nowrap  w-100 opacity-75">
             {MEMBER_TABS.map((tab) => {
                 const isActive = activeTab === tab.key;
-
                 return (
                     <li
                         key={tab.key}
@@ -198,40 +218,517 @@ const scrollToTopMinus = (id, offset = 50) => {
 ===================== */
 
 const MemberProfile = () => {
-    return <div>會員中心內容</div>;
-};
+    const [nickname, setNickname] = useState('YeStep 用戶');
+    const [isEditing, setIsEditing] = useState(false);
 
-// 暫時的假資料
-const MOCK_FAVORITES = [
-    {
-        id: 1,
-        name: '象山親山步道',
-        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
-        length: '約 1.5 km',
-        altitude: '183 m',
-    },
-    {
-        id: 2,
-        name: '大坑步道 9 號',
-        image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e',
-        length: '約 2.3 km',
-        altitude: '395 m',
-    },
-];
-const MemberFavorite = () => {
-    const handleRemove = (id) => {
-        console.log('取消收藏 id:', id);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setIsEditing(false);
+        console.log('更新暱稱為:', nickname);
     };
 
-    return <MobileFavoriteDropdown favorites={MOCK_FAVORITES} onRemove={handleRemove} />;
+    return (
+        <div className="bg-white rounded-24 p-4 p-md-6" style={{ maxWidth: 520 }}>
+            <h3 className="mb-4">會員資料</h3>
+
+            <form onSubmit={handleSubmit}>
+                {/* 帳號 */}
+                <div className="form-floating mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="account"
+                        value="yestep_user01"
+                        readOnly
+                    />
+                    <label htmlFor="account">帳號</label>
+                </div>
+
+                {/* 密碼 */}
+                <div className="form-floating mb-3">
+                    <input
+                        type="password"
+                        className="form-control"
+                        id="password"
+                        value="12345678"
+                        readOnly
+                    />
+                    <label htmlFor="password">密碼</label>
+                </div>
+
+                {/* Email */}
+                <div className="form-floating mb-3">
+                    <input
+                        type="email"
+                        className="form-control"
+                        id="emailProfile"
+                        value="user@yestep.com"
+                        readOnly
+                    />
+                    <label htmlFor="emailProfile">Email</label>
+                </div>
+
+                {/* 暱稱（可編輯） */}
+                <div className="form-floating mb-4">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="nickname"
+                        value={nickname}
+                        disabled={!isEditing}
+                        onChange={(e) => setNickname(e.target.value)}
+                    />
+                    <label htmlFor="nickname">暱稱</label>
+                </div>
+
+                <div className="d-flex gap-2">
+                    {!isEditing ? (
+                        <button
+                            type="button"
+                            className="btn btn-outline-primary"
+                            onClick={() => setIsEditing(true)}
+                        >
+                            編輯暱稱
+                        </button>
+                    ) : (
+                        <>
+                            <button type="submit" className="btn btn-primary">
+                                儲存變更
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                onClick={() => setIsEditing(false)}
+                            >
+                                取消
+                            </button>
+                        </>
+                    )}
+                </div>
+            </form>
+        </div>
+    );
 };
 
-const MemberAnalytics = () => {
-    return <div>統計分析</div>;
+const MemberFavorite = () => {
+    const [favorites, setFavorites] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        let mounted = true;
+
+        const fetchFavorites = async () => {
+            try {
+                setLoading(true);
+                setError('');
+
+                const res = await searchApi.get('/favorites', { params: { _limit: 9999 } });
+                const list = Array.isArray(res.data) ? res.data : [];
+
+                // 轉成 MobileFavoriteDropdown 需要的欄位
+                const mapped = list.map((f) => ({
+                    id: f.id, // 收藏紀錄 id（accordion key / 刪除用）
+                    trailId: f.trailId, // 步道 id（導向用）
+                    name: f.trailName,
+                    image: f.trailImage,
+                    length: f.trail_length ?? '—',
+                    altitude: f.trail_altitude ?? '—',
+                }));
+
+                if (mounted) setFavorites(mapped);
+            } catch (e) {
+                if (mounted) {
+                    setError('收藏資料載入失敗');
+                    setFavorites([]);
+                }
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        };
+
+        fetchFavorites();
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    const handleRemove = async (favId) => {
+        // 樂觀更新 UI
+        const prev = favorites;
+        setFavorites((p) => p.filter((x) => x.id !== favId));
+
+        try {
+            await searchApi.delete(`/favorites/${favId}`);
+        } catch (e) {
+            setError('取消收藏失敗，請稍後再試');
+            setFavorites(prev); // 回滾
+        }
+    };
+
+    return (
+        <div className="d-grid gap-3" style={{ maxWidth: 520 }}>
+            {loading && <p className="text-muted mb-0">載入收藏中...</p>}
+            {error && <p className="text-danger mb-0">{error}</p>}
+
+            <MobileFavoriteDropdown favorites={favorites} onRemove={handleRemove} />
+        </div>
+    );
+};
+
+const REGION_KEYS = ['北部', '中部', '南部', '東部'];
+
+const normalizeRegion = (r) => {
+    if (!r) return '其他';
+    if (REGION_KEYS.includes(r)) return r;
+    return '其他';
+};
+
+const countByRegion = (list, getRegion) => {
+    const acc = { 北部: 0, 中部: 0, 南部: 0, 東部: 0, 其他: 0 };
+    (Array.isArray(list) ? list : []).forEach((item) => {
+        const region = normalizeRegion(getRegion(item));
+        acc[region] = (acc[region] || 0) + 1;
+    });
+    return acc;
+};
+
+const calcPercent = (num, den) => {
+    if (!den) return 0;
+    return Math.round((num / den) * 1000) / 10; // 1 位小數
+};
+
+export const MemberAnalytics = () => {
+    const [trails, setTrails] = useState([]);
+    const [favorites, setFavorites] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState('');
+
+    useEffect(() => {
+        let mounted = true;
+
+        const fetchAll = async () => {
+            try {
+                setLoading(true);
+                setErr('');
+
+                // 兩支 API 一起打（並行）
+                const [trailsRes, favRes] = await Promise.all([
+                    searchApi.get('/trails', { params: { _limit: 9999 } }),
+                    searchApi.get('/favorites', { params: { _limit: 9999 } }),
+                ]);
+
+                if (!mounted) return;
+
+                setTrails(Array.isArray(trailsRes.data) ? trailsRes.data : []);
+                setFavorites(Array.isArray(favRes.data) ? favRes.data : []);
+            } catch (e) {
+                if (!mounted) return;
+                setErr('統計資料載入失敗（API 可能暫時有問題）');
+                setTrails([]);
+                setFavorites([]);
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        };
+
+        fetchAll();
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    const REGION_COLORS = useMemo(
+        () => ({
+            北部: '#4F6947',
+            中部: '#8AA96B',
+            南部: '#F2C14E',
+            東部: '#4D9DE0',
+            其他: '#B0B7C3',
+        }),
+        [],
+    );
+
+    // 1) 步道分布（分母：全部 trails）
+    const trailsRegionCount = useMemo(() => {
+        return countByRegion(trails, (t) => t.trail_region);
+    }, [trails]);
+
+    // 2) 收藏分布（分母：全部 favorites）
+    const favRegionCount = useMemo(() => {
+        return countByRegion(favorites, (f) => f.trail_region);
+    }, [favorites]);
+
+    // 3) 各區收藏率：收藏筆數 / 該區步道數
+    const favRateByRegion = useMemo(() => {
+        const regions = [...REGION_KEYS, '其他'];
+
+        return regions.map((r) => {
+            const trailCount = trailsRegionCount[r] || 0;
+            const favCount = favRegionCount[r] || 0;
+            return {
+                region: r,
+                trailCount,
+                favCount,
+                rate: calcPercent(favCount, trailCount), // %
+            };
+        });
+    }, [trailsRegionCount, favRegionCount]);
+
+    const doughnutDataTrails = useMemo(() => {
+        const labels = [...REGION_KEYS, '其他'];
+        const data = labels.map((k) => trailsRegionCount[k] || 0);
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: '步道數',
+                    data,
+                    backgroundColor: [
+                        '#4F6947', // 北部
+                        '#8AA96B', // 中部
+                        '#F2C14E', // 南部
+                        '#4D9DE0', // 東部
+                        '#B0B7C3', // 其他
+                    ],
+                    borderColor: ['#4F6947', '#8AA96B', '#F2C14E', '#4D9DE0', '#B0B7C3'],
+                    borderWidth: 1,
+                },
+            ],
+        };
+    }, [trailsRegionCount]);
+
+    const barDataFavRate = useMemo(() => {
+        const labels = favRateByRegion.map((x) => x.region);
+        const data = favRateByRegion.map((x) => x.rate);
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: '收藏率（%）',
+                    data,
+                    backgroundColor: ['#4F6947', '#8AA96B', '#F2C14E', '#4D9DE0', '#B0B7C3'],
+                    borderColor: ['#3E5439', '#6F8E54', '#D9A62C', '#2F7FBE', '#8F98A6'],
+                    borderWidth: 1,
+                    borderRadius: 8,
+                },
+            ],
+        };
+    }, [favRateByRegion]);
+
+    const barOptionsFavRate = useMemo(() => {
+        return {
+            responsive: true,
+            plugins: {
+                legend: { display: true },
+                title: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => {
+                            const region = ctx.label;
+                            const item = favRateByRegion.find((x) => x.region === region);
+                            if (!item) return `${ctx.dataset.label}: ${ctx.parsed.y}%`;
+                            return `收藏率：${item.rate}%（收藏 ${item.favCount} / 步道 ${item.trailCount}）`;
+                        },
+                    },
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 100,
+                    ticks: {
+                        callback: (v) => `${v}%`,
+                    },
+                },
+            },
+        };
+    }, [favRateByRegion]);
+    return (
+        <div className="d-grid gap-4">
+            {loading && <p className="text-muted mb-0">載入統計中...</p>}
+            {err && <p className="text-danger mb-0">{err}</p>}
+
+            {/* Chart 1: 步道區域分佈 */}
+            <div className="bg-white rounded-24 p-4 p-md-6">
+                <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
+                    <div>
+                        <h3 className="mb-1">步道區域比例</h3>
+                        <p className="text-muted small mb-0">分母：全部步道（/trails）</p>
+                    </div>
+                    <div className="text-muted small">總步道：{trails.length}</div>
+                </div>
+
+                <div style={{ maxWidth: 520 }}>
+                    <Doughnut data={doughnutDataTrails} />
+                </div>
+            </div>
+
+            {/* Chart 2: 各區收藏率 */}
+            <div className="bg-white rounded-24 p-4 p-md-6">
+                <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
+                    <div>
+                        <h3 className="mb-1">各區收藏率</h3>
+                        <p className="text-muted small mb-0">
+                            公式：該區收藏筆數（/favorites） ÷ 該區步道數（/trails）
+                        </p>
+                    </div>
+                    <div className="text-muted small">總收藏：{favorites.length}</div>
+                </div>
+
+                <Bar data={barDataFavRate} options={barOptionsFavRate} />
+
+                {/* 讓你看數字（方便 debug / 對照） */}
+                <div className="mt-4">
+                    <div className="small text-muted mb-2">步道收藏比例列表</div>
+                    <ul className="list-unstyled d-grid gap-2 mb-0">
+                        {favRateByRegion.map((x) => (
+                            <li
+                                key={x.region}
+                                className="d-flex justify-content-between align-items-center rounded-12 px-3 py-2"
+                                style={{
+                                    backgroundColor: `${REGION_COLORS[x.region] ?? '#B0B7C3'}22`,
+                                    border: `1px solid ${REGION_COLORS[x.region] ?? '#B0B7C3'}55`,
+                                }}
+                            >
+                                <span className="d-flex align-items-center gap-2">
+                                    <span
+                                        aria-hidden="true"
+                                        style={{
+                                            width: 10,
+                                            height: 10,
+                                            borderRadius: 999,
+                                            backgroundColor: REGION_COLORS[x.region] ?? '#B0B7C3',
+                                            display: 'inline-block',
+                                        }}
+                                    />
+                                    <span className="fw-semibold">{x.region}</span>
+                                </span>
+                                <span className="text-muted">
+                                    收藏 {x.favCount} / 步道 {x.trailCount}（{x.rate}%）
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const pickRandomUnique = (arr, count) => {
+    if (!Array.isArray(arr) || arr.length === 0) return [];
+    const pool = [...arr];
+    const result = [];
+    const n = Math.min(count, pool.length);
+
+    for (let i = 0; i < n; i++) {
+        const idx = Math.floor(Math.random() * pool.length);
+        result.push(pool[idx]);
+        pool.splice(idx, 1);
+    }
+
+    return result;
 };
 
 const MemberRecommend = () => {
-    return <div>猜你喜歡</div>;
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const fetchRecommend = async () => {
+            try {
+                setLoading(true);
+                setError('');
+
+                // 與 TrailSearchPage 同一支 API：/trails
+                // 這裡先抓多一點再隨機抽 3 筆（json-server 沒有隨機 API）
+                const res = await searchApi.get('/trails', {
+                    params: { _limit: 200 },
+                });
+
+                const list = Array.isArray(res.data) ? res.data : [];
+                const picked = pickRandomUnique(list, 3);
+
+                if (isMounted) setItems(picked);
+            } catch (e) {
+                if (isMounted) {
+                    setError('推薦步道載入失敗');
+                    setItems([]);
+                }
+            } finally {
+                if (isMounted) setLoading(false);
+            }
+        };
+
+        fetchRecommend();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    return (
+        <div className="py-6">
+            {loading && <p className="text-muted">載入推薦中...</p>}
+
+            {(error || items.length === 0) && !loading ? (
+                <div
+                    className="card border-0 rounded-24 shadow-sm overflow-hidden"
+                    style={{ maxWidth: 420 }}
+                >
+                    <img
+                        src="https://images.unsplash.com/photo-1502439502085-ebf78244370a?q=80&w=1849&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        alt="recommend placeholder"
+                        style={{ height: 160, width: '100%', objectFit: 'cover' }}
+                    />
+                    <div className="card-body">
+                        <h5 className="card-title mb-2">猜你喜歡</h5>
+                        <p className="text-muted small mb-0">
+                            {error ? error : '目前沒有推薦步道，稍後再試。'}
+                        </p>
+                    </div>
+                </div>
+            ) : (
+                <div className="row g-4">
+                    {items.map((trail) => (
+                        <div className="col-12 col-sm-6 col-xl-4" key={trail.id}>
+                            <div className="card border-0 rounded-24 shadow-sm h-100 overflow-hidden">
+                                <img
+                                    src={trail.trail_image}
+                                    className="card-img-top rounded-top-24"
+                                    alt={trail.trail_name}
+                                    style={{ height: 180, objectFit: 'cover' }}
+                                />
+                                <div className="card-body d-flex flex-column">
+                                    <h5 className="card-title mb-2">{trail.trail_name}</h5>
+                                    <p className="text-muted small mb-1">
+                                        {trail.trail_address || trail.trail_region || '—'}
+                                    </p>
+                                    <p className="text-muted small mb-3">
+                                        {trail.trail_hour || ''}
+                                    </p>
+
+                                    <Link
+                                        to={`/detail/${trail.id}`}
+                                        className="btn btn-primary mt-auto"
+                                    >
+                                        查看步道
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 };
 
 const Member = () => {
@@ -241,28 +738,26 @@ const Member = () => {
     }, []);
     const handleTabChange = (key) => {
         setActiveTab(key);
-        scrollToTopMinus('member-main', 60);
+        scrollToTopMinus('member-main', 120);
     };
+    const currentTab = MEMBER_TABS.find((tab) => tab.key === activeTab) || MEMBER_TABS[0];
     return (
         <>
-            <Nav />
-            <section
-                className="position-relative"
-                style={{ minHeight: '500px', padding: '72px 0 0' }}
-            >
+            <div className="memberPage">
+                <Nav />
                 <MemberTabs activeTab={activeTab} onChange={handleTabChange} />
                 <main
-                    id="member-main container-fluid"
-                    className="memberMain"
-                    style={{ padding: '105px 5% 0' }}
+                    id="member-main"
+                    className="memberMain container-fluid"
+                    style={{ padding: '0 5%' }}
                 >
-                    <h2 className="fs-5 fs-md-2">我的收藏</h2>
+                    <h2 className="fs-5 fs-md-2 pt-8 pb-4 pt-md-0 pb-md-8">{currentTab.label}</h2>
                     {activeTab === 'member' && <MemberProfile />}
                     {activeTab === 'favorite' && <MemberFavorite />}
                     {activeTab === 'analytics' && <MemberAnalytics />}
                     {activeTab === 'recommend' && <MemberRecommend />}
                 </main>
-            </section>
+            </div>
         </>
     );
 };
