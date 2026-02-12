@@ -415,13 +415,13 @@ const MemberFavorite = ({ user }) => {
 const REGION_KEYS = ['北部', '中部', '南部', '東部'];
 
 const normalizeRegion = (r) => {
-    if (!r) return '其他';
+    if (!r) return '其他地區';
     if (REGION_KEYS.includes(r)) return r;
-    return '其他';
+    return '其他地區';
 };
 
 const countByRegion = (list, getRegion) => {
-    const acc = { 北部: 0, 中部: 0, 南部: 0, 東部: 0, 其他: 0 };
+    const acc = { 北部: 0, 中部: 0, 南部: 0, 東部: 0, 其他地區: 0 };
     (Array.isArray(list) ? list : []).forEach((item) => {
         const region = normalizeRegion(getRegion(item));
         acc[region] = (acc[region] || 0) + 1;
@@ -480,7 +480,7 @@ export const MemberAnalytics = () => {
             中部: '#8AA96B',
             南部: '#F2C14E',
             東部: '#4D9DE0',
-            其他: '#B0B7C3',
+            其他地區: '#B0B7C3',
         }),
         [],
     );
@@ -497,7 +497,7 @@ export const MemberAnalytics = () => {
 
     // 3) 各區收藏率：收藏筆數 / 該區步道數
     const favRateByRegion = useMemo(() => {
-        const regions = [...REGION_KEYS, '其他'];
+        const regions = [...REGION_KEYS, '其他地區'];
 
         return regions.map((r) => {
             const trailCount = trailsRegionCount[r] || 0;
@@ -512,7 +512,7 @@ export const MemberAnalytics = () => {
     }, [trailsRegionCount, favRegionCount]);
 
     const doughnutDataTrails = useMemo(() => {
-        const labels = [...REGION_KEYS, '其他'];
+        const labels = [...REGION_KEYS, '其他地區'];
         const data = labels.map((k) => trailsRegionCount[k] || 0);
 
         return {
@@ -526,7 +526,7 @@ export const MemberAnalytics = () => {
                         '#8AA96B', // 中部
                         '#F2C14E', // 南部
                         '#4D9DE0', // 東部
-                        '#B0B7C3', // 其他
+                        '#B0B7C3', // 其他地區
                     ],
                     borderColor: ['#4F6947', '#8AA96B', '#F2C14E', '#4D9DE0', '#B0B7C3'],
                     borderWidth: 1,
@@ -588,13 +588,12 @@ export const MemberAnalytics = () => {
             {err && <p className="text-danger mb-0">{err}</p>}
 
             {/* Chart 1: 步道區域分佈 */}
-            <div className="bg-white rounded-24 p-4 p-md-6">
+            <div className="bg-white rounded-24 p-4 p-md-6 overflow-scroll">
                 <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
                     <div>
-                        <h3 className="mb-1">步道區域比例</h3>
-                        <p className="text-muted small mb-0">分母：全部步道（/trails）</p>
+                        <h3 className="mb-1">步道收藏率</h3>
+                        <div className="text-muted small">總步道數量：{trails.length}</div>
                     </div>
-                    <div className="text-muted small">總步道：{trails.length}</div>
                 </div>
 
                 <div style={{ maxWidth: 520 }}>
@@ -603,15 +602,12 @@ export const MemberAnalytics = () => {
             </div>
 
             {/* Chart 2: 各區收藏率 */}
-            <div className="bg-white rounded-24 p-4 p-md-6">
+            <div className="bg-white rounded-24 p-4 p-md-6 overflow-scroll">
                 <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
                     <div>
-                        <h3 className="mb-1">各區收藏率</h3>
-                        <p className="text-muted small mb-0">
-                            公式：該區收藏筆數（/favorites） ÷ 該區步道數（/trails）
-                        </p>
+                        <h3 className="mb-1">各區收藏佔比</h3>
+                        <div className="text-muted small">總步道收藏數：{favorites.length}</div>
                     </div>
-                    <div className="text-muted small">總收藏：{favorites.length}</div>
                 </div>
 
                 <Bar data={barDataFavRate} options={barOptionsFavRate} />
@@ -642,8 +638,8 @@ export const MemberAnalytics = () => {
                                     />
                                     <span className="fw-semibold">{x.region}</span>
                                 </span>
-                                <span className="text-muted">
-                                    收藏 {x.favCount} / 步道 {x.trailCount}（{x.rate}%）
+                                <span className="text-muted" style={{ width: 110 }}>
+                                    {x.favCount} / {x.trailCount}（{x.rate}%）
                                 </span>
                             </li>
                         ))}
