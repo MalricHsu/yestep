@@ -1,16 +1,32 @@
 .decor-lined {
     position: relative;
-}
+    font-weight: 500;
 
-.decor-lined::after {
-    position: absolute;
-    content: '';
-    height: 20px;
-    width: 1px;
-    background: #ffffff;
-    right: -16px; /*把線條往右推*/
-    top: 50%;
-    transform: translateY(-50%);
+    &::after {
+        position: absolute;
+        content: '';
+        height: 20px;
+        width: 1px;
+        background: #ffffff;
+        right: -32px; /*把線條往右推*/
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &:last-child::after {
+        display: none;
+    }
+
+    &:hover a::after,
+    .active::after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        bottom: -0.15rem;
+        background-color: $white;
+    }
 }
 
 .logo {
@@ -64,8 +80,15 @@ nav {
             color: $primary-300;
         }
 
-        .decor-lined::after {
-            background: $primary-300;
+        .decor-lined {
+            &::after {
+                background: $primary-300;
+            }
+
+            &:hover a::after,
+            .active::after {
+                background-color: $primary-300;
+            }
         }
 
         .btn-menu {
@@ -78,10 +101,17 @@ nav {
     // 修改懸浮選單 active 的 bg
     .header__login {
         .dropdown-item {
+            color: $black-900;
+
             &:focus,
             &:active,
             &.active {
                 background-color: $black-50; // 設計稿是 $primary-200
+            }
+
+            &:active,
+            &.active {
+                color: $white;
             }
         }
     }

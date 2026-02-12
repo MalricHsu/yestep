@@ -33,14 +33,38 @@ import aboutBgLg from '../assets/images/home/about-bg-lg.svg';
 import aboutBg from '../assets/images/home/about-bg.svg';
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import PopularTrails from '../components/PopularTrails';
 
 const Home = () => {
+    const { hash } = useLocation();
+
     useEffect(() => {
         document.title = '首頁 | YeStep';
     }, []);
+
+    useEffect(() => {
+        if (hash === '#popular-trails') {
+            // 稍微延遲 100ms 確保頁面其他元件（如圖片）渲染定位
+            const timer = setTimeout(() => {
+                const element = document.getElementById('popular-trails');
+                if (element) {
+                    // 取得導覽列的高度，動態計算偏移量
+                    const headerOffset = 80;
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth',
+                    });
+                }
+            }, 100);
+
+            return () => clearTimeout(timer);
+        }
+    }, [hash]);
 
     // Hero顯示邏輯
     const [heroMode, setHeroMode] = useState('video');
