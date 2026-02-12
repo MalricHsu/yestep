@@ -10,6 +10,7 @@ import TrailTag from './pages/TrailTag';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ThemeDetail from './pages/ThemeDetail';
+import ProtectedRoute from './pages/ProtectedRoute';
 
 const router = createHashRouter([
     {
@@ -41,8 +42,12 @@ const router = createHashRouter([
                 element: <ThemeDetail />,
             },
             {
-                path: 'member', // 當網址是 /trails/123 時
-                element: <Member />,
+                path: 'member',
+                element: (
+                    <ProtectedRoute>
+                        <Member />
+                    </ProtectedRoute>
+                ),
             },
             {
                 path: '*',

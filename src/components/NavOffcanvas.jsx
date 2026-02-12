@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { logout } from '../slices/authSlice';
 import { createMessage } from '../slices/infoSlice.js';
 
+import Cookies from 'js-cookie';
+
 const NavOffcanvas = ({ show, onClose }) => {
     const offcanvasRef = useRef(null);
     const instanceRef = useRef(null);
@@ -27,6 +29,8 @@ const NavOffcanvas = ({ show, onClose }) => {
 
     const handleLogout = (e) => {
         e.preventDefault();
+        Cookies.remove('token');
+        Cookies.remove('user');
         dispatch(logout());
         dispatch(
             createMessage({

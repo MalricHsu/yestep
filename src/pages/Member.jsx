@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import Nav from '../components/Nav';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import { createMessage } from '../slices/infoSlice';
 
 import axios from 'axios';
 import {
@@ -14,6 +17,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
+import { useDispatch } from 'react-redux';
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -310,7 +314,8 @@ const MemberProfile = () => {
     );
 };
 
-const MemberFavorite = () => {
+const MemberFavorite = ({ user }) => {
+    // 1. 接收 user props
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -319,17 +324,34 @@ const MemberFavorite = () => {
         let mounted = true;
 
         const fetchFavorites = async () => {
+            // 如果沒有 user 資料（例如尚未登入完全），就不執行
+            if (!user || !user.id) return;
+
             try {
                 setLoading(true);
                 setError('');
 
-                const res = await searchApi.get('/favorites', { params: { _limit: 9999 } });
+                const token = Cookies.get('token'); // 2. 取得 Token
+
+                // 3. 修改 API 請求：
+                //    - 加入 userId 篩選
+                //    - 加入 Authorization Header
+                const res = await searchApi.get(`/favorites`, {
+                    params: {
+                        userId: user.id, // 只抓這個人的
+                        _limit: 9999,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`, // 帶上通行證
+                    },
+                });
+
                 const list = Array.isArray(res.data) ? res.data : [];
 
-                // 轉成 MobileFavoriteDropdown 需要的欄位
+                // 轉成 MobileFavoriteDropdown 需要的欄位 (邏輯不變)
                 const mapped = list.map((f) => ({
-                    id: f.id, // 收藏紀錄 id（accordion key / 刪除用）
-                    trailId: f.trailId, // 步道 id（導向用）
+                    id: f.id,
+                    trailId: f.trailId || f.themeId, // 兼容你的不同命名可能
                     name: f.trailName,
                     image: f.trailImage,
                     length: f.trail_length ?? '—',
@@ -339,6 +361,7 @@ const MemberFavorite = () => {
                 if (mounted) setFavorites(mapped);
             } catch (e) {
                 if (mounted) {
+                    console.error(e);
                     setError('收藏資料載入失敗');
                     setFavorites([]);
                 }
@@ -352,16 +375,23 @@ const MemberFavorite = () => {
         return () => {
             mounted = false;
         };
-    }, []);
+    }, [user]); // 加入 user 作為依賴，當 user 改變時重抓
 
     const handleRemove = async (favId) => {
+        const token = Cookies.get('token'); // 刪除時也要 Token
+
         // 樂觀更新 UI
         const prev = favorites;
         setFavorites((p) => p.filter((x) => x.id !== favId));
 
         try {
-            await searchApi.delete(`/favorites/${favId}`);
+            await searchApi.delete(`/favorites/${favId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
         } catch (e) {
+            console.error('刪除失敗', e);
             setError('取消收藏失敗，請稍後再試');
             setFavorites(prev); // 回滾
         }
@@ -371,6 +401,11 @@ const MemberFavorite = () => {
         <div className="d-grid gap-3" style={{ maxWidth: 520 }}>
             {loading && <p className="text-muted mb-0">載入收藏中...</p>}
             {error && <p className="text-danger mb-0">{error}</p>}
+
+            {/* 如果沒資料顯示提示 */}
+            {!loading && favorites.length === 0 && !error && (
+                <div className="text-center py-5 text-muted">目前沒有收藏步道</div>
+            )}
 
             <MobileFavoriteDropdown favorites={favorites} onRemove={handleRemove} />
         </div>
@@ -733,14 +768,38 @@ const MemberRecommend = () => {
 
 const Member = () => {
     const [activeTab, setActiveTab] = useState('member');
+    // 1. 初始化時直接讀取 Cookie，避免第一次 render 是 null 導致畫面閃爍
+    // 如果 Cookie 沒資料，就保持 null
+    const [currentUser, setCurrentUser] = useState(() => {
+        const userStr = Cookies.get('user');
+        return userStr ? JSON.parse(userStr) : null;
+    });
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     useEffect(() => {
         document.title = '會員中心 | YeStep';
-    }, []);
+
+        const token = Cookies.get('token');
+
+        // 2. 檢查權限：如果沒有 user 資料 或 沒有 token
+        if (!currentUser || !token) {
+            dispatch(createMessage({ text: '請先登入會員', type: 'danger' })); // 紅色通常 type 是 danger
+            navigate('/login', { replace: true }); // 加上 replace: true 防止按上一頁又回來
+        }
+    }, [currentUser, dispatch, navigate]); // 依賴加入 currentUser
+
     const handleTabChange = (key) => {
         setActiveTab(key);
         scrollToTopMinus('member-main', 120);
     };
+
     const currentTab = MEMBER_TABS.find((tab) => tab.key === activeTab) || MEMBER_TABS[0];
+
+    // 3. 安全防護：如果還沒確認完使用者，先不要渲染下面的內容，避免子元件報錯
+    if (!currentUser) return null;
+
     return (
         <>
             <div className="memberPage">
@@ -752,9 +811,15 @@ const Member = () => {
                     style={{ padding: '0 5%' }}
                 >
                     <h2 className="fs-5 fs-md-2 pt-8 pb-4 pt-md-0 pb-md-8">{currentTab.label}</h2>
-                    {activeTab === 'member' && <MemberProfile />}
-                    {activeTab === 'favorite' && <MemberFavorite />}
-                    {activeTab === 'analytics' && <MemberAnalytics />}
+
+                    {/* ★ 4. 關鍵修正：把 user 資料透過 props 傳下去 ★ */}
+                    {activeTab === 'member' && (
+                        <MemberProfile user={currentUser} setUser={setCurrentUser} />
+                    )}
+                    {activeTab === 'favorite' && <MemberFavorite user={currentUser} />}
+                    {activeTab === 'analytics' && <MemberAnalytics user={currentUser} />}
+
+                    {/* 推薦通常是隨機或通用的，可能不需要 user，但如果要過濾已收藏的就需要 */}
                     {activeTab === 'recommend' && <MemberRecommend />}
                 </main>
             </div>
