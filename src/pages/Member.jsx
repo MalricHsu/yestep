@@ -553,7 +553,7 @@ export const MemberAnalytics = () => {
             {err && <p className="text-danger mb-0">{err}</p>}
 
             {/* Chart 1: 步道區域分佈 */}
-            <div className="bg-white rounded-24 p-4 p-md-6">
+            <div className="bg-white rounded-24 p-4 p-md-6 overflow-scroll">
                 <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
                     <div>
                         <h3 className="mb-1">步道區域比例</h3>
@@ -568,7 +568,7 @@ export const MemberAnalytics = () => {
             </div>
 
             {/* Chart 2: 各區收藏率 */}
-            <div className="bg-white rounded-24 p-4 p-md-6">
+            <div className="bg-white rounded-24 p-4 p-md-6 overflow-scroll">
                 <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
                     <div>
                         <h3 className="mb-1">各區收藏率</h3>
