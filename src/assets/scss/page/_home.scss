@@ -6,13 +6,13 @@
     position: relative;
     z-index: 0;
 
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
         height: auto; /* 取消 90vh*/
         aspect-ratio: 16 / 9;
     }
 }
 
-// 🔸 影片滿版遮罩
+// 🔸 影片滿版遮罩 - 問題在這
 .hero::after {
     position: absolute;
     content: '';
@@ -50,7 +50,7 @@
     &.active {
         background-color: $primary-100;
         color: $primary-300;
-        font-weight: bold; /* 讓選中的 Icon 稍微厚實一點 (選用) */
+        font-weight: bold;
     }
 }
 
@@ -206,7 +206,7 @@
     height: auto;
     gap: 0;
 
-    @media (min-width: 992px) {
+    @media (min-width: 560px) {
         grid-template-columns: 2fr 3fr 2fr; // 🔸 桌機版 grid 三欄
         align-items: start;
     }
@@ -219,7 +219,7 @@
 .landscape__column {
     display: contents;
 
-    @media (min-width: 992px) {
+    @media (min-width: 560px) {
         display: flex;
         flex-direction: column;
     }
@@ -242,7 +242,7 @@
     z-index: 0;
     overflow: hidden;
 
-    @media (min-width: 992px) {
+    @media (min-width: 560px) {
         height: auto;
     }
 }
@@ -264,7 +264,7 @@
     bottom: 1rem;
     z-index: 2;
 
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
         left: 1.5rem;
         bottom: 1.5rem;
     }
