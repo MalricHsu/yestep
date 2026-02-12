@@ -15,7 +15,7 @@ import { getErrorMessage } from '../utils/error';
 // API
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 
-const PopularTrails = ({ onUpdate, hasBorder = false }) => {
+const PopularTrails = ({ onUpdateSuccess, hasBorder = false }) => {
     const [popularTrails, setPopularTrails] = useState([]);
 
     // 取得熱門步道資料
@@ -87,17 +87,22 @@ const PopularTrails = ({ onUpdate, hasBorder = false }) => {
     // 處理步道點擊
     const handleAddPopular = async (id, currentPopular) => {
         try {
-            // 呼叫父元件傳進來的 handleAddPopular
-            if (onUpdate) {
-                await onUpdate(id, currentPopular);
-            }
+            // 直接在這裡打 API
+            await searchApi.patch(`/trails/${id}`, {
+                trail_popular: (currentPopular || 0) + 1,
+            });
 
-            // 同步更新「熱門步道」元件內部的數字，讓使用者立刻看到變化
+            // 同步更新「熱門步道」元件內部的數字
             setPopularTrails((prev) =>
                 prev.map((t) =>
                     t.id === id ? { ...t, trail_popular: (t.trail_popular || 0) + 1 } : t,
                 ),
             );
+
+            // 父元件有傳同步函式（如搜尋頁），就通知它
+            if (onUpdateSuccess) {
+                onUpdateSuccess(id);
+            }
         } catch (error) {
             console.error('更新失敗:', getErrorMessage(error));
         }

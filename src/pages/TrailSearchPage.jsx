@@ -152,21 +152,25 @@ const TrailSearchPage = () => {
         return pages;
     };
 
-    // 處理步道點擊
-    const handleAddPopular = async (id, currentPopular) => {
+    // 處理「步道列表」卡片的點擊
+    const handleListClick = async (id, currentPopular) => {
         try {
             await searchApi.patch(`/trails/${id}`, {
                 trail_popular: (currentPopular || 0) + 1,
             });
-
-            setTrailData((prev) =>
-                prev.map((t) =>
-                    t.id === id ? { ...t, trail_popular: (t.trail_popular || 0) + 1 } : t,
-                ),
-            );
+            syncListState(id); // 呼叫同步
         } catch (error) {
-            console.error('更新失敗:', getErrorMessage(error));
+            console.error('列表更新失敗:', getErrorMessage(error));
         }
+    };
+
+    // 更新 State 的輔助函式
+    const syncListState = (id) => {
+        setTrailData((prev) =>
+            prev.map((t) =>
+                t.id === id ? { ...t, trail_popular: (t.trail_popular || 0) + 1 } : t,
+            ),
+        );
     };
 
     return (
@@ -394,7 +398,7 @@ const TrailSearchPage = () => {
                                                 to={`/detail/${trail.id}`}
                                                 className="card d-flex flex-xl-row gap-3 rounded-24 shadow p-3"
                                                 onClick={() =>
-                                                    handleAddPopular(trail.id, trail.trail_popular)
+                                                    handleListClick(trail.id, trail.trail_popular)
                                                 }
                                             >
                                                 <div className="card-img rounded-16 overflow-hidden">
@@ -508,7 +512,7 @@ const TrailSearchPage = () => {
                 </section>
 
                 {/* 熱門步道 */}
-                <PopularTrails onUpdate={handleAddPopular} hasBorder={true} />
+                <PopularTrails onUpdateSuccess={syncListState} hasBorder={true} />
 
                 {/* 主題限定活動 */}
                 <SearchTheme />
