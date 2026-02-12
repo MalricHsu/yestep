@@ -84,7 +84,8 @@ const Home = () => {
                             muted
                             playsInline
                         >
-                            <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
+                            {/* 平板跟桌機版套用 heroVideoLg */}
+                            <source src={heroVideoLg} media="(min-width: 576px)" type="video/mp4" />
                             <source src={heroVideo} type="video/mp4" />
                         </video>
                     )}
@@ -146,7 +147,7 @@ const Home = () => {
                 <PopularTrails />
 
                 {/* 步道難度指南 */}
-                <section className="pt-16 pb-32">
+                <section className="pt-10 pb-16">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
