@@ -34,32 +34,13 @@ import aboutBg from '../assets/images/home/about-bg.svg';
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SearchBar from '../components/SearchBar';
 import PopularTrails from '../components/PopularTrails';
-
-// 第三方套件
-import axios from 'axios';
-
-// 工具
-import { getErrorMessage } from '../utils/error';
-
-// API
-const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 
 const Home = () => {
     useEffect(() => {
         document.title = '首頁 | YeStep';
     }, []);
-
-    // 處理步道點擊
-    const handleAddPopular = async (id, currentPopular) => {
-        try {
-            await searchApi.patch(`/trails/${id}`, {
-                trail_popular: (currentPopular || 0) + 1,
-            });
-        } catch (error) {
-            console.error('更新失敗:', getErrorMessage(error));
-        }
-    };
 
     // Hero顯示邏輯
     const [heroMode, setHeroMode] = useState('video');
@@ -98,18 +79,7 @@ const Home = () => {
                                 <h1 className="fs-2 fs-lg-1 text-white text-center mb-8">
                                     Yes to taking the next step !
                                 </h1>
-                                <form className="search-bar mb-3 px-3 py-2 bg-white rounded-pill">
-                                    <div className="input-group align-items-center">
-                                        <input
-                                            type="text"
-                                            className="form-control px-4"
-                                            placeholder="Next Step！想要去哪裡？"
-                                        />
-                                        <button className="btn btn-primary" type="button">
-                                            搜尋
-                                        </button>
-                                    </div>
-                                </form>
+                                <SearchBar />
                             </div>
                         </div>
                     </div>
@@ -149,7 +119,7 @@ const Home = () => {
                     </div>
                 </section>
                 {/* 熱門步道 */}
-                <PopularTrails onUpdate={handleAddPopular} hasBorder={false} />
+                <PopularTrails />
 
                 {/* 步道難度指南 */}
                 <section className="pt-16 pb-32">
