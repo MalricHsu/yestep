@@ -1,5 +1,5 @@
 // 待討論：搜尋欄簡化
-// 最優先：、加上SWiper < > 按鈕、Hero 容器問題、難易度小卡裝飾圖
+// 最優先：、加上SWiper < > 按鈕、Hero 容器問題
 // 待嘗試：ThemeSwiper.jsx 改成滿版，讓他的裝飾可以突顯出來、播放鍵問題
 // 0211 fix: 難易度小卡元件化
 // fix: 選單active bg底色、預約按鈕Link、景觀小卡傳中文
@@ -84,7 +84,8 @@ const Home = () => {
                             muted
                             playsInline
                         >
-                            <source src={heroVideoLg} media="(min-width: 992px)" type="video/mp4" />
+                            {/* 平板跟桌機版套用 heroVideoLg */}
+                            <source src={heroVideoLg} media="(min-width: 576px)" type="video/mp4" />
                             <source src={heroVideo} type="video/mp4" />
                         </video>
                     )}
@@ -101,7 +102,8 @@ const Home = () => {
                         <div className="row ">
                             <div className="col-12 col-lg-8 mx-auto">
                                 <h1 className="fs-2 fs-lg-1 text-white text-center mb-8">
-                                    Yes to taking the next step !
+                                    Yes to taking the next{' '}
+                                    <span className="d-inline-flex">step !</span>
                                 </h1>
                                 <SearchBar />
                             </div>
@@ -146,7 +148,7 @@ const Home = () => {
                 <PopularTrails />
 
                 {/* 步道難度指南 */}
-                <section className="pt-16 pb-32">
+                <section className="pt-10 pb-16">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
