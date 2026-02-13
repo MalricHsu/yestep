@@ -4,14 +4,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 
 // 引入圖片
-import themeImg01 from '../assets/images/home/theme-swiper-01.svg';
-import themeImg02 from '../assets/images/home/theme-swiper-02.png';
-import themeImg03 from '../assets/images/home/theme-swiper-03.png';
-import themeImgLg01 from '../assets/images/home/theme-swiper-lg-01.svg';
-import themeImgLg02 from '../assets/images/home/theme-swiper-lg-02.svg';
-import themeImgLg03 from '../assets/images/home/theme-swiper-lg-03.svg';
-import swiperDecor from '../assets/images/home/swiper-decor.svg';
-import swiperDecorLg from '../assets/images/home/swiper-decor-lg.svg';
+import themeImg01 from '../assets/images/home/theme-swiper-01.webp';
+import themeImg02 from '../assets/images/home/theme-swiper-02.webp';
+import themeImg03 from '../assets/images/home/theme-swiper-03.webp';
+import themeImgLg01 from '../assets/images/home/theme-swiper-lg-01.webp';
+import themeImgLg02 from '../assets/images/home/theme-swiper-lg-02.webp';
+import themeImgLg03 from '../assets/images/home/theme-swiper-lg-03.webp';
+import swiperDecor from '../assets/images/home/swiper-decor.webp';
+import swiperDecorLg from '../assets/images/home/swiper-decor-lg.webp';
 
 function ThemeSwiper() {
     const [carouselData] = useState([
