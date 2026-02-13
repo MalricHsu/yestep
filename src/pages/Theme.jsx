@@ -10,6 +10,29 @@ const trailApi = axios.create({
     baseURL: 'https://yestep.zeabur.app/',
 });
 
+// Unsplash 圖片最佳化（非 Unsplash 來源就原樣回傳）
+const optimizeImgUrl = (rawUrl, { q = 70, w = 520, fm = 'webp', fit = 'crop' } = {}) => {
+    if (!rawUrl) return rawUrl;
+    try {
+        const url = new URL(rawUrl);
+        const isUnsplash =
+            url.hostname === 'images.unsplash.com' ||
+            url.hostname === 'plus.unsplash.com' ||
+            url.hostname.endsWith('.unsplash.com');
+
+        if (!isUnsplash) return rawUrl;
+
+        url.searchParams.set('q', String(q));
+        url.searchParams.set('w', String(w));
+        url.searchParams.set('fm', fm);
+        url.searchParams.set('auto', 'format');
+        url.searchParams.set('fit', fit);
+        return url.toString();
+    } catch {
+        return rawUrl;
+    }
+};
+
 //取出API資料
 const useTrails = () => {
     const [trails, setTrails] = useState([]);
@@ -21,7 +44,7 @@ const useTrails = () => {
         const getTrails = async () => {
             try {
                 setLoading(true);
-                const res = await trailApi.get('/theme');
+                const res = await trailApi.get('/trails');
                 setTrails(res.data);
             } catch (error) {
                 console.log('API 錯誤：', error);
@@ -45,7 +68,7 @@ const useTrails = () => {
         //四大主題內容
         const themeSectionData = async () => {
             try {
-                const res = await trailApi.get('/themeSections ');
+                const res = await trailApi.get('/themeSections');
                 setThemeSection(res.data);
             } catch (error) {
                 console.log(error);
@@ -159,9 +182,6 @@ const RegistrationForm = () => {
                 }),
             );
         }
-
-        // 成功後可清空
-        setForm({ name: '', phone: '', email: '', session: '', qty: 0, consent: false });
     };
     return (
         <form
@@ -333,7 +353,13 @@ const MonthlyActivityInfoCard = ({
     return (
         <div className="navigation bg-white p-4 p-md-6 rounded-24">
             <h2 className="sub1-bold text-primary-300 text-center">{title}</h2>
-            <img src={imageUrl} alt="" className="card-img rounded-12 mt-3 mb-6" />
+            <img
+                src={optimizeImgUrl(imageUrl, { q: 70, w: 900 })}
+                alt=""
+                className="card-img rounded-12 mt-3 mb-6"
+                loading="lazy"
+                decoding="async"
+            />
 
             <ul className="list-unstyled d-flex flex-column pb-3">
                 {items.map((row, idx) => (
@@ -418,61 +444,93 @@ const Theme = () => {
         <>
             <Nav />
             <header
-                style={{
-                    backgroundImage: `url("${bg02}"), url("https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")`,
-                    backgroundRepeat: 'no-repeat',
-                    height: 'clamp(300px, calc(310px + 15.5vw), 600px)',
-                    backgroundSize: 'contain, cover',
-                    backgroundPosition: '50% 103%, 50% 80%',
-                }}
-                className="d-flex flex-column align-items-center justify-content-center position-relative"
+                className="d-flex flex-column align-items-center justify-content-center position-relative overflow-hidden"
+                style={{ height: 'clamp(300px, calc(310px + 15.5vw), 600px)' }}
             >
-                <h1 className="sub1-medium text-white">主題活動</h1>
-                <h2 className="text-white fs-4 fs-lg-1 py-4 pt-sm-24 text-center">
-                    一起走進自然
-                    <span className="d-inline-block">找回你的節奏</span>
-                </h2>
-                <p className="text-primary-100 sub1-medium">讓自然成為你的休息室</p>
+                {/* cover 圖（建議不 lazy，避免首屏閃爍） */}
+                <img
+                    src={optimizeImgUrl(
+                        'https://images.unsplash.com/photo-1533240332313-0db49b459ad6',
+                        { q: 80, w: 1600 },
+                    )}
+                    alt=""
+                    aria-hidden="true"
+                    decoding="async"
+                    fetchPriority="high"
+                    className="position-absolute top-0 start-0 w-100 h-100"
+                    style={{ objectFit: 'cover', objectPosition: '50% 80%' }}
+                />
 
-                <ul
-                    className="nav nav-underline position-absolute bottom-0 d-sm-none opacity-75"
+                {/* 前景裝飾（bg02） */}
+                <img
+                    src={bg02}
+                    alt=""
+                    aria-hidden="true"
+                    decoding="async"
+                    className="position-absolute start-50"
                     style={{
-                        flexWrap: 'nowrap',
-                        overflowX: 'scroll',
-                        scrollbarWidth: 'none',
+                        bottom: 0,
+                        transform: 'translateX(-50%)',
+                        width: 'min(1200px, 100%)',
+                        height: 'auto',
+                        objectFit: 'contain',
+                        pointerEvents: 'none',
                     }}
-                >
-                    {navItems.map((item) => (
-                        <li key={item.id} className="nav-item" style={{ minWidth: 'fit-content' }}>
-                            <button
-                                type="button"
-                                className={`nav-link body1-medium ${
-                                    activeId === item.id ? 'active' : ''
-                                }`}
-                                aria-current={activeId === item.id ? 'page' : undefined}
-                                onClick={() => scrollToId(item.id)}
+                />
+
+                {/* 讓文字永遠在最上層 */}
+                <div className="position-relative text-center" style={{ zIndex: 1 }}>
+                    <h1 className="sub1-medium text-white">主題活動</h1>
+                    <h2 className="text-white fs-4 fs-lg-1 py-4 pt-sm-24 text-center">
+                        一起走進自然
+                        <span className="d-inline-block">找回你的節奏</span>
+                    </h2>
+                    <p className="text-primary-100 sub1-medium">讓自然成為你的休息室</p>
+
+                    <ul
+                        className="nav nav-underline position-absolute bottom-0 d-sm-none opacity-75"
+                        style={{
+                            flexWrap: 'nowrap',
+                            overflowX: 'scroll',
+                            scrollbarWidth: 'none',
+                        }}
+                    >
+                        {navItems.map((item) => (
+                            <li
+                                key={item.id}
+                                className="nav-item"
+                                style={{ minWidth: 'fit-content' }}
                             >
-                                {item.label}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-                <ul className="nav nav-pills mt-8 d-none d-sm-flex gap-2">
-                    {navItems.map((item) => (
-                        <li key={item.id} className="nav-item">
-                            <button
-                                type="button"
-                                className={`nav-link body1-bold ${
-                                    activeId === item.id ? 'active' : ''
-                                }`}
-                                aria-current={activeId === item.id ? 'page' : undefined}
-                                onClick={() => scrollToId(item.id)}
-                            >
-                                {item.label}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
+                                <button
+                                    type="button"
+                                    className={`nav-link body1-medium ${
+                                        activeId === item.id ? 'active' : ''
+                                    }`}
+                                    aria-current={activeId === item.id ? 'page' : undefined}
+                                    onClick={() => scrollToId(item.id)}
+                                >
+                                    {item.label}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                    <ul className="nav nav-pills mt-8 d-none d-sm-flex gap-2">
+                        {navItems.map((item) => (
+                            <li key={item.id} className="nav-item">
+                                <button
+                                    type="button"
+                                    className={`nav-link body1-bold ${
+                                        activeId === item.id ? 'active' : ''
+                                    }`}
+                                    aria-current={activeId === item.id ? 'page' : undefined}
+                                    onClick={() => scrollToId(item.id)}
+                                >
+                                    {item.label}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </header>
 
             <section
@@ -488,9 +546,11 @@ const Theme = () => {
                     {activity.map((item, index) => (
                         <li key={index}>
                             <img
-                                src={item.picUrl}
+                                src={optimizeImgUrl(item.picUrl, { q: 70, w: 520 })}
                                 alt=""
                                 className="card-img rounded-12"
+                                loading="lazy"
+                                decoding="async"
                                 style={{
                                     maxHeight: '250px',
                                     objectFit: 'cover',
@@ -554,89 +614,122 @@ const Theme = () => {
                             return (
                                 <li
                                     key={sec.id}
-                                    className="px-3 py-8 p-md-16 list-unstyled d-grid gap-6"
+                                    className="px-3 py-8 p-md-16 list-unstyled position-relative overflow-hidden"
                                     style={{
-                                        background: `linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), url(${sec.bg})`,
-                                        backgroundSize: 'cover',
-                                        backgroundRepeat: 'no-repeat',
                                         scrollMarginTop: '75px',
                                     }}
                                     id={sec.id}
                                 >
-                                    <aside className="d-flex flex-column">
-                                        <ul className="list-unstyled d-flex gap-3 flex-wrap">
-                                            {(Array.isArray(sec.chips) ? sec.chips : []).map(
-                                                (chip, idx) => (
-                                                    <li
-                                                        key={`${sec.id}-${idx}`}
-                                                        className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100"
-                                                    >
-                                                        {chip}
-                                                    </li>
-                                                ),
-                                            )}
-                                        </ul>
+                                    <img
+                                        src={optimizeImgUrl(sec.bg, { q: 75, w: 1600 })}
+                                        alt=""
+                                        aria-hidden="true"
+                                        className="position-absolute top-0 start-0 w-100 h-100"
+                                        style={{ objectFit: 'cover' }}
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                    <div
+                                        aria-hidden="true"
+                                        className="position-absolute top-0 start-0 w-100 h-100"
+                                        style={{ background: 'rgba(0,0,0,0.15)' }}
+                                    />
+                                    <div
+                                        className="position-relative d-grid gap-6"
+                                        style={{ zIndex: 1 }}
+                                    >
+                                        <aside className="d-flex flex-column">
+                                            <ul className="list-unstyled d-flex gap-3 flex-wrap">
+                                                {(Array.isArray(sec.chips) ? sec.chips : []).map(
+                                                    (chip, idx) => (
+                                                        <li
+                                                            key={`${sec.id}-${idx}`}
+                                                            className="body2-bold text-primary-300 bg-primary-50 px-3 py-1 rounded-100"
+                                                        >
+                                                            {chip}
+                                                        </li>
+                                                    ),
+                                                )}
+                                            </ul>
 
-                                        <h2 className="text-white fs-5 fs-md-2 py-3">
-                                            {sec.title}
-                                        </h2>
-                                        <p className="text-white my-auto body1-regular">
-                                            {sec.desc}
-                                        </p>
-                                    </aside>
+                                            <h2 className="text-white fs-5 fs-md-2 py-3">
+                                                {sec.title}
+                                            </h2>
+                                            <p className="text-white my-auto body1-regular">
+                                                {sec.desc}
+                                            </p>
+                                        </aside>
 
-                                    <ul className="list-unstyled d-grid gap-3 gap-md-4 themeList">
-                                        {cards.map((trail) => (
-                                            <li key={trail.id}>
-                                                <Link
-                                                    to={`/theme/${trail.id}`}
-                                                    className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center"
-                                                    style={{
-                                                        background: `url(${trail.trail_image})`,
-                                                        width: '100%',
-                                                        height: '260px',
-                                                        backgroundPosition: 'center',
-                                                        gridTemplateColumns: 'auto auto',
-                                                    }}
-                                                >
-                                                    <aside>
-                                                        <h3 className="text-white sub1-medium">
-                                                            {trail.trail_name}
-                                                        </h3>
-                                                        <p className="body3-regular text-black-100 pt-1">
-                                                            {trail.trail_address ||
-                                                                trail.trail_region}
-                                                        </p>
-                                                    </aside>
-
-                                                    <i
-                                                        className="btn btn-primary p-0 d-flex"
+                                        <ul className="list-unstyled d-grid gap-3 gap-md-4 themeList">
+                                            {cards.map((trail) => (
+                                                <li key={trail.id}>
+                                                    <Link
+                                                        to={`/detail/${trail.id}`}
+                                                        className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center position-relative overflow-hidden"
                                                         style={{
-                                                            width: '48px',
-                                                            aspectRatio: '1/1',
+                                                            width: '100%',
+                                                            height: '260px',
+                                                            gridTemplateColumns: 'auto auto',
                                                         }}
                                                     >
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            height="24px"
-                                                            viewBox="0 -960 960 960"
-                                                            width="24px"
-                                                            fill="currentColor"
-                                                            className="m-auto"
+                                                        <img
+                                                            src={optimizeImgUrl(trail.trail_image, {
+                                                                q: 70,
+                                                                w: 520,
+                                                            })}
+                                                            alt={trail.trail_name}
+                                                            loading="lazy"
+                                                            decoding="async"
+                                                            className="position-absolute top-0 start-0 w-100 h-100 z-n1"
+                                                            style={{
+                                                                objectFit: 'cover',
+                                                                objectPosition: 'center',
+                                                            }}
+                                                        />
+                                                        <div
+                                                            className="position-relative"
+                                                            style={{ zIndex: 1 }}
                                                         >
-                                                            <path d="M630-444H192v-72h438L429-717l51-51 288 288-288 288-51-51 201-201Z" />
-                                                        </svg>
-                                                    </i>
-                                                </Link>
-                                            </li>
-                                        ))}
+                                                            <aside>
+                                                                <h3 className="text-white sub1-medium">
+                                                                    {trail.trail_name}
+                                                                </h3>
+                                                                <p className="body3-regular text-black-100 pt-1">
+                                                                    {trail.trail_address ||
+                                                                        trail.trail_region}
+                                                                </p>
+                                                            </aside>
 
-                                        {cards.length === 0 && (
-                                            <li className="text-white opacity-75">
-                                                目前沒有「{sec.type}」的活動
-                                            </li>
-                                        )}
-                                    </ul>
+                                                            <i
+                                                                className="btn btn-primary p-0 d-flex"
+                                                                style={{
+                                                                    width: '48px',
+                                                                    aspectRatio: '1/1',
+                                                                }}
+                                                            >
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    height="24px"
+                                                                    viewBox="0 -960 960 960"
+                                                                    width="24px"
+                                                                    fill="currentColor"
+                                                                    className="m-auto"
+                                                                >
+                                                                    <path d="M630-444H192v-72h438L429-717l51-51 288 288-288 288-51-51 201-201Z" />
+                                                                </svg>
+                                                            </i>
+                                                        </div>
+                                                    </Link>
+                                                </li>
+                                            ))}
+
+                                            {cards.length === 0 && (
+                                                <li className="text-white opacity-75">
+                                                    目前沒有「{sec.type}」的活動
+                                                </li>
+                                            )}
+                                        </ul>
+                                    </div>
                                 </li>
                             );
                         })}
