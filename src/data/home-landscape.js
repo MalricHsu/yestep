@@ -1,12 +1,12 @@
 // 引入特色景觀步道圖片
-import flower from '../assets/images/home/landscape-flower.svg';
-import waterfall from '../assets/images/home/landscape-waterfall.svg';
-import stargazing from '../assets/images/home/landscape-stargazing.png';
-import sunrise from '../assets/images/home/landscape-sunrise.svg';
-import sunset from '../assets/images/home/landscape-sunset.svg';
-import cloud from '../assets/images/home/landscape-cloud.svg';
-import birdwatching from '../assets/images/home/landscape-birdwatching.svg';
-import sacredTree from '../assets/images/home/landscape-sacredtree.svg';
+import flower from '../assets/images/home/landscape-flower.webp';
+import waterfall from '../assets/images/home/landscape-waterfall.webp';
+import stargazing from '../assets/images/home/landscape-stargazing.webp';
+import sunrise from '../assets/images/home/landscape-sunrise.webp';
+import sunset from '../assets/images/home/landscape-sunset.webp';
+import cloud from '../assets/images/home/landscape-cloud.webp';
+import birdwatching from '../assets/images/home/landscape-birdwatching.webp';
+import sacredTree from '../assets/images/home/landscape-sacredtree.webp';
 
 const landscapeData = [
     {
