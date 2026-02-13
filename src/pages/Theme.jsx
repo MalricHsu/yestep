@@ -556,7 +556,7 @@ const Theme = () => {
                                     key={sec.id}
                                     className="px-3 py-8 p-md-16 list-unstyled d-grid gap-6"
                                     style={{
-                                        background: `linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), ${sec.bg}`,
+                                        background: `linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), url(${sec.bg})`,
                                         backgroundSize: 'cover',
                                         backgroundRepeat: 'no-repeat',
                                         scrollMarginTop: '75px',
