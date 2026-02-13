@@ -31,8 +31,125 @@ import Nav from '../components/Nav';
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 //api設定
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+
+const withImgParams = (url, { q = 75, w = 520 } = {}) => {
+    if (!url) return '';
+    const params = `q=${q}&w=${w}&fm=webp&auto=format&fit=crop`;
+    return url.includes('?') ? `${url}&${params}` : `${url}?${params}`;
+};
+
+const OptimizedImg = ({ src, alt = '', q = 75, w = 520, className, style, ...rest }) => {
+    return (
+        <img
+            src={withImgParams(src, { q, w })}
+            alt={alt}
+            className={className}
+            style={style}
+            loading="lazy"
+            decoding="async"
+            {...rest}
+        />
+    );
+};
+
+// ===== Itinerary modal =====
+const ItineraryModal = ({ open, data, note, onChangeNote, onClose, onSaveNote, saving }) => {
+    if (!open || !data) return null;
+
+    const dateText = (() => {
+        try {
+            return new Date(data.date).toLocaleString('zh-TW');
+        } catch {
+            return data.date || '';
+        }
+    })();
+
+    return (
+        <>
+            {/* Backdrop */}
+            <div className="modal-backdrop fade show" onClick={onClose} aria-hidden="true" />
+
+            {/* Modal */}
+            <div
+                className="modal fade show"
+                tabIndex={-1}
+                role="dialog"
+                aria-modal="true"
+                style={{ display: 'block' }}
+            >
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content border-0 rounded-24 overflow-hidden">
+                        <div className="modal-header border-0 pb-0">
+                            <h5 className="modal-title fw-semibold">已加入行程</h5>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                aria-label="Close"
+                                onClick={onClose}
+                            />
+                        </div>
+
+                        <div className="modal-body pt-3">
+                            <div className="d-flex gap-3 align-items-center mb-3">
+                                <OptimizedImg
+                                    src={data.trailImage}
+                                    alt={data.trailName || ''}
+                                    q={75}
+                                    w={220}
+                                    style={{
+                                        width: 88,
+                                        height: 64,
+                                        borderRadius: 16,
+                                        objectFit: 'cover',
+                                        flexShrink: 0,
+                                    }}
+                                />
+
+                                <div className="flex-grow-1">
+                                    <div className="fw-semibold">{data.trailName}</div>
+                                    <div className="small text-muted">加入日期：{dateText}</div>
+                                </div>
+                            </div>
+
+                            <div className="form-floating">
+                                <textarea
+                                    className="form-control"
+                                    id="itineraryNote"
+                                    placeholder="新增筆記"
+                                    style={{ minHeight: 110 }}
+                                    value={note}
+                                    onChange={(e) => onChangeNote(e.target.value)}
+                                />
+                                <label htmlFor="itineraryNote">筆記（可選）</label>
+                                <div className="form-text">* 註記</div>
+                            </div>
+                        </div>
+
+                        <div className="modal-footer border-0 pt-0">
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                onClick={onClose}
+                            >
+                                關閉
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={onSaveNote}
+                                disabled={saving}
+                            >
+                                {saving ? '儲存中…' : '儲存筆記'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
 //手機版選單
-const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
+const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) => {
     return (
         <div className="accordion rounded-md-24 overflow-hidden" id="favoriteAccordion">
             {favorites.map((item) => (
@@ -43,7 +160,7 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
                     {/* Header */}
                     <h2 className="accordion-header" id={`heading-${item.id}`}>
                         <button
-                            className="accordion-button collapsed p-3 p-md-6"
+                            className="accordion-button collapsed p-3 p-md-4"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target={`#collapse-${item.id}`}
@@ -52,9 +169,11 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
                         >
                             <div className="d-flex w-100 align-items-center gap-3">
                                 {/* 圖片 */}
-                                <img
+                                <OptimizedImg
                                     src={item.image}
-                                    alt=""
+                                    alt={item.name || ''}
+                                    q={75}
+                                    w={160}
                                     style={{
                                         width: 64,
                                         height: 48,
@@ -82,33 +201,44 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
                         aria-labelledby={`heading-${item.id}`}
                         data-bs-parent="#favoriteAccordion"
                     >
-                        <div className="accordion-body  p-3 p-md-6">
-                            <div className="d-grid gap-2 mb-3">
-                                <div className="d-flex justify-content-between">
-                                    <span className="text-muted">長度</span>
-                                    <span className="fw-semibold">{item.length}</span>
+                        <div className="accordion-body p-3 p-md-4">
+                            <div className="p-3 p-md-4 rounded-4 bg-body-tertiary">
+                                <div className="d-grid gap-2 mb-3">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span className="text-muted">長度</span>
+                                        <span className="fw-semibold">{item.length}</span>
+                                    </div>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span className="text-muted">海拔</span>
+                                        <span className="fw-semibold">{item.altitude}</span>
+                                    </div>
                                 </div>
-                                <div className="d-flex justify-content-between">
-                                    <span className="text-muted">海拔</span>
-                                    <span className="fw-semibold">{item.altitude}</span>
-                                </div>
-                            </div>
 
-                            <div className="d-grid gap-2">
-                                <Link
-                                    to={`/plan/${item.trailId ?? item.id}`}
-                                    className="btn btn-primary mx-auto"
-                                    style={{ width: 'fit-content' }}
-                                >
-                                    前往規劃
-                                </Link>
-                                <button
-                                    type="button"
-                                    className="btn btn-text"
-                                    onClick={() => onRemove(item.id)}
-                                >
-                                    取消收藏
-                                </button>
+                                <div className="d-flex flex-wrap gap-2 justify-content-center">
+                                    <Link
+                                        to={`/detail/${item.trailId ?? item.id}`}
+                                        target="_blank"
+                                        className="btn btn-outline-primary"
+                                    >
+                                        查看步道
+                                    </Link>
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={() => onAddItinerary?.(item)}
+                                    >
+                                        加入行程
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-link text-danger text-decoration-none"
+                                        onClick={() => onRemove(item.id)}
+                                    >
+                                        取消收藏
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -230,87 +360,261 @@ const scrollToTopMinus = (id, offset = 50) => {
 //Tab 內容
 
 //會員資料頁面
-const MemberProfile = () => {
+const ProfileCard = ({ title, children, actions }) => {
+    return (
+        <div
+            className="bg-white rounded-24 p-4 p-md-5 shadow-sm border-0"
+            style={{ maxWidth: 600, margin: '0 auto' }}
+        >
+            <div className="d-flex align-items-center justify-content-between mb-4">
+                <h3 className="fw-bold m-0 text-primary-dark">{title}</h3>
+                {actions}
+            </div>
+            {children}
+        </div>
+    );
+};
+
+const ProfileSectionTitle = ({ children }) => (
+    <h5
+        className="text-muted small fw-bold text-uppercase mb-4 border-bottom pb-2"
+        style={{ letterSpacing: '1px' }}
+    >
+        {children}
+    </h5>
+);
+
+const ReadonlyField = ({ label, value }) => {
+    return (
+        <div className="mb-4">
+            <label className="form-label small text-muted ps-2">{label}</label>
+            <input
+                type="text"
+                className="form-control-plaintext border-bottom ps-2 fw-bold text-primary"
+                value={value ?? ''}
+                readOnly
+            />
+        </div>
+    );
+};
+
+const FloatingInput = ({ id, label, type = 'text', placeholder, disabled, register, error }) => {
+    return (
+        <div className="form-floating">
+            <input
+                id={id}
+                type={type}
+                placeholder={placeholder || label}
+                disabled={disabled}
+                className={` form-control rounded-16 ${disabled ? 'border-transparent bg-light opacity-75' : 'border-primary'} ${error ? 'is-invalid' : ''}`}
+                {...register}
+            />
+            <label htmlFor={id}>{label}</label>
+            {error && <div className="invalid-feedback d-block ps-2">{error}</div>}
+        </div>
+    );
+};
+
+const FloatingSelect = ({ id, label, disabled, register, options }) => {
+    return (
+        <div className="form-floating">
+            <select
+                id={id}
+                disabled={disabled}
+                className={`form-select rounded-16 ${disabled ? 'border-transparent bg-light opacity-75' : 'border-primary'}`}
+                {...register}
+            >
+                {options.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                    </option>
+                ))}
+            </select>
+            <label htmlFor={id}>{label}</label>
+        </div>
+    );
+};
+
+const ProfileActions = ({ isEditing, onEdit, onCancel, submitting }) => {
+    if (!isEditing) {
+        return (
+            <button type="button" className="btn btn-primary rounded-pill px-4" onClick={onEdit}>
+                <i className="bi bi-pencil-square me-2"></i>編輯資料
+            </button>
+        );
+    }
+
+    return (
+        <div className="d-flex gap-2">
+            <button
+                type="button"
+                className="btn btn-outline-secondary rounded-pill px-3"
+                onClick={onCancel}
+                disabled={submitting}
+            >
+                取消
+            </button>
+            <button
+                type="submit"
+                form="member-profile-form"
+                className="btn btn-primary rounded-pill px-4"
+                disabled={submitting}
+            >
+                {submitting ? '儲存中…' : '確認儲存'}
+            </button>
+        </div>
+    );
+};
+
+const MemberProfile = ({ user, setUser }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const token = Cookies.get('accessToken');
+
+    // 以 props 的 user.id 為主；沒有就退回 cookie 的 userId
+    const userId = user?.id ?? Number(Cookies.get('userId'));
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const {
         register,
         handleSubmit,
         reset,
-        formState: { errors },
+        getValues,
+        watch,
+        formState: { errors, isSubmitting },
     } = useForm({
         defaultValues: {
             email: '',
             name: '',
-            password: '',
             phone: '',
             gender: '',
+            gender_detail: '',
             birthday: '',
+            password: '',
+            passwordConfirm: '',
         },
+        mode: 'onBlur',
     });
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [isEditing, setIsEditing] = useState(false);
-    const token = Cookies.get('accessToken');
-    const userId = Cookies.get('userId');
-    // 1. 初始化抓取資料（確認是否有user600登入）
+
+    const genderValue = watch('gender');
+
+    const authHeaders = useMemo(() => {
+        return token ? { Authorization: `Bearer ${token}` } : {};
+    }, [token]);
+
+    // 1) 初始化抓取會員資料：/users/:id
     useEffect(() => {
         const getProfile = async () => {
-            if (!userId || !token) return;
-
+            if (!userId) return;
             try {
+                setLoading(true);
                 const res = await searchApi.get(`/users/${userId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: authHeaders,
                 });
-                if (res && res.data) {
-                    //覆蓋資料
-                    reset({
-                        email: res.data.email || '',
-                        name: res.data.name || 'YeStep 用戶',
-                        phone: res.data.phone || '',
-                        gender: res.data.gender || '',
-                        birthday: res.data.birthday || '',
-                        password: '',
-                    });
+
+                const u = res?.data;
+                if (!u) return;
+
+                reset({
+                    email: u.email || '',
+                    name: u.name || '',
+                    phone: u.phone || '',
+                    gender: u.gender || '',
+                    gender_detail: u.gender_detail || '',
+                    birthday: u.birthday || '',
+                    // 安全起見：不回填密碼
+                    password: '',
+                    passwordConfirm: '',
+                });
+
+                // 同步到全域/本地狀態（避免別頁還是舊資料）
+                if (setUser) {
+                    setUser((prev) => ({ ...(prev || {}), ...u }));
                 }
+                Cookies.set('user', JSON.stringify({ ...(user || {}), ...u }));
+                if (u.id != null) Cookies.set('userId', String(u.id));
             } catch (err) {
                 dispatch(
                     createMessage({
-                        text: err.response?.data?.message || '發生錯誤',
+                        text: err.response?.data?.message || '會員資料載入失敗，請重新登入',
                         type: 'red',
                     }),
                 );
-                navigate('/login');
+                navigate('/login', { replace: true });
+            } finally {
+                setLoading(false);
             }
         };
 
         getProfile();
-    }, [userId, token, reset, dispatch, navigate]);
-    // 2. 處理儲存變更
-    const onSubmit = async (data) => {
-        const updateData = {
-            name: data.name,
-            phone: data.phone,
-            gender: data.gender,
-            birthday: data.birthday,
-        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userId, reset, dispatch, navigate, authHeaders]);
 
-        if (data.password && data.password.trim() !== '') {
-            updateData.password = data.password;
+    // 2) 送出更新（允許改暱稱和密碼）
+    const onSubmit = async (data) => {
+        if (!userId) return;
+
+        const nextName = (data.name || '').trim();
+        const nextPassword = (data.password || '').trim();
+        const nextPasswordConfirm = (data.passwordConfirm || '').trim();
+        const nextPhone = String(data.phone || '').trim();
+        const nextGender = String(data.gender || '').trim();
+        const nextGenderDetail = String(data.gender_detail || '').trim();
+        const nextBirthday = String(data.birthday || '').trim();
+
+        // 允許不改密碼；但若有輸入就必須符合規則
+        if (nextPassword) {
+            if (nextPassword.length < 6) {
+                dispatch(createMessage({ text: '密碼至少 6 碼', type: 'red' }));
+                return;
+            }
+            if (nextPassword !== nextPasswordConfirm) {
+                dispatch(createMessage({ text: '兩次輸入的密碼不一致', type: 'red' }));
+                return;
+            }
         }
 
+        const payload = {
+            name: nextName,
+            phone: nextPhone,
+            gender: nextGender,
+            gender_detail: nextGenderDetail,
+            birthday: nextBirthday,
+            ...(nextPassword ? { password: nextPassword } : {}),
+        };
+
         try {
-            const res = await searchApi.patch(`/users/${userId}`, updateData, {
-                headers: { Authorization: `Bearer ${token}` },
+            const res = await searchApi.patch(`/users/${userId}`, payload, {
+                headers: authHeaders,
             });
-            dispatch(updateName(res.data));
+
+            const updated = res?.data || payload;
+
+            // 更新 redux / cookie / local state
+            dispatch(updateName(updated));
             dispatch(
                 createMessage({
                     text: '會員資料更新成功',
                     type: 'success',
                 }),
             );
+
+            reset({
+                ...getValues(),
+                name: updated.name ?? payload.name,
+                password: '',
+                passwordConfirm: '',
+            });
+
+            if (setUser) {
+                setUser((prev) => ({ ...(prev || {}), ...updated }));
+            }
+            Cookies.set('user', JSON.stringify({ ...(user || {}), ...updated }));
+
             setIsEditing(false);
-            // 更新後重置，覆蓋最新資料
-            reset({ ...res.data, password: '' });
         } catch (err) {
             dispatch(
                 createMessage({
@@ -321,155 +625,170 @@ const MemberProfile = () => {
         }
     };
 
+    const handleCancel = () => {
+        setIsEditing(false);
+        // 回到最後一次 reset 的值
+        reset(getValues());
+    };
+
     return (
-        <div
-            className="bg-white rounded-24 p-4 p-md-5 shadow-sm border-0"
-            style={{ maxWidth: 600, margin: '0 auto' }}
+        <ProfileCard
+            title={
+                <>
+                    <i className="bi bi-person-badge me-2"></i>個人資料詳細
+                </>
+            }
+            actions={
+                <ProfileActions
+                    isEditing={isEditing}
+                    onEdit={() => setIsEditing(true)}
+                    onCancel={handleCancel}
+                    submitting={isSubmitting}
+                />
+            }
         >
-            <div className="d-flex align-items-center justify-content-between mb-5">
-                <h3 className="fw-bold m-0 text-primary-dark">
-                    <i className="bi bi-person-badge me-2"></i>會員個人資料
-                </h3>
-                {!isEditing && (
-                    <button
-                        type="button"
-                        className="btn btn-primary rounded-pill px-4"
-                        onClick={() => setIsEditing(true)}
-                    >
-                        <i className="bi bi-pencil-square me-2"></i>編輯資料
-                    </button>
-                )}
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                {/* 區塊一：帳號安全 */}
-                <div className="mb-5">
-                    <h5
-                        className="text-muted small fw-bold text-uppercase mb-4 border-bottom pb-2"
-                        style={{ letterSpacing: '1px' }}
-                    >
-                        帳號安全設定
-                    </h5>
+            {loading ? (
+                <p className="text-muted mb-0">載入會員資料中...</p>
+            ) : (
+                <form id="member-profile-form" onSubmit={handleSubmit(onSubmit)}>
+                    {/* 帳號資訊 */}
+                    <div className="mb-5">
+                        <ProfileSectionTitle>帳號資訊</ProfileSectionTitle>
+                        <ReadonlyField label="Email (不可修改)" value={getValues('email')} />
+                    </div>
+
+                    {/* 基本資料 */}
                     <div className="mb-4">
-                        <label className="form-label small text-muted ps-2">Email (不可修改)</label>
-                        <input
-                            type="email"
-                            className="form-control-plaintext border-bottom ps-2 fw-bold text-primary"
-                            style={{ fontSize: '1.1rem' }}
-                            {...register('email')}
-                            readOnly
-                        />
-                    </div>
-                </div>
-                {/* 區塊二：基本資料 */}
-                <div className="mb-5">
-                    <h5
-                        className="text-muted small fw-bold text-uppercase mb-4 border-bottom pb-2"
-                        style={{ letterSpacing: '1px' }}
-                    >
-                        個人基本資料
-                    </h5>
-                    <div className="d-flex flex-column gap-4">
-                        {/* 暱稱 */}
-                        <div className="form-floating">
-                            <input
-                                type="text"
-                                className={`form-control rounded-16 ${isEditing ? 'border-primary' : 'border-transparent bg-light opacity-75'}`}
+                        <ProfileSectionTitle>基本資料</ProfileSectionTitle>
+
+                        <div className="d-flex flex-column gap-3 gap-md-4">
+                            <FloatingInput
                                 id="nameInput"
-                                placeholder="暱稱"
+                                label="暱稱（可修改）"
+                                placeholder="請輸入暱稱"
                                 disabled={!isEditing}
-                                {...register('name', { required: '暱稱不能為空' })}
+                                register={register('name', {
+                                    required: '暱稱不能為空',
+                                    minLength: { value: 2, message: '暱稱至少 2 個字' },
+                                    maxLength: { value: 20, message: '暱稱最多 20 個字' },
+                                })}
+                                error={errors.name?.message}
                             />
-                            <label htmlFor="nameInput">暱稱</label>
-                            {errors.name && (
-                                <div className="invalid-feedback d-block ps-2">
-                                    {errors.name.message}
-                                </div>
-                            )}
-                        </div>
-                        {/* 手機號碼 */}
-                        <div className="form-floating">
-                            <input
-                                type="tel"
-                                className={`form-control rounded-16 ${isEditing ? 'border-primary' : 'border-transparent bg-light opacity-75'}`}
-                                id="phoneInput"
-                                placeholder="手機號碼"
-                                disabled={!isEditing}
-                                {...register('phone')}
-                            />
-                            <label htmlFor="phoneInput">手機號碼</label>
-                        </div>
-                        {/* 性別 */}
-                        <div className="form-floating">
-                            <select
-                                className={`form-select rounded-16 ${isEditing ? 'border-primary' : 'border-transparent bg-light opacity-75'}`}
-                                id="genderSelect"
-                                disabled={!isEditing}
-                                {...register('gender')}
-                            >
-                                <option value="">未指定</option>
-                                <option value="male">男</option>
-                                <option value="female">女</option>
-                                <option value="other">其他</option>
-                            </select>
-                            <label htmlFor="genderSelect">性別</label>
-                        </div>
-                        {/* 生日 */}
-                        <div className="form-floating">
-                            <input
-                                type="date"
-                                className={`form-control rounded-16 ${isEditing ? 'border-primary' : 'border-transparent bg-light opacity-75'}`}
-                                id="birthdayInput"
-                                disabled={!isEditing}
-                                {...register('birthday')}
-                            />
-                            <label htmlFor="birthdayInput">生日</label>
-                        </div>
-                    </div>
-                </div>
-                {/* 區塊三：修改密碼 */}
-                {isEditing && (
-                    <div className="mb-5 animate__animated animate__fadeIn">
-                        <h5
-                            className="text-muted small fw-bold text-uppercase mb-4 border-bottom pb-2"
-                            style={{ letterSpacing: '1px' }}
-                        >
-                            修改登入密碼
-                        </h5>
-                        <div className="form-floating mb-3">
-                            <input
-                                type="password"
-                                className="form-control rounded-16 border-primary"
+
+                            <FloatingInput
                                 id="passwordInput"
-                                placeholder="新密碼"
-                                {...register('password')}
+                                label="新密碼"
+                                type="password"
+                                placeholder="至少 6 碼"
+                                disabled={!isEditing}
+                                register={register('password', {
+                                    validate: (v) => {
+                                        if (!isEditing) return true;
+                                        if (!v) return true; // 不改密碼就放過
+                                        if (String(v).trim().length < 6) return '密碼至少 6 碼';
+                                        return true;
+                                    },
+                                })}
+                                error={errors.password?.message}
                             />
-                            <label htmlFor="passwordInput">輸入新密碼 (若不修改請留空)</label>
+
+                            <FloatingInput
+                                id="passwordConfirmInput"
+                                label="確認新密碼"
+                                type="password"
+                                placeholder="請再輸入一次"
+                                disabled={!isEditing}
+                                register={register('passwordConfirm', {
+                                    validate: (v) => {
+                                        if (!isEditing) return true;
+                                        const p = String(getValues('password') || '').trim();
+                                        const c = String(v || '').trim();
+                                        if (!p && !c) return true;
+                                        if (p && !c) return '請再次輸入確認密碼';
+                                        if (p !== c) return '兩次輸入的密碼不一致';
+                                        return true;
+                                    },
+                                })}
+                                error={errors.passwordConfirm?.message}
+                            />
+
+                            <FloatingInput
+                                id="phoneInput"
+                                label="手機號碼"
+                                placeholder="0912345678"
+                                disabled={!isEditing}
+                                register={register('phone', {
+                                    validate: (v) => {
+                                        if (!isEditing) return true;
+                                        const s = String(v || '').trim();
+                                        if (!s) return true; // 允許空白（你的 users 可能一開始 phone 是空字串）
+                                        if (!/^(09\d{8}|\d{10})$/.test(s))
+                                            return '手機號碼格式不正確';
+                                        return true;
+                                    },
+                                })}
+                                error={errors.phone?.message}
+                            />
+
+                            <FloatingSelect
+                                id="genderSelect"
+                                label="性別"
+                                disabled={!isEditing}
+                                register={register('gender')}
+                                options={[
+                                    { value: '', label: '未指定' },
+                                    { value: 'prefer_not_say', label: '不透露' },
+                                    { value: 'female', label: '女性' },
+                                    { value: 'male', label: '男性' },
+                                    { value: 'trans_woman', label: '跨性別者 / Trans woman' },
+                                    { value: 'agender', label: '無性別 / Agender' },
+                                    { value: 'intersex', label: '雙性 / Intersex' },
+                                    { value: 'custom', label: '自我描述（自行輸入）' },
+                                ]}
+                            />
+                            {genderValue === 'custom' && (
+                                <FloatingInput
+                                    id="genderDetailInput"
+                                    label="性別自我描述"
+                                    placeholder="例如：跨性別、非二元..."
+                                    disabled={!isEditing}
+                                    register={register('gender_detail', {
+                                        validate: (v) => {
+                                            if (!isEditing) return true;
+                                            const g = String(genderValue || '');
+                                            if (g !== 'custom') return true;
+                                            const s = String(v || '').trim();
+                                            if (!s) return '請輸入性別自我描述';
+                                            if (s.length > 40) return '最多 40 字';
+                                            return true;
+                                        },
+                                    })}
+                                    error={errors.gender_detail?.message}
+                                />
+                            )}
+
+                            <FloatingInput
+                                id="birthdayInput"
+                                label="生日"
+                                type="date"
+                                placeholder=""
+                                disabled={!isEditing}
+                                register={register('birthday', {
+                                    validate: (v) => {
+                                        if (!isEditing) return true;
+                                        const s = String(v || '').trim();
+                                        if (!s) return true; // 允許空白
+                                        if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return '生日格式不正確';
+                                        return true;
+                                    },
+                                })}
+                                error={errors.birthday?.message}
+                            />
                         </div>
                     </div>
-                )}
-                {/* 按鈕組 */}
-                {isEditing && (
-                    <div className="d-flex flex-column flex-md-row gap-3 justify-content-end pt-3 border-top mt-5">
-                        <button
-                            type="button"
-                            className="btn btn-outline-secondary rounded-pill px-4 order-2 order-md-1"
-                            onClick={() => {
-                                setIsEditing(false);
-                                reset();
-                            }}
-                        >
-                            取消變更
-                        </button>
-                        <button
-                            type="submit"
-                            className="btn btn-primary rounded-pill px-5 shadow-sm order-1 order-md-2"
-                        >
-                            確認儲存
-                        </button>
-                    </div>
-                )}
-            </form>
-        </div>
+                </form>
+            )}
+        </ProfileCard>
     );
 };
 
@@ -481,6 +800,11 @@ const MemberFavorite = ({ user }) => {
     const [error, setError] = useState('');
     const dispatch = useDispatch();
 
+    const [itineraryModalOpen, setItineraryModalOpen] = useState(false);
+    const [itineraryData, setItineraryData] = useState(null);
+    const [itineraryNote, setItineraryNote] = useState('');
+    const [savingNote, setSavingNote] = useState(false);
+
     useEffect(() => {
         let mounted = true;
         const fetchFavorites = async () => {
@@ -490,7 +814,7 @@ const MemberFavorite = ({ user }) => {
                 setLoading(true);
                 setError('');
 
-                const token = Cookies.get('token'); // 2. 取得 Token
+                const token = Cookies.get('accessToken'); // 2. 取得 Token
                 // 修改 API 請求
                 const res = await searchApi.get(`/favorites`, {
                     params: {
@@ -556,6 +880,78 @@ const MemberFavorite = ({ user }) => {
         }
     };
 
+    const handleAddItinerary = async (item) => {
+        if (!user || !user.id) return;
+
+        try {
+            const token = Cookies.get('accessToken');
+            const payload = {
+                userId: user.id,
+                trailId: String(item.trailId ?? item.id),
+                trailName: item.name,
+                trailImage: item.image,
+                date: new Date().toISOString(),
+            };
+
+            const res = await searchApi.post('/itinerary', payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const created = res?.data || payload;
+            setItineraryData(created);
+            setItineraryNote(created.note || '');
+            setItineraryModalOpen(true);
+
+            dispatch(createMessage({ text: '已加入行程', type: 'success' }));
+        } catch (e) {
+            console.error('加入行程失敗', e);
+            dispatch(createMessage({ text: '加入行程失敗，請稍後再試', type: 'red' }));
+        }
+    };
+
+    const handleCloseItineraryModal = () => {
+        setItineraryModalOpen(false);
+        setItineraryData(null);
+        setItineraryNote('');
+        setSavingNote(false);
+    };
+
+    const handleSaveItineraryNote = async () => {
+        if (!itineraryData?.id) {
+            handleCloseItineraryModal();
+            return;
+        }
+
+        try {
+            setSavingNote(true);
+            const token = Cookies.get('accessToken');
+
+            // json-server 允許 patch 新欄位
+            const res = await searchApi.patch(
+                `/itinerary/${itineraryData.id}`,
+                { note: itineraryNote },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+
+            const updated = res?.data || { ...itineraryData, note: itineraryNote };
+            setItineraryData(updated);
+
+            dispatch(createMessage({ text: '筆記已儲存', type: 'success' }));
+            handleCloseItineraryModal();
+        } catch (e) {
+            console.error('儲存筆記失敗', e);
+            dispatch(createMessage({ text: '筆記儲存失敗，請稍後再試', type: 'red' }));
+        } finally {
+            setSavingNote(false);
+        }
+    };
+
     return (
         <div className="d-grid gap-3" style={{ maxWidth: 520 }}>
             {loading && <p className="text-muted mb-0">載入收藏中...</p>}
@@ -566,7 +962,20 @@ const MemberFavorite = ({ user }) => {
                 <div className="text-center py-5 text-muted">目前沒有收藏步道</div>
             )}
 
-            <MobileFavoriteDropdown favorites={favorites} onRemove={handleRemove} />
+            <MobileFavoriteDropdown
+                favorites={favorites}
+                onRemove={handleRemove}
+                onAddItinerary={handleAddItinerary}
+            />
+            <ItineraryModal
+                open={itineraryModalOpen}
+                data={itineraryData}
+                note={itineraryNote}
+                onChangeNote={setItineraryNote}
+                onClose={handleCloseItineraryModal}
+                onSaveNote={handleSaveItineraryNote}
+                saving={savingNote}
+            />
         </div>
     );
 };
@@ -856,14 +1265,13 @@ const MemberRecommend = () => {
             try {
                 setLoading(true);
                 setError('');
-                // 與 TrailSearchPage 同一支 API：/trails
-                // 這裡先抓多一點再隨機抽 3 筆（json-server 沒有隨機 API）
+                // 這裡先抓多一點再隨機抽 6 筆（json-server 沒有隨機 API）
                 const res = await searchApi.get('/trails', {
                     params: { _limit: 200 },
                 });
 
                 const list = Array.isArray(res.data) ? res.data : [];
-                const picked = pickRandomUnique(list, 3);
+                const picked = pickRandomUnique(list, 6);
 
                 if (isMounted) setItems(picked);
             } catch (err) {
@@ -898,9 +1306,11 @@ const MemberRecommend = () => {
                     className="card border-0 rounded-24 shadow-sm overflow-hidden"
                     style={{ maxWidth: 420 }}
                 >
-                    <img
-                        src="https://images.unsplash.com/photo-1502439502085-ebf78244370a?q=80&w=1849&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    <OptimizedImg
+                        src="https://images.unsplash.com/photo-1502439502085-ebf78244370a"
                         alt="recommend placeholder"
+                        q={75}
+                        w={720}
                         style={{ height: 160, width: '100%', objectFit: 'cover' }}
                     />
                     <div className="card-body">
@@ -915,10 +1325,12 @@ const MemberRecommend = () => {
                     {items.map((trail) => (
                         <div className="col-12 col-sm-6 col-xl-4" key={trail.id}>
                             <div className="card border-0 rounded-24 shadow-sm h-100 overflow-hidden">
-                                <img
+                                <OptimizedImg
                                     src={trail.trail_image}
                                     className="card-img-top rounded-top-24"
                                     alt={trail.trail_name}
+                                    q={75}
+                                    w={520}
                                     style={{ height: 180, objectFit: 'cover' }}
                                 />
                                 <div className="card-body d-flex flex-column">
@@ -932,6 +1344,7 @@ const MemberRecommend = () => {
 
                                     <Link
                                         to={`/detail/${trail.id}`}
+                                        target="_blank"
                                         className="btn btn-primary mt-auto"
                                     >
                                         查看步道
