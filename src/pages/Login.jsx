@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../slices/authSlice';
 import { createMessage, clearMessage } from '../slices/infoSlice';
 import axios from 'axios';
@@ -13,6 +13,7 @@ const LoginApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         document.title = '登入 | YeStep';
@@ -26,6 +27,7 @@ const Login = () => {
     } = useForm({ mode: 'onChange' });
 
     const onSubmit = async (data) => {
+        dispatch(clearMessage());
         try {
             const res = await LoginApi.post('/login', data);
             const { accessToken, user } = res.data;
@@ -34,7 +36,9 @@ const Login = () => {
             Cookies.set('user', JSON.stringify(user), { expires: 7 });
             dispatch(loginSuccess({ accessToken, user }));
             dispatch(createMessage({ text: `${user.name}，歡迎回來 YeStep`, type: 'success' }));
-            setTimeout(() => navigate('/'), 500);
+            // 取得當初傳過來的來源路徑，如果沒有就回首頁
+            const origin = location.state?.from || '/';
+            setTimeout(() => navigate(origin, { replace: true }), 500);
         } catch (error) {
             const text = error.response ? '帳號或密碼錯誤' : '伺服器連線失敗';
             dispatch(createMessage({ text, type: 'danger' }));
@@ -121,7 +125,7 @@ const Login = () => {
                                         placeholder="name@example.com"
                                     />
                                     <label htmlFor="floatingInput" className="text-primary-100">
-                                        帳號 (Email)
+                                        帳號
                                     </label>
                                     {errors.email && (
                                         <div className="invalid-feedback text-red">

@@ -32,7 +32,7 @@ export const authSlice = createSlice({
             state.token = null;
             Cookies.remove('accessToken');
             Cookies.remove('user');
-            Cookies.remove('userId'); // 登出也要記得移除
+            Cookies.remove('userId');
         },
         //修改暱稱
         updateName: (state, action) => {
