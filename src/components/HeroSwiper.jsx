@@ -4,9 +4,9 @@ import 'swiper/css';
 import 'swiper/css/effect-fade';
 
 // 引入圖片
-import heroSwiper01 from '../assets/images/home/heroswiper-01.jpg';
-import heroSwiper02 from '../assets/images/home/heroswiper-02.jpg';
-import heroSwiper03 from '../assets/images/home/heroswiper-03.jpg';
+import heroSwiper01 from '../assets/images/home/heroswiper-01.webp';
+import heroSwiper02 from '../assets/images/home/heroswiper-02.webp';
+import heroSwiper03 from '../assets/images/home/heroswiper-03.webp';
 
 function HeroSwiper() {
     const carouselData = [
