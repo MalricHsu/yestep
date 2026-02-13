@@ -2,15 +2,17 @@ import { Link } from 'react-router-dom';
 const TrailCard = ({ trailData }) => {
     return (
         <>
-            <div className="row g-6">
+            <div className="row">
                 {trailData.map((data) => {
                     return (
                         <div className="col-md-4 mb-6 mb-lg-0" key={data.id}>
                             <div className="card bg-dark text-white rounded-24 overflow-hidden border-0 position-relative recommend-card card-height">
                                 <img
-                                    src={data.trail_image}
+                                    src={`${data.trail_image}?q=70&w=520&fm=webp&auto=format&fit=crop`}
                                     className="card-img object-fit-cover w-100 h-100"
                                     alt={data.trail_name}
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                                 <div className="card-img-overlay d-flex flex-column">
                                     <div className="d-flex align-items-start">

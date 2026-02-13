@@ -295,9 +295,11 @@ const TrailDetail = () => {
                         <div className="row">
                             <div className="col-lg-5">
                                 <img
-                                    src={detailData.trail_image}
+                                    src={`${detailData.trail_image}?q=70&w=520&fm=webp&auto=format&fit=crop1`}
                                     alt={detailData.trail_address}
                                     className="img-fluid object-fit-cover detail-img rounded-24 mb-3 mb-lg-4"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                                 <div className="d-none d-lg-block">
                                     <TrailMap />
