@@ -38,7 +38,6 @@ const TrailDetail = () => {
     //設定實體
     const ModalRef = useRef(null);
     const [favoriteId, setFavoriteId] = useState(null);
-    const [planId, setPlanId] = useState(null);
 
     //標題名稱
     useEffect(() => {
@@ -163,29 +162,18 @@ const TrailDetail = () => {
     const ActionButtons = () => {
         // 利用 !! 將 ID 轉為布林值來決定樣式
         const isLiked = !!favoriteId;
-        const isPlan = !!planId;
         return (
             <>
                 <button
                     type="button"
-                    className={`btn  p-3 d-flex justify-content-center align-items-center me-3 ${isLiked ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'} `}
-                    style={{ width: '48px', height: '48px' }}
+                    className={`btn px-6 py-3 d-flex justify-content-center align-items-center me-3 ${isLiked ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'} `}
+                    // style={{ width: '48px', height: '48px' }}
                     onClick={() => {
                         handleAction('like');
                     }}
                 >
                     <span className="material-symbols-outlined m-0">favorite</span>
-                </button>
-
-                <button
-                    type="button"
-                    className={`btn  px-6 py-3 d-flex justify-content-center align-items-center me-3 ${isPlan ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'}  `}
-                    onClick={() => {
-                        handleAction('plan');
-                    }}
-                >
-                    <span className="material-symbols-outlined me-2">add_circle</span>
-                    <p className="body1-bold">加入行程</p>
+                    <p className="body1-bold">加入收藏</p>
                 </button>
             </>
         );
@@ -206,21 +194,12 @@ const TrailDetail = () => {
                     } else {
                         setFavoriteId(null);
                     }
-                    const planRes = await detailApi.get(
-                        `/itinerary?userId=${user.id}&trailId=${id}`,
-                    );
-                    if (planRes.data.length > 0) {
-                        setPlanId(planRes.data[0].id);
-                    } else {
-                        setPlanId(null);
-                    }
                 } catch (error) {
                     console.error('狀態檢查失敗', error);
                 }
             } else {
                 // 如果沒登入，清空狀態
                 setFavoriteId(null);
-                setPlanId(null);
             }
         };
         checkStatus();
@@ -253,24 +232,6 @@ const TrailDetail = () => {
                     });
                     setFavoriteId(res.data.id);
                     ModalRef.current.open('like_auth');
-                }
-            }
-            if (type === 'plan') {
-                if (planId) {
-                    // --- 取消行程 (Delete) ---
-                    await detailApi.delete(`/itinerary/${planId}`);
-                    setPlanId(null);
-                } else {
-                    // --- 加入行程 (Post) ---
-                    const res = await detailApi.post('/itinerary', {
-                        userId: user.id,
-                        trailId: id,
-                        trailName: detailData.trail_name,
-                        trailImage: detailData.trail_image,
-                        date: new Date().toISOString(),
-                    });
-                    setPlanId(res.data.id);
-                    ModalRef.current.open('plan_auth');
                 }
             }
         } catch (error) {
