@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation } from 'react-router';
+import { Link } from 'react-router';
 
 // 引入logo-white
 import logoWhite from '../assets/images/logo/logo-white.png';
@@ -11,7 +11,6 @@ import iconLine from '../assets/images/community/icon-line.svg';
 import iconThread from '../assets/images/community/icon-thread.svg';
 
 const Footer = () => {
-    const location = useLocation();
     return (
         <>
             <footer className="bg-black py-8 py-sm-16">
@@ -35,27 +34,19 @@ const Footer = () => {
                             <nav className="footer__nav">
                                 <ul className="footer-links list-unstyled d-flex justify-content-center justify-content-lg-start gap-8 ">
                                     <li className="decor-lined">
-                                        <NavLink to="/theme" className="nav-link">
+                                        <Link to="/theme" className="nav-link">
                                             主題活動
-                                        </NavLink>
+                                        </Link>
                                     </li>
                                     <li className="decor-lined">
-                                        <NavLink to="/search" className="nav-link">
+                                        <Link to="/search" className="nav-link">
                                             步道總覽
-                                        </NavLink>
+                                        </Link>
                                     </li>
                                     <li className="decor-lined">
-                                        <NavLink
-                                            to="/#popular-trails"
-                                            className={() =>
-                                                location.pathname === '/' &&
-                                                location.hash === '#popular-trails'
-                                                    ? 'nav-link active'
-                                                    : 'nav-link'
-                                            }
-                                        >
+                                        <Link to="/#popular-trails" className="nav-link">
                                             熱門步道
-                                        </NavLink>
+                                        </Link>
                                     </li>
                                 </ul>
                             </nav>

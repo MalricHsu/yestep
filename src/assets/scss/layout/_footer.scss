@@ -4,6 +4,10 @@
 .footer-links {
     .decor-lined {
         position: relative;
+
+        &:hover ::after {
+            display: none;
+        }
     }
     .nav-link {
         color: $white;
