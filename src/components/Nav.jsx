@@ -17,6 +17,8 @@ import { useNavigate } from 'react-router-dom';
 import { logout } from '../slices/authSlice';
 import { createMessage } from '../slices/infoSlice.js';
 
+import Cookies from 'js-cookie';
+
 //預設nav的字一開始就是非綠色的
 const Nav = () => {
     const location = useLocation();
@@ -47,6 +49,8 @@ const Nav = () => {
     //處理登出
     const handleLogout = (e) => {
         e.preventDefault();
+        Cookies.remove('token');
+        Cookies.remove('user');
         dispatch(logout());
         dispatch(
             createMessage({

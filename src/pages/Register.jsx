@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../slices/authSlice';
 import axios from 'axios';
 import { createMessage, clearMessage } from '../slices/infoSlice';
+import Cookies from 'js-cookie';
 
 // API
 const RegisterApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
@@ -32,7 +33,9 @@ const Register = () => {
                 password: data.password,
             });
             const { accessToken, user } = res.data;
-
+            Cookies.set('accessToken', accessToken, { expires: 7 });
+            Cookies.set('userId', user.id, { expires: 7 });
+            Cookies.set('nickname', user.name, { expires: 7 });
             dispatch(loginSuccess({ accessToken, user }));
             dispatch(
                 createMessage({
