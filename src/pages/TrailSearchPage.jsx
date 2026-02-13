@@ -191,8 +191,12 @@ const TrailSearchPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                             >
                                 <div className="input-group align-items-center">
+                                    <label htmlFor="regionSelect" class="d-none">
+                                        請選擇地區
+                                    </label>
                                     <select
                                         className="form-select px-4 d-none d-sm-block"
+                                        id="regionSelect"
                                         value={urlArea}
                                         onChange={(e) =>
                                             updateRoute({ trail_region: e.target.value, _page: 1 })

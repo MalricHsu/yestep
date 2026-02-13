@@ -163,7 +163,7 @@ const PopularTrails = ({ onUpdateSuccess, hasBorder = false }) => {
                                         >
                                             <div className="card-img">
                                                 <img
-                                                    src={`${trail.trail_image}?q=70&w=520&auto=format&fit=crop`}
+                                                    src={`${trail.trail_image}?q=80&w=520&fm=webp&auto=format&fit=crop`}
                                                     alt={trail.trail_name}
                                                     loading="lazy"
                                                     decoding="async"
