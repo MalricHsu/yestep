@@ -19,7 +19,11 @@ const Footer = () => {
                         {/* 🚩左欄logo + nav */}
                         <div className="col-lg-5">
                             <div className="brand__logo d-flex flex-column align-items-center align-items-lg-start mb-6 mb-sm-13">
-                                <Link to="/" className="d-flex column-gap-2 mb-2">
+                                <Link
+                                    to="/"
+                                    className="d-flex column-gap-2 mb-2"
+                                    onClick={() => window.scrollTo(0, 0)}
+                                >
                                     <img className="logo" src={logoWhite} alt="footer logo圖" />
                                     <img
                                         className="logo-yestep"
@@ -55,22 +59,38 @@ const Footer = () => {
                         <div className="col-lg-7">
                             <ul className="footer__icons list-unstyled d-flex justify-content-center justify-content-lg-end gap-3 mb-5">
                                 <li>
-                                    <a href="/" className="text-white p-2">
+                                    <a
+                                        href="https://www.facebook.com/"
+                                        target="_blank"
+                                        className="text-white p-2"
+                                    >
                                         <img src={iconFacebook} alt="facebook icon" />
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/" className="text-white p-2">
+                                    <a
+                                        href="https://www.line.me/"
+                                        target="_blank"
+                                        className="text-white p-2"
+                                    >
                                         <img src={iconLine} alt="line icon" />
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/" className="text-white p-2">
+                                    <a
+                                        href="https://www.instagram.com/"
+                                        target="_blank"
+                                        className="text-white p-2"
+                                    >
                                         <img src={iconInstagram} alt="instagram icon" />
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/" className="text-white p-2">
+                                    <a
+                                        href="https://www.threads.com/"
+                                        target="_blank"
+                                        className="text-white p-2"
+                                    >
                                         <img src={iconThread} alt="thread icon" />
                                     </a>
                                 </li>
@@ -93,6 +113,7 @@ const Footer = () => {
                                     <li>
                                         <a
                                             href="https://icons8.com/"
+                                            target="_blank"
                                             className="text-decoration-none text-black-100"
                                         >
                                             illustrations by icons8.

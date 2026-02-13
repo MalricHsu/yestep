@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Offcanvas from 'bootstrap/js/dist/offcanvas';
 
@@ -28,6 +28,12 @@ const NavOffcanvas = ({ show, onClose }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    // 優化：點擊連結後同時關閉選單並置頂
+    const handleLinkClick = useCallback(() => {
+        onClose?.();
+        window.scrollTo(0, 0);
+    }, [onClose]);
+
     const handleLogout = (e) => {
         e.preventDefault();
         Cookies.remove('token');
@@ -39,6 +45,7 @@ const NavOffcanvas = ({ show, onClose }) => {
                 type: 'success',
             }),
         );
+        onClose?.(); // 登出後關閉選單
         setTimeout(() => {
             navigate('/');
         }, 1500);
@@ -72,7 +79,11 @@ const NavOffcanvas = ({ show, onClose }) => {
         <div ref={offcanvasRef} className="offcanvas offcanvas-end bg-primary-50" tabIndex="-1">
             <div className="offcanvas-header">
                 <h5 className="offcanvas-title">
-                    <Link to="/" className="d-flex column-gap-2 pe-4 me-10" onClick={onClose}>
+                    <Link
+                        to="/"
+                        className="d-flex column-gap-2 pe-4 me-10"
+                        onClick={handleLinkClick}
+                    >
                         <img className="logo" src={logoDark} alt="logo圖片" />
                         <img className="logo-yestep" src={yestepDark} alt="logo圖片" />
                     </Link>
