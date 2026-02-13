@@ -32,11 +32,16 @@ export const authSlice = createSlice({
             state.token = null;
             Cookies.remove('accessToken');
             Cookies.remove('user');
-            Cookies.remove('userId'); // ★ 登出也要記得移除
+            Cookies.remove('userId'); // 登出也要記得移除
+        },
+        //修改暱稱
+        updateName: (state, action) => {
+            state.user = { ...state.user, ...action.payload };
+            Cookies.set('user', JSON.stringify(state.user), { expires: 7 });
         },
     },
 });
 
 export default authSlice.reducer;
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { loginSuccess, logout, updateName } = authSlice.actions;

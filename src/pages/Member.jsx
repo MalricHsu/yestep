@@ -1,11 +1,15 @@
+//react套件
 import { useEffect, useMemo, useState } from 'react';
-import Nav from '../components/Nav';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import { createMessage } from '../slices/infoSlice';
 import { useForm } from 'react-hook-form';
 
+//狀態管理
+import { useDispatch } from 'react-redux';
+import { createMessage } from '../slices/infoSlice';
+import { updateName } from '../slices/authSlice';
+
+//第三方套件
 import axios from 'axios';
 import {
     Chart as ChartJS,
@@ -18,12 +22,16 @@ import {
     Legend,
 } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import { useDispatch } from 'react-redux';
+import Cookies from 'js-cookie';
 
+//元件
+import Nav from '../components/Nav';
+
+//圖表設定
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
+//api設定
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
-
+//手機版選單
 const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
     return (
         <div className="accordion rounded-md-24 overflow-hidden" id="favoriteAccordion">
@@ -114,6 +122,7 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
     );
 };
 
+//Tab會員頁面
 const MEMBER_TABS = [
     {
         key: 'member',
@@ -181,6 +190,7 @@ const MEMBER_TABS = [
     },
 ];
 
+//Tab 跳轉選單
 const MemberTabs = ({ activeTab, onChange }) => {
     return (
         <ul className="nav nav-underline flex-nowrap  w-100 opacity-75">
@@ -207,22 +217,19 @@ const MemberTabs = ({ activeTab, onChange }) => {
         </ul>
     );
 };
+//Tab 特效
 const scrollToTopMinus = (id, offset = 50) => {
     const el = document.getElementById(id);
     if (!el) return;
-
     const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
-
     window.scrollTo({
         top: y,
         behavior: 'smooth',
     });
 };
-/* =====================
-   Tab Contents
-===================== */
+//Tab 內容
 
-// 假設你的 API 實例名稱為 searchApi
+//會員資料頁面
 const MemberProfile = () => {
     const {
         register,
@@ -231,34 +238,30 @@ const MemberProfile = () => {
         formState: { errors },
     } = useForm({
         defaultValues: {
-            account: '',
             email: '',
             name: '',
             password: '',
-            phone: '', // 新增：手機
-            gender: '', // 新增：性別
-            birthday: '', // 新增：生日
+            phone: '',
+            gender: '',
+            birthday: '',
         },
     });
-
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
     const token = Cookies.get('accessToken');
     const userId = Cookies.get('userId');
-
-    // 1. 初始化抓取資料
+    // 1. 初始化抓取資料（確認是否有user600登入）
     useEffect(() => {
         const getProfile = async () => {
-            // 檢查 Cookie 是否存在
-            if (!userId || !token) {
-                console.warn('缺少 userId 或 token，不執行抓取');
-                return;
-            }
+            if (!userId || !token) return;
 
             try {
                 const res = await searchApi.get(`/users/${userId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 if (res && res.data) {
+                    //覆蓋資料
                     reset({
                         email: res.data.email || '',
                         name: res.data.name || 'YeStep 用戶',
@@ -269,13 +272,18 @@ const MemberProfile = () => {
                     });
                 }
             } catch (err) {
-                console.error('初始化失敗', err);
-                // 這裡如果不跳轉，至少不會讓頁面全白
+                dispatch(
+                    createMessage({
+                        text: err.response?.data?.message || '發生錯誤',
+                        type: 'red',
+                    }),
+                );
+                navigate('/login');
             }
         };
 
         getProfile();
-    }, [userId, token, reset]);
+    }, [userId, token, reset, dispatch, navigate]);
     // 2. 處理儲存變更
     const onSubmit = async (data) => {
         const updateData = {
@@ -293,20 +301,30 @@ const MemberProfile = () => {
             const res = await searchApi.patch(`/users/${userId}`, updateData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            alert('會員資料更新成功！');
+            dispatch(updateName(res.data));
+            dispatch(
+                createMessage({
+                    text: '會員資料更新成功',
+                    type: 'success',
+                }),
+            );
             setIsEditing(false);
-            // 更新後重置，保持資料最新狀態
-            reset({ ...res.data, account: res.data.email.split('@')[0], password: '' });
+            // 更新後重置，覆蓋最新資料
+            reset({ ...res.data, password: '' });
         } catch (err) {
-            console.error('更新失敗:', err);
-            alert('更新失敗，請檢查權限');
+            dispatch(
+                createMessage({
+                    text: err.response?.data?.message || '更新資料失敗',
+                    type: 'red',
+                }),
+            );
         }
     };
 
     return (
         <div
             className="bg-white rounded-24 p-4 p-md-5 shadow-sm border-0"
-            style={{ maxWidth: 600, margin: '0 auto' }} // 縮小最大寬度讓單欄排版不至於太散
+            style={{ maxWidth: 600, margin: '0 auto' }}
         >
             <div className="d-flex align-items-center justify-content-between mb-5">
                 <h3 className="fw-bold m-0 text-primary-dark">
@@ -322,7 +340,6 @@ const MemberProfile = () => {
                     </button>
                 )}
             </div>
-
             <form onSubmit={handleSubmit(onSubmit)}>
                 {/* 區塊一：帳號安全 */}
                 <div className="mb-5">
@@ -343,7 +360,6 @@ const MemberProfile = () => {
                         />
                     </div>
                 </div>
-
                 {/* 區塊二：基本資料 */}
                 <div className="mb-5">
                     <h5
@@ -352,9 +368,7 @@ const MemberProfile = () => {
                     >
                         個人基本資料
                     </h5>
-                    <div className="d-grid gap-4">
-                        {' '}
-                        {/* 使用 d-grid 確保每一行都是獨立的一行 */}
+                    <div className="d-flex flex-column gap-4">
                         {/* 暱稱 */}
                         <div className="form-floating">
                             <input
@@ -412,7 +426,6 @@ const MemberProfile = () => {
                         </div>
                     </div>
                 </div>
-
                 {/* 區塊三：修改密碼 */}
                 {isEditing && (
                     <div className="mb-5 animate__animated animate__fadeIn">
@@ -434,7 +447,6 @@ const MemberProfile = () => {
                         </div>
                     </div>
                 )}
-
                 {/* 按鈕組 */}
                 {isEditing && (
                     <div className="d-flex flex-column flex-md-row gap-3 justify-content-end pt-3 border-top mt-5">
@@ -461,28 +473,25 @@ const MemberProfile = () => {
     );
 };
 
+//收藏頁面
 const MemberFavorite = ({ user }) => {
-    // 1. 接收 user props
+    //接收 user props
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let mounted = true;
-
         const fetchFavorites = async () => {
-            // 如果沒有 user 資料（例如尚未登入完全），就不執行
+            // 如果沒有 user 資料（例如尚未登入完全）
             if (!user || !user.id) return;
-
             try {
                 setLoading(true);
                 setError('');
 
                 const token = Cookies.get('token'); // 2. 取得 Token
-
-                // 3. 修改 API 請求：
-                //    - 加入 userId 篩選
-                //    - 加入 Authorization Header
+                // 修改 API 請求
                 const res = await searchApi.get(`/favorites`, {
                     params: {
                         userId: user.id, // 只抓這個人的
@@ -494,21 +503,24 @@ const MemberFavorite = ({ user }) => {
                 });
 
                 const list = Array.isArray(res.data) ? res.data : [];
-
-                // 轉成 MobileFavoriteDropdown 需要的欄位 (邏輯不變)
+                // 轉成 MobileFavoriteDropdown 需要的欄位
                 const mapped = list.map((f) => ({
                     id: f.id,
-                    trailId: f.trailId || f.themeId, // 兼容你的不同命名可能
+                    trailId: f.trailId,
                     name: f.trailName,
                     image: f.trailImage,
                     length: f.trail_length ?? '—',
                     altitude: f.trail_altitude ?? '—',
                 }));
-
                 if (mounted) setFavorites(mapped);
-            } catch (e) {
+            } catch (err) {
                 if (mounted) {
-                    console.error(e);
+                    dispatch(
+                        createMessage({
+                            text: err.response?.data?.message || '收藏步道資料載入失敗',
+                            type: 'red',
+                        }),
+                    );
                     setError('收藏資料載入失敗');
                     setFavorites([]);
                 }
@@ -522,7 +534,7 @@ const MemberFavorite = ({ user }) => {
         return () => {
             mounted = false;
         };
-    }, [user]); // 加入 user 作為依賴，當 user 改變時重抓
+    }, [dispatch, user]);
 
     const handleRemove = async (favId) => {
         const token = Cookies.get('accessToken'); // 刪除時也要 Token
@@ -578,7 +590,7 @@ const countByRegion = (list, getRegion) => {
 
 const calcPercent = (num, den) => {
     if (!den) return 0;
-    return Math.round((num / den) * 1000) / 10; // 1 位小數
+    return Math.round((num / den) * 1000) / 10;
 };
 
 export const MemberAnalytics = ({ user }) => {
@@ -586,12 +598,11 @@ export const MemberAnalytics = ({ user }) => {
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState('');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let mounted = true;
-
         const fetchAll = async () => {
-            // 如果沒有 user，就不抓資料
             if (!user || !user.id) return;
 
             try {
@@ -604,8 +615,7 @@ export const MemberAnalytics = ({ user }) => {
                 const [trailsRes, favRes] = await Promise.all([
                     // 1. 抓全部步道 (用來當分母，這不用過濾)
                     searchApi.get('/trails', { params: { _limit: 9999 } }),
-
-                    // 2. ★ 修改重點：只抓「這個會員」的收藏
+                    // 2. 修改重點：只抓「這個會員」的收藏
                     searchApi.get('/favorites', {
                         params: {
                             userId: user.id, // 加上 userId 篩選
@@ -621,9 +631,14 @@ export const MemberAnalytics = ({ user }) => {
 
                 setTrails(Array.isArray(trailsRes.data) ? trailsRes.data : []);
                 setFavorites(Array.isArray(favRes.data) ? favRes.data : []);
-            } catch (e) {
+            } catch (err) {
                 if (!mounted) return;
-                console.error(e);
+                dispatch(
+                    createMessage({
+                        text: err.response?.data?.message || '統計資料載入失敗',
+                        type: 'red',
+                    }),
+                );
                 setErr('統計資料載入失敗');
                 setTrails([]);
                 setFavorites([]);
@@ -636,7 +651,7 @@ export const MemberAnalytics = ({ user }) => {
         return () => {
             mounted = false;
         };
-    }, [user]); // 加入 user 依賴
+    }, [dispatch, user]);
 
     const REGION_COLORS = useMemo(
         () => ({
@@ -833,15 +848,14 @@ const MemberRecommend = () => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let isMounted = true;
-
         const fetchRecommend = async () => {
             try {
                 setLoading(true);
                 setError('');
-
                 // 與 TrailSearchPage 同一支 API：/trails
                 // 這裡先抓多一點再隨機抽 3 筆（json-server 沒有隨機 API）
                 const res = await searchApi.get('/trails', {
@@ -852,8 +866,14 @@ const MemberRecommend = () => {
                 const picked = pickRandomUnique(list, 3);
 
                 if (isMounted) setItems(picked);
-            } catch (e) {
+            } catch (err) {
                 if (isMounted) {
+                    dispatch(
+                        createMessage({
+                            text: err.response?.data?.message || '推薦資料資料載入失敗',
+                            type: 'red',
+                        }),
+                    );
                     setError('推薦步道載入失敗');
                     setItems([]);
                 }
@@ -867,7 +887,7 @@ const MemberRecommend = () => {
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className="py-6">
@@ -942,13 +962,12 @@ const Member = () => {
         document.title = '會員中心 | YeStep';
 
         const token = Cookies.get('accessToken');
-
         // 2. 檢查權限：如果沒有 user 資料 或 沒有 token
         if (!currentUser || !token) {
-            dispatch(createMessage({ text: '請先登入會員', type: 'danger' })); // 紅色通常 type 是 danger
+            dispatch(createMessage({ text: '請先登入會員', type: 'red' }));
             navigate('/login', { replace: true }); // 加上 replace: true 防止按上一頁又回來
         }
-    }, [currentUser, dispatch, navigate]); // 依賴加入 currentUser
+    }, [currentUser, dispatch, navigate]);
 
     const handleTabChange = (key) => {
         setActiveTab(key);
@@ -971,15 +990,11 @@ const Member = () => {
                     style={{ padding: '0 5%' }}
                 >
                     <h2 className="fs-5 fs-md-2 pt-8 pb-4 pt-md-0 pb-md-8">{currentTab.label}</h2>
-
-                    {/* ★ 4. 關鍵修正：把 user 資料透過 props 傳下去 ★ */}
                     {activeTab === 'member' && (
                         <MemberProfile user={currentUser} setUser={setCurrentUser} />
                     )}
                     {activeTab === 'favorite' && <MemberFavorite user={currentUser} />}
                     {activeTab === 'analytics' && <MemberAnalytics user={currentUser} />}
-
-                    {/* 推薦通常是隨機或通用的，可能不需要 user，但如果要過濾已收藏的就需要 */}
                     {activeTab === 'recommend' && <MemberRecommend />}
                 </main>
             </div>
