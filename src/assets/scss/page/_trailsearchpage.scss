@@ -1,13 +1,19 @@
-$loader-size: 100px;
-$loader-dot-size: ($loader-size / 10);
-$loader-height: ($loader-dot-size * 2);
-$loader-dot-color: $primary-300;
+// $loader-size: 100px;
+// $loader-dot-size: ($loader-size / 10);
+// $loader-height: ($loader-dot-size * 2);
+// $loader-dot-color: $primary-300;
 
 .trail-loader {
-    position: relative;
+    display: flex;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 2;
 
     .lottie-walk {
-        max-width: 500px;
+        max-width: 800px;
     }
 
     .loading-text {
@@ -84,6 +90,19 @@ $loader-dot-color: $primary-300;
     //         top: 0;
     //     }
     // }
+}
+
+.isLoaded {
+    animation: fadeIn 0.5s ease-in-out;
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
 }
 
 .search-header {
@@ -234,6 +253,7 @@ $loader-dot-color: $primary-300;
 }
 
 .popularTrails {
+    position: relative;
     overflow: hidden;
 
     .btn-arrow {
