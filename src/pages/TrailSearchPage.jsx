@@ -191,7 +191,7 @@ const TrailSearchPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                             >
                                 <div className="input-group align-items-center">
-                                    <label htmlFor="regionSelect" class="d-none">
+                                    <label htmlFor="regionSelect" className="d-none">
                                         請選擇地區
                                     </label>
                                     <select
