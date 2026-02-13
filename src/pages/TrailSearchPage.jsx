@@ -404,8 +404,10 @@ const TrailSearchPage = () => {
                                                 <div className="card-img rounded-16 overflow-hidden">
                                                     <img
                                                         className="card-img-top"
-                                                        src={trail.trail_image}
+                                                        src={`${trail.trail_image}?q=70&w=520&auto=format&fit=crop`}
                                                         alt={trail.trail_name}
+                                                        loading="lazy"
+                                                        decoding="async"
                                                     />
                                                     <div className="card-featured d-flex gap-1 text-white fs-9">
                                                         <div className="d-flex align-items-center gap-1">
