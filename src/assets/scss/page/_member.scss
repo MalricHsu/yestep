@@ -53,9 +53,16 @@
     margin: 0 auto;
     padding: 72px 5vw 32px;
     .nav-underline {
+        background-color: rgba(0, 0, 0, 0.1);
+        gap: 1px;
+        box-shadow: 0 0 10px 1px rgba(51, 51, 51, 0.2);
         position: sticky;
         z-index: 100;
         top: 64px;
+
+        .nav-item .active {
+            background-color: rgba($primary-50, 1);
+        }
     }
 
     .memberMain main {

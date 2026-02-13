@@ -2,7 +2,8 @@
 import { useState, useEffect, Fragment, useRef } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { createMessage } from '../slices/infoSlice';
 
 //第三方套件
 import axios from 'axios';
@@ -25,6 +26,7 @@ const TrailDetail = () => {
     const detailApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
     const useParam = useParams();
     const { id } = useParam;
+    const dispatch = useDispatch();
 
     //狀態管理
     const isLogin = useSelector((state) => {
@@ -33,10 +35,9 @@ const TrailDetail = () => {
     const user = useSelector((state) => {
         return state.auth.user;
     });
-
+    //設定實體
     const ModalRef = useRef(null);
     const [favoriteId, setFavoriteId] = useState(null);
-    const [planId, setPlanId] = useState(null);
 
     //標題名稱
     useEffect(() => {
@@ -76,7 +77,6 @@ const TrailDetail = () => {
                 const filterSystem = res.data.filter((trail) => {
                     return !trail.trail_system.includes('中央山脈');
                 });
-                //  console.log(filterSystem);
                 const randomTrail = [...filterSystem].sort(() => 0.5 - Math.random());
                 setSystemOther(randomTrail.slice(0, 3));
             } catch (error) {
@@ -100,6 +100,7 @@ const TrailDetail = () => {
         handleReviewData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     //swiper
     useEffect(() => {
         if (!reviewData || reviewData.length === 0) return;
@@ -122,11 +123,11 @@ const TrailDetail = () => {
                 loop: true,
                 breakpoints: {
                     768: {
-                        slidesPerView: 2, // 平板顯示 2 張
+                        slidesPerView: 2,
                         spaceBetween: 20,
                     },
                     992: {
-                        slidesPerView: 3, // 電腦顯示 3 張
+                        slidesPerView: 3,
                         spaceBetween: 24,
                     },
                 },
@@ -161,29 +162,18 @@ const TrailDetail = () => {
     const ActionButtons = () => {
         // 利用 !! 將 ID 轉為布林值來決定樣式
         const isLiked = !!favoriteId;
-        const isPlan = !!planId;
         return (
             <>
                 <button
                     type="button"
-                    className={`btn  p-3 d-flex justify-content-center align-items-center me-3 ${isLiked ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'} `}
-                    style={{ width: '48px', height: '48px' }}
+                    className={`btn px-6 py-3 d-flex justify-content-center align-items-center me-3 ${isLiked ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'} `}
+                    // style={{ width: '48px', height: '48px' }}
                     onClick={() => {
                         handleAction('like');
                     }}
                 >
                     <span className="material-symbols-outlined m-0">favorite</span>
-                </button>
-
-                <button
-                    type="button"
-                    className={`btn  px-6 py-3 d-flex justify-content-center align-items-center me-3 ${isPlan ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'}  `}
-                    onClick={() => {
-                        handleAction('plan');
-                    }}
-                >
-                    <span className="material-symbols-outlined me-2">add_circle</span>
-                    <p className="body1-bold">加入行程</p>
+                    <p className="body1-bold">加入收藏</p>
                 </button>
             </>
         );
@@ -204,22 +194,12 @@ const TrailDetail = () => {
                     } else {
                         setFavoriteId(null);
                     }
-
-                    const planRes = await detailApi.get(
-                        `/itinerary?userId=${user.id}&trailId=${id}`,
-                    );
-                    if (planRes.data.length > 0) {
-                        setPlanId(planRes.data[0].id);
-                    } else {
-                        setPlanId(null);
-                    }
                 } catch (error) {
                     console.error('狀態檢查失敗', error);
                 }
             } else {
                 // 如果沒登入，清空狀態
                 setFavoriteId(null);
-                setPlanId(null);
             }
         };
         checkStatus();
@@ -254,27 +234,13 @@ const TrailDetail = () => {
                     ModalRef.current.open('like_auth');
                 }
             }
-            if (type === 'plan') {
-                if (planId) {
-                    // --- 取消行程 (Delete) ---
-                    await detailApi.delete(`/itinerary/${planId}`);
-                    setPlanId(null);
-                } else {
-                    // --- 加入行程 (Post) ---
-                    const res = await detailApi.post('/itinerary', {
-                        userId: user.id,
-                        trailId: id,
-                        trailName: detailData.trail_name,
-                        trailImage: detailData.trail_image,
-                        date: new Date().toISOString(),
-                    });
-                    setPlanId(res.data.id);
-                    ModalRef.current.open('plan_auth');
-                }
-            }
         } catch (error) {
-            console.error('操作失敗', error);
-            alert('連線錯誤，請稍後再試');
+            dispatch(
+                createMessage({
+                    text: error.response?.data?.message || '連線失敗，請稍候再試',
+                    type: 'red',
+                }),
+            );
         }
     };
 
@@ -290,9 +256,11 @@ const TrailDetail = () => {
                         <div className="row">
                             <div className="col-lg-5">
                                 <img
-                                    src={detailData.trail_image}
+                                    src={`${detailData.trail_image}?q=70&w=520&fm=webp&auto=format&fit=crop1`}
                                     alt={detailData.trail_address}
                                     className="img-fluid object-fit-cover detail-img rounded-24 mb-3 mb-lg-4"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                                 <div className="d-none d-lg-block">
                                     <TrailMap />
