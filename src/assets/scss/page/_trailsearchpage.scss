@@ -13,7 +13,8 @@
     z-index: 2;
 
     .lottie-walk {
-        max-width: 800px;
+        max-width: 500px;
+        width: 100%;
     }
 
     .loading-text {
@@ -355,7 +356,7 @@
 
 .search-theme {
     position: relative;
-    background: url(https://images.unsplash.com/photo-1725877762973-2422cee8ac72?q=70&w=1170&auto=format&fit=crop)
+    background: url(https://images.unsplash.com/photo-1725877762973-2422cee8ac72?q=70&w=1170&fm=webp&auto=format&fit=crop)
         no-repeat center bottom;
     background-size: cover;
 
