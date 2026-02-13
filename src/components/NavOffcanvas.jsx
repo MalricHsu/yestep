@@ -115,7 +115,7 @@ const NavOffcanvas = ({ show, onClose }) => {
                     <>
                         <div className="d-flex justify-content-center mt-auto">
                             <Link
-                                to="/login"
+                                to="/member"
                                 className="d-flex align-items-center text-decoration-none link-primary-300"
                             >
                                 <span>會員中心</span>
