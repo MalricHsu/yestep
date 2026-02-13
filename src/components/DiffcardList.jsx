@@ -1,8 +1,8 @@
-import diffCard01 from '../assets/images/home/diffcard-01.png';
-import diffCard02 from '../assets/images/home/diffcard-02.png';
-import diffCard03 from '../assets/images/home/diffcard-03.png';
-import diffCard04 from '../assets/images/home/diffcard-04.png';
-import diffCard05 from '../assets/images/home/diffcard-05.png';
+import diffCard01 from '../assets/images/home/diffcard-01.webp';
+import diffCard02 from '../assets/images/home/diffcard-02.webp';
+import diffCard03 from '../assets/images/home/diffcard-03.webp';
+import diffCard04 from '../assets/images/home/diffcard-04.webp';
+import diffCard05 from '../assets/images/home/diffcard-05.webp';
 
 const diffData = [
     {

@@ -25,12 +25,12 @@ import DiffCardList from '../components/DiffcardList';
 import { landscapeColumns } from '../data/home-landscape';
 
 // 引入 關於我們
-import aboutImg from '../assets/images/home/about-img.svg';
-import aboutImgLg from '../assets/images/home/about-img-lg.svg';
+import aboutImg from '../assets/images/home/about-img.webp';
+import aboutImgLg from '../assets/images/home/about-img-lg.webp';
 
 // 引入 關於我們-背景山脈圖
-import aboutBgLg from '../assets/images/home/about-bg-lg.svg';
-import aboutBg from '../assets/images/home/about-bg.svg';
+import aboutBgLg from '../assets/images/home/about-bg-lg.webp';
+import aboutBg from '../assets/images/home/about-bg.webp';
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';

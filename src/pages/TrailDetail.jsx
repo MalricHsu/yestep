@@ -2,7 +2,8 @@
 import { useState, useEffect, Fragment, useRef } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { createMessage } from '../slices/infoSlice';
 
 //第三方套件
 import axios from 'axios';
@@ -25,6 +26,7 @@ const TrailDetail = () => {
     const detailApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
     const useParam = useParams();
     const { id } = useParam;
+    const dispatch = useDispatch();
 
     //狀態管理
     const isLogin = useSelector((state) => {
@@ -33,7 +35,7 @@ const TrailDetail = () => {
     const user = useSelector((state) => {
         return state.auth.user;
     });
-
+    //設定實體
     const ModalRef = useRef(null);
     const [favoriteId, setFavoriteId] = useState(null);
     const [planId, setPlanId] = useState(null);
@@ -76,7 +78,6 @@ const TrailDetail = () => {
                 const filterSystem = res.data.filter((trail) => {
                     return !trail.trail_system.includes('中央山脈');
                 });
-                //  console.log(filterSystem);
                 const randomTrail = [...filterSystem].sort(() => 0.5 - Math.random());
                 setSystemOther(randomTrail.slice(0, 3));
             } catch (error) {
@@ -100,6 +101,7 @@ const TrailDetail = () => {
         handleReviewData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     //swiper
     useEffect(() => {
         if (!reviewData || reviewData.length === 0) return;
@@ -122,11 +124,11 @@ const TrailDetail = () => {
                 loop: true,
                 breakpoints: {
                     768: {
-                        slidesPerView: 2, // 平板顯示 2 張
+                        slidesPerView: 2,
                         spaceBetween: 20,
                     },
                     992: {
-                        slidesPerView: 3, // 電腦顯示 3 張
+                        slidesPerView: 3,
                         spaceBetween: 24,
                     },
                 },
@@ -204,7 +206,6 @@ const TrailDetail = () => {
                     } else {
                         setFavoriteId(null);
                     }
-
                     const planRes = await detailApi.get(
                         `/itinerary?userId=${user.id}&trailId=${id}`,
                     );
@@ -273,8 +274,12 @@ const TrailDetail = () => {
                 }
             }
         } catch (error) {
-            console.error('操作失敗', error);
-            alert('連線錯誤，請稍後再試');
+            dispatch(
+                createMessage({
+                    text: error.response?.data?.message || '連線失敗，請稍候再試',
+                    type: 'red',
+                }),
+            );
         }
     };
 
@@ -290,9 +295,11 @@ const TrailDetail = () => {
                         <div className="row">
                             <div className="col-lg-5">
                                 <img
-                                    src={detailData.trail_image}
+                                    src={`${detailData.trail_image}?q=70&w=520&fm=webp&auto=format&fit=crop1`}
                                     alt={detailData.trail_address}
                                     className="img-fluid object-fit-cover detail-img rounded-24 mb-3 mb-lg-4"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                                 <div className="d-none d-lg-block">
                                     <TrailMap />

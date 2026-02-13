@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { Modal } from 'bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const MODAL_CONFIG = {
     //沒登入
@@ -48,6 +48,7 @@ const ActionModal = forwardRef((props, ref) => {
     //建立一個實例
     const modalInstanceRef = useRef(null);
     const [currentMode, setCurrentModal] = useState('like_guest');
+    const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -84,7 +85,11 @@ const ActionModal = forwardRef((props, ref) => {
     const handleButtonClick = (btn) => {
         modalInstanceRef.current?.hide();
         if (btn.action === 'redirect' && navigate) {
-            navigate(btn.path);
+            // 重點：跳轉時把當前 location 傳給登入頁
+            navigate(btn.path, {
+                // 紀錄剛才是因為想做什麼才被擋下來的
+                state: { from: location.pathname + location.search, actionType: currentMode },
+            });
         }
     };
 
