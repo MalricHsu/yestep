@@ -191,8 +191,12 @@ const TrailSearchPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                             >
                                 <div className="input-group align-items-center">
+                                    <label htmlFor="regionSelect" className="d-none">
+                                        請選擇地區
+                                    </label>
                                     <select
                                         className="form-select px-4 d-none d-sm-block"
+                                        id="regionSelect"
                                         value={urlArea}
                                         onChange={(e) =>
                                             updateRoute({ trail_region: e.target.value, _page: 1 })
@@ -404,8 +408,10 @@ const TrailSearchPage = () => {
                                                 <div className="card-img rounded-16 overflow-hidden">
                                                     <img
                                                         className="card-img-top"
-                                                        src={trail.trail_image}
+                                                        src={`${trail.trail_image}?q=70&w=520&auto=format&fit=crop`}
                                                         alt={trail.trail_name}
+                                                        loading="lazy"
+                                                        decoding="async"
                                                     />
                                                     <div className="card-featured d-flex gap-1 text-white fs-9">
                                                         <div className="d-flex align-items-center gap-1">

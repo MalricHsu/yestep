@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../slices/authSlice';
 import { createMessage, clearMessage } from '../slices/infoSlice';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 // API
 const LoginApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
@@ -28,6 +29,9 @@ const Login = () => {
         try {
             const res = await LoginApi.post('/login', data);
             const { accessToken, user } = res.data;
+            //後端路由取得userId 只能看到自己的部分
+            Cookies.set('accessToken', accessToken, { expires: 7 });
+            Cookies.set('user', JSON.stringify(user), { expires: 7 });
             dispatch(loginSuccess({ accessToken, user }));
             dispatch(createMessage({ text: `${user.name}，歡迎回來 YeStep`, type: 'success' }));
             setTimeout(() => navigate('/'), 500);

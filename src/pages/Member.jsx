@@ -1,7 +1,15 @@
+//react套件
 import { useEffect, useMemo, useState } from 'react';
-import Nav from '../components/Nav';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
+//狀態管理
+import { useDispatch } from 'react-redux';
+import { createMessage } from '../slices/infoSlice';
+import { updateName } from '../slices/authSlice';
+
+//第三方套件
 import axios from 'axios';
 import {
     Chart as ChartJS,
@@ -14,11 +22,16 @@ import {
     Legend,
 } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
+import Cookies from 'js-cookie';
 
+//元件
+import Nav from '../components/Nav';
+
+//圖表設定
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
+//api設定
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
-
+//手機版選單
 const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
     return (
         <div className="accordion rounded-md-24 overflow-hidden" id="favoriteAccordion">
@@ -109,6 +122,7 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove }) => {
     );
 };
 
+//Tab會員頁面
 const MEMBER_TABS = [
     {
         key: 'member',
@@ -176,6 +190,7 @@ const MEMBER_TABS = [
     },
 ];
 
+//Tab 跳轉選單
 const MemberTabs = ({ activeTab, onChange }) => {
     return (
         <ul className="nav nav-underline flex-nowrap  w-100 opacity-75">
@@ -202,143 +217,310 @@ const MemberTabs = ({ activeTab, onChange }) => {
         </ul>
     );
 };
+//Tab 特效
 const scrollToTopMinus = (id, offset = 50) => {
     const el = document.getElementById(id);
     if (!el) return;
-
     const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
-
     window.scrollTo({
         top: y,
         behavior: 'smooth',
     });
 };
-/* =====================
-   Tab Contents
-===================== */
+//Tab 內容
 
+//會員資料頁面
 const MemberProfile = () => {
-    const [nickname, setNickname] = useState('YeStep 用戶');
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            email: '',
+            name: '',
+            password: '',
+            phone: '',
+            gender: '',
+            birthday: '',
+        },
+    });
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
+    const token = Cookies.get('accessToken');
+    const userId = Cookies.get('userId');
+    // 1. 初始化抓取資料（確認是否有user600登入）
+    useEffect(() => {
+        const getProfile = async () => {
+            if (!userId || !token) return;
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setIsEditing(false);
-        console.log('更新暱稱為:', nickname);
+            try {
+                const res = await searchApi.get(`/users/${userId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                if (res && res.data) {
+                    //覆蓋資料
+                    reset({
+                        email: res.data.email || '',
+                        name: res.data.name || 'YeStep 用戶',
+                        phone: res.data.phone || '',
+                        gender: res.data.gender || '',
+                        birthday: res.data.birthday || '',
+                        password: '',
+                    });
+                }
+            } catch (err) {
+                dispatch(
+                    createMessage({
+                        text: err.response?.data?.message || '發生錯誤',
+                        type: 'red',
+                    }),
+                );
+                navigate('/login');
+            }
+        };
+
+        getProfile();
+    }, [userId, token, reset, dispatch, navigate]);
+    // 2. 處理儲存變更
+    const onSubmit = async (data) => {
+        const updateData = {
+            name: data.name,
+            phone: data.phone,
+            gender: data.gender,
+            birthday: data.birthday,
+        };
+
+        if (data.password && data.password.trim() !== '') {
+            updateData.password = data.password;
+        }
+
+        try {
+            const res = await searchApi.patch(`/users/${userId}`, updateData, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            dispatch(updateName(res.data));
+            dispatch(
+                createMessage({
+                    text: '會員資料更新成功',
+                    type: 'success',
+                }),
+            );
+            setIsEditing(false);
+            // 更新後重置，覆蓋最新資料
+            reset({ ...res.data, password: '' });
+        } catch (err) {
+            dispatch(
+                createMessage({
+                    text: err.response?.data?.message || '更新資料失敗',
+                    type: 'red',
+                }),
+            );
+        }
     };
 
     return (
-        <div className="bg-white rounded-24 p-4 p-md-6" style={{ maxWidth: 520 }}>
-            <h3 className="mb-4">會員資料</h3>
-
-            <form onSubmit={handleSubmit}>
-                {/* 帳號 */}
-                <div className="form-floating mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="account"
-                        value="yestep_user01"
-                        readOnly
-                    />
-                    <label htmlFor="account">帳號</label>
+        <div
+            className="bg-white rounded-24 p-4 p-md-5 shadow-sm border-0"
+            style={{ maxWidth: 600, margin: '0 auto' }}
+        >
+            <div className="d-flex align-items-center justify-content-between mb-5">
+                <h3 className="fw-bold m-0 text-primary-dark">
+                    <i className="bi bi-person-badge me-2"></i>會員個人資料
+                </h3>
+                {!isEditing && (
+                    <button
+                        type="button"
+                        className="btn btn-primary rounded-pill px-4"
+                        onClick={() => setIsEditing(true)}
+                    >
+                        <i className="bi bi-pencil-square me-2"></i>編輯資料
+                    </button>
+                )}
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                {/* 區塊一：帳號安全 */}
+                <div className="mb-5">
+                    <h5
+                        className="text-muted small fw-bold text-uppercase mb-4 border-bottom pb-2"
+                        style={{ letterSpacing: '1px' }}
+                    >
+                        帳號安全設定
+                    </h5>
+                    <div className="mb-4">
+                        <label className="form-label small text-muted ps-2">Email (不可修改)</label>
+                        <input
+                            type="email"
+                            className="form-control-plaintext border-bottom ps-2 fw-bold text-primary"
+                            style={{ fontSize: '1.1rem' }}
+                            {...register('email')}
+                            readOnly
+                        />
+                    </div>
                 </div>
-
-                {/* 密碼 */}
-                <div className="form-floating mb-3">
-                    <input
-                        type="password"
-                        className="form-control"
-                        id="password"
-                        value="12345678"
-                        readOnly
-                    />
-                    <label htmlFor="password">密碼</label>
+                {/* 區塊二：基本資料 */}
+                <div className="mb-5">
+                    <h5
+                        className="text-muted small fw-bold text-uppercase mb-4 border-bottom pb-2"
+                        style={{ letterSpacing: '1px' }}
+                    >
+                        個人基本資料
+                    </h5>
+                    <div className="d-flex flex-column gap-4">
+                        {/* 暱稱 */}
+                        <div className="form-floating">
+                            <input
+                                type="text"
+                                className={`form-control rounded-16 ${isEditing ? 'border-primary' : 'border-transparent bg-light opacity-75'}`}
+                                id="nameInput"
+                                placeholder="暱稱"
+                                disabled={!isEditing}
+                                {...register('name', { required: '暱稱不能為空' })}
+                            />
+                            <label htmlFor="nameInput">暱稱</label>
+                            {errors.name && (
+                                <div className="invalid-feedback d-block ps-2">
+                                    {errors.name.message}
+                                </div>
+                            )}
+                        </div>
+                        {/* 手機號碼 */}
+                        <div className="form-floating">
+                            <input
+                                type="tel"
+                                className={`form-control rounded-16 ${isEditing ? 'border-primary' : 'border-transparent bg-light opacity-75'}`}
+                                id="phoneInput"
+                                placeholder="手機號碼"
+                                disabled={!isEditing}
+                                {...register('phone')}
+                            />
+                            <label htmlFor="phoneInput">手機號碼</label>
+                        </div>
+                        {/* 性別 */}
+                        <div className="form-floating">
+                            <select
+                                className={`form-select rounded-16 ${isEditing ? 'border-primary' : 'border-transparent bg-light opacity-75'}`}
+                                id="genderSelect"
+                                disabled={!isEditing}
+                                {...register('gender')}
+                            >
+                                <option value="">未指定</option>
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                                <option value="other">其他</option>
+                            </select>
+                            <label htmlFor="genderSelect">性別</label>
+                        </div>
+                        {/* 生日 */}
+                        <div className="form-floating">
+                            <input
+                                type="date"
+                                className={`form-control rounded-16 ${isEditing ? 'border-primary' : 'border-transparent bg-light opacity-75'}`}
+                                id="birthdayInput"
+                                disabled={!isEditing}
+                                {...register('birthday')}
+                            />
+                            <label htmlFor="birthdayInput">生日</label>
+                        </div>
+                    </div>
                 </div>
-
-                {/* Email */}
-                <div className="form-floating mb-3">
-                    <input
-                        type="email"
-                        className="form-control"
-                        id="emailProfile"
-                        value="user@yestep.com"
-                        readOnly
-                    />
-                    <label htmlFor="emailProfile">Email</label>
-                </div>
-
-                {/* 暱稱（可編輯） */}
-                <div className="form-floating mb-4">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="nickname"
-                        value={nickname}
-                        disabled={!isEditing}
-                        onChange={(e) => setNickname(e.target.value)}
-                    />
-                    <label htmlFor="nickname">暱稱</label>
-                </div>
-
-                <div className="d-flex gap-2">
-                    {!isEditing ? (
+                {/* 區塊三：修改密碼 */}
+                {isEditing && (
+                    <div className="mb-5 animate__animated animate__fadeIn">
+                        <h5
+                            className="text-muted small fw-bold text-uppercase mb-4 border-bottom pb-2"
+                            style={{ letterSpacing: '1px' }}
+                        >
+                            修改登入密碼
+                        </h5>
+                        <div className="form-floating mb-3">
+                            <input
+                                type="password"
+                                className="form-control rounded-16 border-primary"
+                                id="passwordInput"
+                                placeholder="新密碼"
+                                {...register('password')}
+                            />
+                            <label htmlFor="passwordInput">輸入新密碼 (若不修改請留空)</label>
+                        </div>
+                    </div>
+                )}
+                {/* 按鈕組 */}
+                {isEditing && (
+                    <div className="d-flex flex-column flex-md-row gap-3 justify-content-end pt-3 border-top mt-5">
                         <button
                             type="button"
-                            className="btn btn-outline-primary"
-                            onClick={() => setIsEditing(true)}
+                            className="btn btn-outline-secondary rounded-pill px-4 order-2 order-md-1"
+                            onClick={() => {
+                                setIsEditing(false);
+                                reset();
+                            }}
                         >
-                            編輯暱稱
+                            取消變更
                         </button>
-                    ) : (
-                        <>
-                            <button type="submit" className="btn btn-primary">
-                                儲存變更
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-outline-secondary"
-                                onClick={() => setIsEditing(false)}
-                            >
-                                取消
-                            </button>
-                        </>
-                    )}
-                </div>
+                        <button
+                            type="submit"
+                            className="btn btn-primary rounded-pill px-5 shadow-sm order-1 order-md-2"
+                        >
+                            確認儲存
+                        </button>
+                    </div>
+                )}
             </form>
         </div>
     );
 };
 
-const MemberFavorite = () => {
+//收藏頁面
+const MemberFavorite = ({ user }) => {
+    //接收 user props
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let mounted = true;
-
         const fetchFavorites = async () => {
+            // 如果沒有 user 資料（例如尚未登入完全）
+            if (!user || !user.id) return;
             try {
                 setLoading(true);
                 setError('');
 
-                const res = await searchApi.get('/favorites', { params: { _limit: 9999 } });
-                const list = Array.isArray(res.data) ? res.data : [];
+                const token = Cookies.get('token'); // 2. 取得 Token
+                // 修改 API 請求
+                const res = await searchApi.get(`/favorites`, {
+                    params: {
+                        userId: user.id, // 只抓這個人的
+                        _limit: 9999,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`, // 帶上通行證
+                    },
+                });
 
+                const list = Array.isArray(res.data) ? res.data : [];
                 // 轉成 MobileFavoriteDropdown 需要的欄位
                 const mapped = list.map((f) => ({
-                    id: f.id, // 收藏紀錄 id（accordion key / 刪除用）
-                    trailId: f.trailId, // 步道 id（導向用）
+                    id: f.id,
+                    trailId: f.trailId,
                     name: f.trailName,
                     image: f.trailImage,
                     length: f.trail_length ?? '—',
                     altitude: f.trail_altitude ?? '—',
                 }));
-
                 if (mounted) setFavorites(mapped);
-            } catch (e) {
+            } catch (err) {
                 if (mounted) {
+                    dispatch(
+                        createMessage({
+                            text: err.response?.data?.message || '收藏步道資料載入失敗',
+                            type: 'red',
+                        }),
+                    );
                     setError('收藏資料載入失敗');
                     setFavorites([]);
                 }
@@ -352,16 +534,23 @@ const MemberFavorite = () => {
         return () => {
             mounted = false;
         };
-    }, []);
+    }, [dispatch, user]);
 
     const handleRemove = async (favId) => {
+        const token = Cookies.get('accessToken'); // 刪除時也要 Token
+
         // 樂觀更新 UI
         const prev = favorites;
         setFavorites((p) => p.filter((x) => x.id !== favId));
 
         try {
-            await searchApi.delete(`/favorites/${favId}`);
+            await searchApi.delete(`/favorites/${favId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
         } catch (e) {
+            console.error('刪除失敗', e);
             setError('取消收藏失敗，請稍後再試');
             setFavorites(prev); // 回滾
         }
@@ -371,6 +560,11 @@ const MemberFavorite = () => {
         <div className="d-grid gap-3" style={{ maxWidth: 520 }}>
             {loading && <p className="text-muted mb-0">載入收藏中...</p>}
             {error && <p className="text-danger mb-0">{error}</p>}
+
+            {/* 如果沒資料顯示提示 */}
+            {!loading && favorites.length === 0 && !error && (
+                <div className="text-center py-5 text-muted">目前沒有收藏步道</div>
+            )}
 
             <MobileFavoriteDropdown favorites={favorites} onRemove={handleRemove} />
         </div>
@@ -396,36 +590,56 @@ const countByRegion = (list, getRegion) => {
 
 const calcPercent = (num, den) => {
     if (!den) return 0;
-    return Math.round((num / den) * 1000) / 10; // 1 位小數
+    return Math.round((num / den) * 1000) / 10;
 };
 
-export const MemberAnalytics = () => {
+export const MemberAnalytics = ({ user }) => {
     const [trails, setTrails] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState('');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let mounted = true;
-
         const fetchAll = async () => {
+            if (!user || !user.id) return;
+
             try {
                 setLoading(true);
                 setErr('');
 
-                // 兩支 API 一起打（並行）
+                const token = Cookies.get('accessToken');
+
+                // 兩支 API 一起打
                 const [trailsRes, favRes] = await Promise.all([
+                    // 1. 抓全部步道 (用來當分母，這不用過濾)
                     searchApi.get('/trails', { params: { _limit: 9999 } }),
-                    searchApi.get('/favorites', { params: { _limit: 9999 } }),
+                    // 2. 修改重點：只抓「這個會員」的收藏
+                    searchApi.get('/favorites', {
+                        params: {
+                            userId: user.id, // 加上 userId 篩選
+                            _limit: 9999,
+                        },
+                        headers: {
+                            Authorization: `Bearer ${token}`, // 帶上 Token
+                        },
+                    }),
                 ]);
 
                 if (!mounted) return;
 
                 setTrails(Array.isArray(trailsRes.data) ? trailsRes.data : []);
                 setFavorites(Array.isArray(favRes.data) ? favRes.data : []);
-            } catch (e) {
+            } catch (err) {
                 if (!mounted) return;
-                setErr('統計資料載入失敗（API 可能暫時有問題）');
+                dispatch(
+                    createMessage({
+                        text: err.response?.data?.message || '統計資料載入失敗',
+                        type: 'red',
+                    }),
+                );
+                setErr('統計資料載入失敗');
                 setTrails([]);
                 setFavorites([]);
             } finally {
@@ -437,7 +651,7 @@ export const MemberAnalytics = () => {
         return () => {
             mounted = false;
         };
-    }, []);
+    }, [dispatch, user]);
 
     const REGION_COLORS = useMemo(
         () => ({
@@ -634,15 +848,14 @@ const MemberRecommend = () => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let isMounted = true;
-
         const fetchRecommend = async () => {
             try {
                 setLoading(true);
                 setError('');
-
                 // 與 TrailSearchPage 同一支 API：/trails
                 // 這裡先抓多一點再隨機抽 3 筆（json-server 沒有隨機 API）
                 const res = await searchApi.get('/trails', {
@@ -653,8 +866,14 @@ const MemberRecommend = () => {
                 const picked = pickRandomUnique(list, 3);
 
                 if (isMounted) setItems(picked);
-            } catch (e) {
+            } catch (err) {
                 if (isMounted) {
+                    dispatch(
+                        createMessage({
+                            text: err.response?.data?.message || '推薦資料資料載入失敗',
+                            type: 'red',
+                        }),
+                    );
                     setError('推薦步道載入失敗');
                     setItems([]);
                 }
@@ -668,7 +887,7 @@ const MemberRecommend = () => {
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className="py-6">
@@ -729,14 +948,37 @@ const MemberRecommend = () => {
 
 const Member = () => {
     const [activeTab, setActiveTab] = useState('member');
+    // 1. 初始化時直接讀取 Cookie，避免第一次 render 是 null 導致畫面閃爍
+    // 如果 Cookie 沒資料，就保持 null
+    const [currentUser, setCurrentUser] = useState(() => {
+        const userStr = Cookies.get('user');
+        return userStr ? JSON.parse(userStr) : null;
+    });
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     useEffect(() => {
         document.title = '會員中心 | YeStep';
-    }, []);
+
+        const token = Cookies.get('accessToken');
+        // 2. 檢查權限：如果沒有 user 資料 或 沒有 token
+        if (!currentUser || !token) {
+            dispatch(createMessage({ text: '請先登入會員', type: 'red' }));
+            navigate('/login', { replace: true }); // 加上 replace: true 防止按上一頁又回來
+        }
+    }, [currentUser, dispatch, navigate]);
+
     const handleTabChange = (key) => {
         setActiveTab(key);
         scrollToTopMinus('member-main', 120);
     };
+
     const currentTab = MEMBER_TABS.find((tab) => tab.key === activeTab) || MEMBER_TABS[0];
+
+    // 3. 安全防護：如果還沒確認完使用者，先不要渲染下面的內容，避免子元件報錯
+    if (!currentUser) return null;
+
     return (
         <>
             <div className="memberPage">
@@ -748,9 +990,11 @@ const Member = () => {
                     style={{ padding: '0 5%' }}
                 >
                     <h2 className="fs-5 fs-md-2 pt-8 pb-4 pt-md-0 pb-md-8">{currentTab.label}</h2>
-                    {activeTab === 'member' && <MemberProfile />}
-                    {activeTab === 'favorite' && <MemberFavorite />}
-                    {activeTab === 'analytics' && <MemberAnalytics />}
+                    {activeTab === 'member' && (
+                        <MemberProfile user={currentUser} setUser={setCurrentUser} />
+                    )}
+                    {activeTab === 'favorite' && <MemberFavorite user={currentUser} />}
+                    {activeTab === 'analytics' && <MemberAnalytics user={currentUser} />}
                     {activeTab === 'recommend' && <MemberRecommend />}
                 </main>
             </div>

@@ -1,16 +1,19 @@
-import { Link } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Offcanvas from 'bootstrap/js/dist/offcanvas';
 
 import logoDark from '../assets/images/logo/logo.png';
 import yestepDark from '../assets/images/logo/yestep.svg';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { logout } from '../slices/authSlice';
 import { createMessage } from '../slices/infoSlice.js';
 
+import Cookies from 'js-cookie';
+
 const NavOffcanvas = ({ show, onClose }) => {
+    const location = useLocation();
+
     const offcanvasRef = useRef(null);
     const instanceRef = useRef(null);
 
@@ -27,6 +30,8 @@ const NavOffcanvas = ({ show, onClose }) => {
 
     const handleLogout = (e) => {
         e.preventDefault();
+        Cookies.remove('token');
+        Cookies.remove('user');
         dispatch(logout());
         dispatch(
             createMessage({
@@ -80,20 +85,28 @@ const NavOffcanvas = ({ show, onClose }) => {
                 <div className="d-flex justify-content-center">
                     <ul className="list-unstyled d-flex flex-column row-gap-12">
                         <li className="decor-lined">
-                            <Link to="/theme" className="nav-link" onClick={onClose}>
+                            <NavLink to="/theme" className="nav-link" onClick={onClose}>
                                 主題活動
-                            </Link>
+                            </NavLink>
                         </li>
                         <li className="decor-lined">
-                            <Link to="/search" className="nav-link" onClick={onClose}>
+                            <NavLink to="/search" className="nav-link" onClick={onClose}>
                                 步道總覽
-                            </Link>
+                            </NavLink>
                         </li>
                         {/* 熱門步道要連到首頁的點擊率小卡 */}
                         <li>
-                            <Link to="/" className="nav-link" onClick={onClose}>
+                            <NavLink
+                                to="/#popular-trails"
+                                className={() =>
+                                    location.pathname === '/' && location.hash === '#popular-trails'
+                                        ? 'nav-link active'
+                                        : 'nav-link'
+                                }
+                                onClick={onClose}
+                            >
                                 熱門步道
-                            </Link>
+                            </NavLink>
                         </li>
                     </ul>
                 </div>

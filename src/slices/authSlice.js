@@ -23,19 +23,25 @@ export const authSlice = createSlice({
             Cookies.set('accessToken', accessToken, { expires: 7 });
             // 為了方便前端顯示 User 名稱，我們先把 user 資訊也存 cookie (實務上通常只存 token)
             Cookies.set('user', JSON.stringify(user), { expires: 7 });
+            Cookies.set('userId', user.id, { expires: 7 });
         },
         //登出
         logout: (state) => {
             state.isLogin = false;
             state.user = null;
             state.token = null;
-
             Cookies.remove('accessToken');
             Cookies.remove('user');
+            Cookies.remove('userId'); // 登出也要記得移除
+        },
+        //修改暱稱
+        updateName: (state, action) => {
+            state.user = { ...state.user, ...action.payload };
+            Cookies.set('user', JSON.stringify(state.user), { expires: 7 });
         },
     },
 });
 
 export default authSlice.reducer;
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { loginSuccess, logout, updateName } = authSlice.actions;
