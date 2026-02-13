@@ -469,12 +469,10 @@ const Theme = () => {
                     decoding="async"
                     className="position-absolute start-50"
                     style={{
-                        bottom: 0,
+                        bottom: -5,
                         transform: 'translateX(-50%)',
-                        width: 'min(1200px, 100%)',
+                        width: '100%',
                         height: 'auto',
-                        objectFit: 'contain',
-                        pointerEvents: 'none',
                     }}
                 />
 
@@ -614,30 +612,19 @@ const Theme = () => {
                             return (
                                 <li
                                     key={sec.id}
-                                    className="px-3 py-8 p-md-16 list-unstyled position-relative overflow-hidden"
-                                    style={{
-                                        scrollMarginTop: '75px',
-                                    }}
+                                    className="themeSectionItem px-3 py-8 p-md-16 list-unstyled"
+                                    style={{ scrollMarginTop: '75px' }}
                                     id={sec.id}
                                 >
                                     <img
                                         src={optimizeImgUrl(sec.bg, { q: 75, w: 1600 })}
                                         alt=""
                                         aria-hidden="true"
-                                        className="position-absolute top-0 start-0 w-100 h-100"
-                                        style={{ objectFit: 'cover' }}
+                                        className="themeSectionBg"
                                         loading="lazy"
                                         decoding="async"
                                     />
-                                    <div
-                                        aria-hidden="true"
-                                        className="position-absolute top-0 start-0 w-100 h-100"
-                                        style={{ background: 'rgba(0,0,0,0.15)' }}
-                                    />
-                                    <div
-                                        className="position-relative d-grid gap-6"
-                                        style={{ zIndex: 1 }}
-                                    >
+                                    <div className="themeSectionContent d-grid gap-6">
                                         <aside className="d-flex flex-column">
                                             <ul className="list-unstyled d-flex gap-3 flex-wrap">
                                                 {(Array.isArray(sec.chips) ? sec.chips : []).map(
@@ -665,12 +652,7 @@ const Theme = () => {
                                                 <li key={trail.id}>
                                                     <Link
                                                         to={`/detail/${trail.id}`}
-                                                        className="rounded-24 p-4 d-grid align-content-end justify-content-between align-items-center position-relative overflow-hidden"
-                                                        style={{
-                                                            width: '100%',
-                                                            height: '260px',
-                                                            gridTemplateColumns: 'auto auto',
-                                                        }}
+                                                        className="themeCard"
                                                     >
                                                         <img
                                                             src={optimizeImgUrl(trail.trail_image, {
@@ -680,17 +662,11 @@ const Theme = () => {
                                                             alt={trail.trail_name}
                                                             loading="lazy"
                                                             decoding="async"
-                                                            className="position-absolute top-0 start-0 w-100 h-100 z-n1"
-                                                            style={{
-                                                                objectFit: 'cover',
-                                                                objectPosition: 'center',
-                                                            }}
+                                                            className="themeCardImg"
                                                         />
-                                                        <div
-                                                            className="position-relative"
-                                                            style={{ zIndex: 1 }}
-                                                        >
-                                                            <aside>
+
+                                                        <aside className="themeCardBody">
+                                                            <div className="themeCardText">
                                                                 <h3 className="text-white sub1-medium">
                                                                     {trail.trail_name}
                                                                 </h3>
@@ -698,14 +674,11 @@ const Theme = () => {
                                                                     {trail.trail_address ||
                                                                         trail.trail_region}
                                                                 </p>
-                                                            </aside>
+                                                            </div>
 
-                                                            <i
-                                                                className="btn btn-primary p-0 d-flex"
-                                                                style={{
-                                                                    width: '48px',
-                                                                    aspectRatio: '1/1',
-                                                                }}
+                                                            <span
+                                                                className="themeCardCta btn btn-primary p-0 d-flex"
+                                                                aria-hidden="true"
                                                             >
                                                                 <svg
                                                                     xmlns="http://www.w3.org/2000/svg"
@@ -717,8 +690,8 @@ const Theme = () => {
                                                                 >
                                                                     <path d="M630-444H192v-72h438L429-717l51-51 288 288-288 288-51-51 201-201Z" />
                                                                 </svg>
-                                                            </i>
-                                                        </div>
+                                                            </span>
+                                                        </aside>
                                                     </Link>
                                                 </li>
                                             ))}
