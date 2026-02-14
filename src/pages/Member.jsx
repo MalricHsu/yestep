@@ -139,7 +139,7 @@ const ItineraryModal = ({ open, data, note, onChangeNote, onClose, onSaveNote, s
                                 onClick={onSaveNote}
                                 disabled={saving}
                             >
-                                {saving ? '儲存中…' : '儲存筆記'}
+                                {saving ? '儲存中…' : '儲存規劃'}
                             </button>
                         </div>
                     </div>
@@ -226,7 +226,7 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
                                         className="btn btn-primary"
                                         onClick={() => onAddItinerary?.(item)}
                                     >
-                                        加入行程
+                                        加入規劃
                                     </button>
 
                                     <button
@@ -250,7 +250,7 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
 const MEMBER_TABS = [
     {
         key: 'member',
-        label: '會員資料',
+        label: '我的帳號',
         svg: (
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -298,7 +298,7 @@ const MEMBER_TABS = [
     },
     {
         key: 'recommend',
-        label: '你可能會喜歡...',
+        label: '你可能會喜歡',
         svg: (
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -381,7 +381,7 @@ const ReadonlyField = ({ label, value }) => {
             <label className="form-label small text-muted ps-2">{label}</label>
             <input
                 type="text"
-                className="form-control-plaintext border-0 px-2 py-0 fw-bold text-primary"
+                className="form-control-plaintext border-0 px-2 py-0 fw-bold text-primary-300"
                 value={value ?? ''}
                 readOnly
             />
@@ -626,7 +626,7 @@ const MemberProfile = ({ user, setUser }) => {
         <ProfileCard
             title={
                 <>
-                    <i className="bi bi-person-badge me-2"></i>個人資料詳細
+                    <i className="bi bi-person-badge me-2"></i>基本資料
                 </>
             }
             actions={
@@ -784,6 +784,7 @@ const MemberProfile = ({ user, setUser }) => {
 };
 
 //收藏頁面
+//收藏頁面
 const MemberFavorite = ({ user }) => {
     //接收 user props
     const [favorites, setFavorites] = useState([]);
@@ -871,31 +872,54 @@ const MemberFavorite = ({ user }) => {
         }
     };
 
+    // --- 修改這裡：先 GET 檢查，再決定是否 POST ---
     const handleAddItinerary = async (item) => {
         if (!user || !user.id) return;
 
         try {
             const token = Cookies.get('accessToken');
-            const payload = {
-                userId: user.id,
-                trailId: String(item.trailId ?? item.id),
-                trailName: item.name,
-                trailImage: item.image,
-                date: new Date().toISOString(),
-            };
+            const trailId = String(item.trailId ?? item.id);
 
-            const res = await searchApi.post('/itinerary', payload, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+            // 1. 先根據 userId 和 trailId 檢查該行程是否已經存在
+            const checkRes = await searchApi.get(
+                `/itinerary?userId=${user.id}&trailId=${trailId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 },
-            });
+            );
 
-            const created = res?.data || payload;
-            setItineraryData(created);
-            setItineraryNote(created.note || '');
+            let itineraryToOpen;
+
+            if (checkRes.data && checkRes.data.length > 0) {
+                // 2. 如果已經存在，直接抓取現有的第一筆資料
+                itineraryToOpen = checkRes.data[0];
+            } else {
+                // 3. 如果不存在，才執行 POST 新增
+                const payload = {
+                    userId: user.id,
+                    trailId,
+                    trailName: item.name,
+                    trailImage: item.image,
+                    date: new Date().toISOString(),
+                    note: '',
+                };
+
+                const postRes = await searchApi.post('/itinerary', payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                itineraryToOpen = postRes.data || payload;
+            }
+
+            // 4. 將抓到的資料帶入 State，準備開啟 Modal
+            setItineraryData(itineraryToOpen);
+            setItineraryNote(itineraryToOpen.note || ''); // 這裡就會抓到原本寫的內容了
             setItineraryModalOpen(true);
         } catch (e) {
-            console.error('加入行程失敗', e);
+            console.error('處理行程失敗', e);
         }
     };
 
@@ -930,11 +954,11 @@ const MemberFavorite = ({ user }) => {
             const updated = res?.data || { ...itineraryData, note: itineraryNote };
             setItineraryData(updated);
 
-            dispatch(createMessage({ text: '筆記已儲存', type: 'success' }));
+            dispatch(createMessage({ text: '行程規劃儲存成功', type: 'success' }));
             handleCloseItineraryModal();
         } catch (e) {
             console.error('儲存筆記失敗', e);
-            dispatch(createMessage({ text: '筆記儲存失敗，請稍後再試', type: 'red' }));
+            dispatch(createMessage({ text: '行程規劃儲存失敗，請稍後再試', type: 'red' }));
         } finally {
             setSavingNote(false);
         }
@@ -957,15 +981,19 @@ const MemberFavorite = ({ user }) => {
                 onRemove={handleRemove}
                 onAddItinerary={handleAddItinerary}
             />
-            <ItineraryModal
-                open={itineraryModalOpen}
-                data={itineraryData}
-                note={itineraryNote}
-                onChangeNote={setItineraryNote}
-                onClose={handleCloseItineraryModal}
-                onSaveNote={handleSaveItineraryNote}
-                saving={savingNote}
-            />
+
+            {/* 修改這裡：加上 itineraryData && 的判斷 */}
+            {itineraryData && (
+                <ItineraryModal
+                    open={itineraryModalOpen}
+                    data={itineraryData}
+                    note={itineraryNote}
+                    onChangeNote={setItineraryNote}
+                    onClose={handleCloseItineraryModal}
+                    onSaveNote={handleSaveItineraryNote}
+                    saving={savingNote}
+                />
+            )}
         </div>
     );
 };
@@ -1168,7 +1196,7 @@ export const MemberAnalytics = ({ user }) => {
             {/* Chart 1: 步道區域分佈 */}
             <div className="bg-primary-50 bg-opacity-75 rounded-24 p-4 p-md-8 overflow-hidden d-flex flex-column align-items-center gap-5">
                 <div className="d-flex gap-3 align-items-center justify-content-center text-center flex-wrap gap-3 mb-3">
-                    <h3 className="mb-1">步道收藏率</h3>
+                    <h3 className="mb-1">區域探索分析</h3>
                     <div className="text-muted small">總步道數量：{trails.length}</div>
                 </div>
 
@@ -1190,7 +1218,7 @@ export const MemberAnalytics = ({ user }) => {
 
                 {/* 讓你看數字（方便 debug / 對照） */}
                 <div className="mt-4">
-                    <div className="small text-muted mb-2">步道收藏比例列表</div>
+                    <div className="small text-muted mb-2">各區收藏佔比</div>
                     <ul className="list-unstyled d-grid gap-2 mb-0">
                         {favRateByRegion.map((x) => (
                             <li
