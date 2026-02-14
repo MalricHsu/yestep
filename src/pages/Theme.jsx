@@ -512,7 +512,7 @@ const Theme = () => {
                             </li>
                         ))}
                     </ul>
-                    <ul className="nav nav-pills mt-8 d-none d-sm-flex gap-2">
+                    <ul className="nav nav-pills mt-lg-8 mt-0 d-none d-sm-inline-flex gap-2 mx-auto">
                         {navItems.map((item) => (
                             <li key={item.id} className="nav-item">
                                 <button
