@@ -92,6 +92,23 @@
     }
 }
 
+// 新增按鈕樣式
+.theme__btn-prev,
+.theme__btn-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // 預設樣式
+    background-color: $white;
+    box-shadow: 0 0.0625rem 0.5rem rgba($black, 0.08);
+
+    &:hover {
+        color: $white;
+        background-color: $primary-200;
+    }
+}
+
 .theme__content {
     position: absolute;
     bottom: -144px;
@@ -109,6 +126,20 @@
         height: auto;
     }
 }
+
+.theme__btn {
+    background-color: $primary-100;
+    color: $primary-300;
+
+    &:hover {
+        background-color: $primary-200;
+        color: $white;
+    }
+    &:active {
+        background-color: lighten($primary-200, 30%);
+    }
+}
+
 /* 步道難度指南 diffcard */
 
 .diffcard__list {

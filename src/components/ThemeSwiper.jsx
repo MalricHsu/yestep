@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+
 import 'swiper/css';
+import 'swiper/css/navigation';
 
 // 引入圖片
 import themeImg01 from '../assets/images/home/theme-swiper-01.webp';
@@ -42,9 +45,16 @@ function ThemeSwiper() {
         <>
             <Swiper
                 className="theme-swiper"
+                modules={[Navigation]}
                 loop={true}
                 spaceBetween={72}
                 slidesPerView={1} //手機版、電腦版顯示 1 張
+                navigation={{
+                    nextEl: '.theme__btn-next',
+                    prevEl: '.theme__btn-prev',
+                }}
+                observer={true}
+                observeParents={true}
             >
                 {carouselData.map((item) => (
                     <SwiperSlide key={item.id}>
@@ -87,7 +97,7 @@ function ThemeSwiper() {
                                             </div>
                                             <Link
                                                 to="/theme"
-                                                className="theme__btn px-6 py-3 border-0 bg-primary-100 text-primary-300 body1-bold rounded-pill"
+                                                className="theme__btn px-6 py-3 border-0  body1-bold rounded-pill"
                                             >
                                                 立即預約
                                             </Link>
