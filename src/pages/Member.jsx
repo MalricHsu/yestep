@@ -148,19 +148,19 @@ const ItineraryModal = ({ open, data, note, onChangeNote, onClose, onSaveNote, s
         </>
     );
 };
-//手機版選單
+
+// 我的收藏dropdown
 const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) => {
     return (
-        <div className="accordion rounded-md-24 overflow-hidden" id="favoriteAccordion">
+        <div className="accordion" id="favoriteAccordion">
             {favorites.map((item) => (
                 <div
-                    className="accordion-item border-0 border-primary-50 border-bottom overflow-hidden"
+                    className="accordion-item border-0 rounded-md-24 overflow-hidden"
                     key={item.id}
                 >
-                    {/* Header */}
-                    <h2 className="accordion-header" id={`heading-${item.id}`}>
+                    <h2 className="accordion-header border-0" id={`heading-${item.id}`}>
                         <button
-                            className="accordion-button collapsed p-3 p-md-4"
+                            className="accordion-button collapsed p-3 p-md-4 border-0"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target={`#collapse-${item.id}`}
@@ -177,7 +177,7 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
                                     style={{
                                         width: 64,
                                         height: 48,
-                                        borderRadius: 12,
+                                        borderRadius: '0.75vw',
                                         objectFit: 'cover',
                                         flexShrink: 0,
                                     }}
@@ -193,16 +193,14 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
                             </div>
                         </button>
                     </h2>
-
-                    {/* Content */}
                     <div
                         id={`collapse-${item.id}`}
-                        className="accordion-collapse collapse"
+                        className="accordion-collapse collapse border-0"
                         aria-labelledby={`heading-${item.id}`}
                         data-bs-parent="#favoriteAccordion"
                     >
-                        <div className="accordion-body p-3 p-md-4">
-                            <div className="p-3 p-md-4 rounded-4 bg-body-tertiary">
+                        <div className="accordion-body p-3 p-md-4 border-0">
+                            <div className="p-3 p-md-4 rounded-4">
                                 <div className="d-grid gap-2 mb-3">
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span className="text-muted">長度</span>
@@ -244,10 +242,6 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
                     </div>
                 </div>
             ))}
-
-            {favorites.length === 0 && (
-                <div className="text-center py-5 text-muted">目前沒有收藏步道</div>
-            )}
         </div>
     );
 };
@@ -362,14 +356,11 @@ const scrollToTopMinus = (id, offset = 50) => {
 //會員資料頁面
 const ProfileCard = ({ title, children, actions }) => {
     return (
-        <div
-            className="bg-white rounded-24 p-4 p-md-5 shadow-sm border-0"
-            style={{ maxWidth: 600, margin: '0 auto' }}
-        >
-            <div className="d-flex align-items-center justify-content-between mb-4">
+        <div className="profileCard rounded-24 p-4 p-md-5 shadow-sm border-0">
+            <header className="mb-4">
                 <h3 className="fw-bold m-0 text-primary-dark">{title}</h3>
                 {actions}
-            </div>
+            </header>
             {children}
         </div>
     );
@@ -377,7 +368,7 @@ const ProfileCard = ({ title, children, actions }) => {
 
 const ProfileSectionTitle = ({ children }) => (
     <h5
-        className="text-muted small fw-bold text-uppercase mb-4 border-bottom pb-2"
+        className="text-muted small fw-bold text-uppercase mb-4 border-bottom border-primary-200 pb-2"
         style={{ letterSpacing: '1px' }}
     >
         {children}
@@ -390,7 +381,7 @@ const ReadonlyField = ({ label, value }) => {
             <label className="form-label small text-muted ps-2">{label}</label>
             <input
                 type="text"
-                className="form-control-plaintext border-bottom ps-2 fw-bold text-primary"
+                className="form-control-plaintext border-0 px-2 py-0 fw-bold text-primary"
                 value={value ?? ''}
                 readOnly
             />
@@ -438,8 +429,8 @@ const FloatingSelect = ({ id, label, disabled, register, options }) => {
 const ProfileActions = ({ isEditing, onEdit, onCancel, submitting }) => {
     if (!isEditing) {
         return (
-            <button type="button" className="btn btn-primary rounded-pill px-4" onClick={onEdit}>
-                <i className="bi bi-pencil-square me-2"></i>編輯資料
+            <button type="button" className="btn btn-primary rounded-pill px-6" onClick={onEdit}>
+                <i className="bi bi-pencil-square"></i>編輯資料
             </button>
         );
     }
@@ -457,7 +448,7 @@ const ProfileActions = ({ isEditing, onEdit, onCancel, submitting }) => {
             <button
                 type="submit"
                 form="member-profile-form"
-                className="btn btn-primary rounded-pill px-4"
+                className="btn btn-primary rounded-pill px-6"
                 disabled={submitting}
             >
                 {submitting ? '儲存中…' : '確認儲存'}
@@ -950,13 +941,15 @@ const MemberFavorite = ({ user }) => {
     };
 
     return (
-        <div className="d-grid gap-3" style={{ maxWidth: 520 }}>
+        <div className="d-grid gap-3" style={{ maxWidth: 520, minHeight: 450 }}>
             {loading && <p className="text-muted mb-0">載入收藏中...</p>}
             {error && <p className="text-danger mb-0">{error}</p>}
 
             {/* 如果沒資料顯示提示 */}
             {!loading && favorites.length === 0 && !error && (
-                <div className="text-center py-5 text-muted">目前沒有收藏步道</div>
+                <div className="text-center py-5 text-black bg-primary-100 rounded-24 opacity-75">
+                    目前沒有收藏步道
+                </div>
             )}
 
             <MobileFavoriteDropdown
@@ -1173,12 +1166,10 @@ export const MemberAnalytics = ({ user }) => {
             {err && <p className="text-danger mb-0">{err}</p>}
 
             {/* Chart 1: 步道區域分佈 */}
-            <div className="bg-white rounded-24 p-4 p-md-6 overflow-scroll">
-                <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
-                    <div>
-                        <h3 className="mb-1">步道收藏率</h3>
-                        <div className="text-muted small">總步道數量：{trails.length}</div>
-                    </div>
+            <div className="bg-primary-50 bg-opacity-75 rounded-24 p-4 p-md-8 overflow-hidden d-flex flex-column align-items-center gap-5">
+                <div className="d-flex gap-3 align-items-center justify-content-center text-center flex-wrap gap-3 mb-3">
+                    <h3 className="mb-1">步道收藏率</h3>
+                    <div className="text-muted small">總步道數量：{trails.length}</div>
                 </div>
 
                 <div style={{ maxWidth: 520 }}>
@@ -1187,7 +1178,7 @@ export const MemberAnalytics = ({ user }) => {
             </div>
 
             {/* Chart 2: 各區收藏率 */}
-            <div className="bg-white rounded-24 p-4 p-md-6 overflow-scroll">
+            <div className="bg-primary-50 rounded-24 p-4 p-md-8 overflow-hidden">
                 <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
                     <div>
                         <h3 className="mb-1">各區收藏佔比</h3>
@@ -1295,7 +1286,7 @@ const MemberRecommend = () => {
     }, [dispatch]);
 
     return (
-        <div className="py-6">
+        <div className="pb-6">
             {loading && <p className="text-muted">載入推薦中...</p>}
 
             {(error || items.length === 0) && !loading ? (
@@ -1393,20 +1384,28 @@ const Member = () => {
         <>
             <div className="memberPage">
                 <Nav />
-                <MemberTabs activeTab={activeTab} onChange={handleTabChange} />
-                <main
-                    id="member-main"
-                    className="memberMain container-fluid"
-                    style={{ padding: '0 5%' }}
-                >
-                    <h2 className="fs-5 fs-md-2 pt-8 pb-4 pt-md-0 pb-md-8">{currentTab.label}</h2>
-                    {activeTab === 'member' && (
-                        <MemberProfile user={currentUser} setUser={setCurrentUser} />
-                    )}
-                    {activeTab === 'favorite' && <MemberFavorite user={currentUser} />}
-                    {activeTab === 'analytics' && <MemberAnalytics user={currentUser} />}
-                    {activeTab === 'recommend' && <MemberRecommend />}
-                </main>
+                <OptimizedImg
+                    src="https://images.unsplash.com/photo-1502439502085-ebf78244370a"
+                    alt="會員中心背景"
+                    q={70}
+                    w={1600}
+                    className="bgImg w-100"
+                />
+                <div className="memberContainer">
+                    <MemberTabs activeTab={activeTab} onChange={handleTabChange} />
+
+                    <main id="member-main" className="memberMain">
+                        <h2 className="fs-5 fs-md-2 pt-8 pb-4 pt-md-0 pb-md-14">
+                            {currentTab.label}
+                        </h2>
+                        {activeTab === 'member' && (
+                            <MemberProfile user={currentUser} setUser={setCurrentUser} />
+                        )}
+                        {activeTab === 'favorite' && <MemberFavorite user={currentUser} />}
+                        {activeTab === 'analytics' && <MemberAnalytics user={currentUser} />}
+                        {activeTab === 'recommend' && <MemberRecommend />}
+                    </main>
+                </div>
             </div>
         </>
     );

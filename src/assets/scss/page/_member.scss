@@ -1,60 +1,98 @@
-.memberTabBtn {
+.memberContainer {
+    max-width: 1360px;
+    margin: 0 auto;
     position: relative;
-    flex: 1 1 0;
-    transition: flex 0.4s ease;
-
-    &:hover {
-        flex: 4 0 0;
-    }
-
-    /* === SVG === */
-    svg {
-        transition:
-            transform 0.4s ease,
-            opacity 0.4s ease;
-    }
-
-    &:hover svg {
-        transform: scale(1.5);
-        opacity: 0;
-    }
-
-    /* === Label === */
-    .memberTabLabel {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        pointer-events: none;
-        white-space: nowrap;
-        transition:
-            opacity 0.4s ease,
-            transform 0.4s ease;
-        z-index: 1;
-    }
-
-    &:hover .memberTabLabel,
-    &:focus-visible .memberTabLabel {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.06);
-        z-index: 2;
-    }
-}
-
-.accordion-button:not(.collapsed),
-.accordion-button:hover {
-    color: $primary-300;
-    background-color: rgba($primary-200, 0.1);
 }
 
 .memberPage {
+    img.bgImg {
+        height: 100%;
+        width: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        filter: contrast(0.5) brightness(1.2);
+    }
+
+    .memberTabBtn {
+        position: relative;
+        flex: 1 1 0;
+        transition: flex 0.4s ease;
+
+        &:hover {
+            flex: 4 0 0;
+        }
+
+        svg {
+            transition:
+                transform 0.4s ease,
+                opacity 0.4s ease;
+        }
+
+        &:hover svg {
+            transform: scale(1.5);
+            opacity: 0;
+        }
+
+        /* === Label === */
+        .memberTabLabel {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+            transition:
+                opacity 0.4s ease,
+                transform 0.4s ease;
+            z-index: 1;
+        }
+
+        &:hover .memberTabLabel,
+        &:focus-visible .memberTabLabel {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.06);
+            z-index: 2;
+        }
+    }
+    .profileCard {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: rgba($primary-100, 0.8);
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex-flow: wrap;
+            gap: 1em;
+        }
+    }
+
+    .accordion-item {
+        background-color: rgba($primary-100, 0.7);
+    }
+    .accordion-button {
+        box-shadow: none;
+        background-color: rgba($primary-200, 0.5);
+
+        &:hover {
+            color: $primary-300;
+            background-color: rgba($primary-200, 0.1);
+        }
+    }
+
     position: relative;
     margin: 0 auto;
-    padding: 72px 5vw 32px;
+    padding: 72px 0 32px;
+
     .nav-underline {
         background-color: rgba(0, 0, 0, 0.1);
-        gap: 1px;
+        gap: 0 1px;
         box-shadow: 0 0 10px 1px rgba(51, 51, 51, 0.2);
         position: sticky;
         z-index: 100;
@@ -65,8 +103,8 @@
         }
     }
 
-    .memberMain main {
-        padding-top: 105px;
+    .memberMain {
+        padding: 105px 5% 0;
     }
 }
 
@@ -79,25 +117,36 @@
 }
 
 @media (min-width: 768px) {
-    .memberPage {
-        margin: 64px auto 32px;
+    .memberContainer {
+        padding: 8vw 5vw 100px;
         display: grid;
+        gap: 0 4vw;
         grid-template-columns: 1fr 3fr;
+    }
+
+    .memberPage {
+        padding: 0;
+
         .nav-underline {
+            margin-top: 100px;
             position: static;
+            top: auto;
             background-color: #ffffff;
             display: grid;
-            grid-template-rows: repeat(4, 55px);
+            grid-template-rows: repeat(4, 1fr);
             justify-items: center;
             border-radius: 24px;
             height: fit-content;
-            padding: 24px 24px 60px;
+            overflow: hidden;
+
             .nav-item {
-                width: fit-content !important;
                 background-color: transparent;
             }
         }
-        .memberTabBtn {
+
+        .memberTabBtn,
+        .memberTabBtn:hover {
+            background-color: #eef0e9;
             svg {
                 transform: none;
                 opacity: 1;
@@ -108,6 +157,13 @@
                 transform: none;
                 padding-left: 0.5em;
             }
+        }
+        .nav-link {
+            padding: 1.25em 0;
+        }
+
+        .memberMain {
+            padding-top: 0;
         }
     }
 }
