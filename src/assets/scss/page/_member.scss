@@ -1,17 +1,10 @@
-.memberPage {
-    .profileCard {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: rgba($primary-100, 0.8);
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-evenly;
-            flex-flow: wrap;
-            gap: 1em;
-        }
-    }
+.memberContainer {
+    max-width: 1360px;
+    margin: 0 auto;
+    position: relative;
+}
 
+.memberPage {
     img.bgImg {
         height: 100%;
         width: 100%;
@@ -67,6 +60,18 @@
             z-index: 2;
         }
     }
+    .profileCard {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: rgba($primary-100, 0.8);
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex-flow: wrap;
+            gap: 1em;
+        }
+    }
 
     .accordion-item {
         background-color: rgba($primary-100, 0.7);
@@ -84,16 +89,7 @@
     position: relative;
     margin: 0 auto;
     padding: 72px 0 32px;
-}
 
-.memberContainer {
-    max-width: 1360px;
-    margin: 0 auto;
-    padding: 0 5%;
-    position: relative;
-}
-
-.memberPage {
     .nav-underline {
         background-color: rgba(0, 0, 0, 0.1);
         gap: 0 1px;
@@ -108,7 +104,7 @@
     }
 
     .memberMain {
-        padding-top: 105px;
+        padding: 105px 5% 0;
     }
 }
 
@@ -132,7 +128,7 @@
         padding: 0;
 
         .nav-underline {
-            margin-top: 76px;
+            margin-top: 100px;
             position: static;
             top: auto;
             background-color: #ffffff;
@@ -162,15 +158,12 @@
                 padding-left: 0.5em;
             }
         }
+        .nav-link {
+            padding: 1.25em 0;
+        }
 
         .memberMain {
             padding-top: 0;
         }
     }
-}
-
-.memberTabs .nav-link {
-    width: 100%;
-    display: flex;
-    justify-content: center;
 }

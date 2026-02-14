@@ -242,10 +242,6 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
                     </div>
                 </div>
             ))}
-
-            {favorites.length === 0 && (
-                <div className="text-center py-5 text-muted">目前沒有收藏步道</div>
-            )}
         </div>
     );
 };
@@ -951,7 +947,9 @@ const MemberFavorite = ({ user }) => {
 
             {/* 如果沒資料顯示提示 */}
             {!loading && favorites.length === 0 && !error && (
-                <div className="text-center py-5 text-muted">目前沒有收藏步道</div>
+                <div className="text-center py-5 text-black bg-primary-100 rounded-24 opacity-75">
+                    目前沒有收藏步道
+                </div>
             )}
 
             <MobileFavoriteDropdown
@@ -1168,12 +1166,10 @@ export const MemberAnalytics = ({ user }) => {
             {err && <p className="text-danger mb-0">{err}</p>}
 
             {/* Chart 1: 步道區域分佈 */}
-            <div className="bg-white rounded-24 p-4 p-md-6 overflow-scroll">
-                <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
-                    <div>
-                        <h3 className="mb-1">步道收藏率</h3>
-                        <div className="text-muted small">總步道數量：{trails.length}</div>
-                    </div>
+            <div className="bg-primary-50 bg-opacity-75 rounded-24 p-4 p-md-8 overflow-hidden d-flex flex-column align-items-center gap-5">
+                <div className="d-flex gap-3 align-items-center justify-content-center text-center flex-wrap gap-3 mb-3">
+                    <h3 className="mb-1">步道收藏率</h3>
+                    <div className="text-muted small">總步道數量：{trails.length}</div>
                 </div>
 
                 <div style={{ maxWidth: 520 }}>
@@ -1182,7 +1178,7 @@ export const MemberAnalytics = ({ user }) => {
             </div>
 
             {/* Chart 2: 各區收藏率 */}
-            <div className="bg-white rounded-24 p-4 p-md-6 overflow-scroll">
+            <div className="bg-primary-50 rounded-24 p-4 p-md-8 overflow-hidden">
                 <div className="d-flex align-items-end justify-content-between gap-3 mb-3">
                     <div>
                         <h3 className="mb-1">各區收藏佔比</h3>
@@ -1290,7 +1286,7 @@ const MemberRecommend = () => {
     }, [dispatch]);
 
     return (
-        <div className="py-6">
+        <div className="pb-6">
             {loading && <p className="text-muted">載入推薦中...</p>}
 
             {(error || items.length === 0) && !loading ? (
@@ -1399,7 +1395,7 @@ const Member = () => {
                     <MemberTabs activeTab={activeTab} onChange={handleTabChange} />
 
                     <main id="member-main" className="memberMain">
-                        <h2 className="fs-5 fs-md-2 pt-8 pb-4 pt-md-0 pb-md-8">
+                        <h2 className="fs-5 fs-md-2 pt-8 pb-4 pt-md-0 pb-md-14">
                             {currentTab.label}
                         </h2>
                         {activeTab === 'member' && (
