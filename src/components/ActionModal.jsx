@@ -9,10 +9,19 @@ const MODAL_CONFIG = {
         desc: '加入​會員，​立即​蒐集​你​想走​的​每​一​步',
         buttons: [{ text: '前往登入', action: 'redirect', path: '/login', style: 'primary-100' }],
     },
-    plan_guest: {
-        title: '還沒​加入​會員嗎？​',
-        desc: '加入​會員，​立即​規劃​你​想走​的​每​一​步​',
-        buttons: [{ text: '前往登入', action: 'redirect', path: '/login', style: 'primary-100' }],
+    //有登入
+    like_auth: {
+        title: '已加入 YeStep！​',
+        desc: '你的專屬步道清單已準備就緒，隨時都能出發',
+        buttons: [
+            { text: '我知道了', action: 'close', style: 'outline-primary-300' },
+            {
+                text: '查看收藏',
+                action: 'redirect',
+                path: '/member',
+                style: 'primary-100',
+            },
+        ],
     },
 };
 
