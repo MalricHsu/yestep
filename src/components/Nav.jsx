@@ -70,7 +70,11 @@ const Nav = () => {
                     <div className="header__links d-flex justify-content-between align-items-center">
                         {/* logo + 導覽列 */}
                         <div className="header__nav d-flex align-items-center ">
-                            <Link to="/" className="d-flex column-gap-2 pe-4 me-10">
+                            <Link
+                                to="/"
+                                className="d-flex column-gap-2 pe-4 me-10"
+                                onClick={() => window.scrollTo(0, 0)}
+                            >
                                 <img
                                     className="logo"
                                     src={scrolled ? logoDark : logoWhite}

@@ -148,7 +148,7 @@ const PopularTrails = ({ onUpdateSuccess, hasBorder = false }) => {
                     {isLoading && <TrailLoading />}
 
                     <div
-                        className={`popularTrailCards swiper-container ${isLoading ? 'opacity-0' : 'isLoaded'}`}
+                        className={`popularTrailCards swiper-container ${isLoading ? 'd-none' : 'isLoaded'}`}
                     >
                         <div className="swiper-wrapper">
                             {popularTrails.map((trail) => {

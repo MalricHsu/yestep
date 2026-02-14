@@ -898,11 +898,8 @@ const MemberFavorite = ({ user }) => {
             setItineraryData(created);
             setItineraryNote(created.note || '');
             setItineraryModalOpen(true);
-
-            dispatch(createMessage({ text: '已加入行程', type: 'success' }));
         } catch (e) {
             console.error('加入行程失敗', e);
-            dispatch(createMessage({ text: '加入行程失敗，請稍後再試', type: 'red' }));
         }
     };
 

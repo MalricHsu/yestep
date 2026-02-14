@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 // 第三方套件
 import axios from 'axios';
 
 // 工具
-import { formatNumber } from '../utils/formatNumber';
 import { getErrorMessage } from '../utils/error';
 
 // 元件
 import Nav from '../components/Nav';
-import StarRating from '../components/StarRating';
+import SearchTrailList from '../components/SearchTrailList';
+import SearchPagination from '../components/SearchPagination';
 import PopularTrails from '../components/PopularTrails';
 import SearchTheme from '../components/SearchTheme';
 
@@ -19,8 +19,8 @@ const difficulty = ['休閒級', '入門級', '健行級', '挑戰級', '專業�
 const estimatedDuration = ['3小時內', '3-6小時', '6-12小時', '12小時-兩天', '兩天以上'];
 const landscape = ['瀑布', '日出', '雲海', '晚霞', '觀星', '神木', '賞花', '賞鳥'];
 const sortOptions = [
-    { label: '難易度由高到低', sort: 'trail_difficulty', order: 'desc' },
-    { label: '難易度由低到高', sort: 'trail_difficulty', order: 'asc' },
+    { label: '難易度由高到低', sort: 'trail_difficulty_level', order: 'desc' },
+    { label: '難易度由低到高', sort: 'trail_difficulty_level', order: 'asc' },
     { label: '熱門程度由高到低', sort: 'trail_popular', order: 'desc' },
     { label: '熱門程度由低到高', sort: 'trail_popular', order: 'asc' },
 ];
@@ -123,34 +123,6 @@ const TrailSearchPage = () => {
         };
         getTrailScenery();
     }, [currentPage, urlKeyword, urlArea, urlDifficulty, urlLandscape, urlSort, urlOrder]);
-
-    // 處理頁碼 Prev、Next
-    const handlePageChange = (targetPage) => {
-        if (targetPage < 1 || targetPage > totalPages) return;
-
-        // 修正：傳入物件而非單一字串
-        updateRoute({ _page: targetPage });
-
-        window.scrollTo({
-            top: 200,
-            behavior: 'smooth',
-        });
-    };
-
-    // 處理頁碼點擊
-    const renderPagination = () => {
-        const pages = [];
-        for (let i = 1; i <= totalPages; i++) {
-            pages.push(
-                <li key={i} className={`page-item ${currentPage === i ? 'active' : ''}`}>
-                    <button className="page-link" onClick={() => handlePageChange(i)}>
-                        {i}
-                    </button>
-                </li>,
-            );
-        }
-        return pages;
-    };
 
     // 處理「步道列表」卡片的點擊
     const handleListClick = async (id, currentPopular) => {
@@ -395,125 +367,20 @@ const TrailSearchPage = () => {
                         </div>
                         <div className="mb-8">
                             <div className="row row-gap-3 row-gap-sm-6">
-                                {trailData.map((trail) => {
-                                    return (
-                                        <div className="col-md-6" key={trail.id}>
-                                            <Link
-                                                to={`/detail/${trail.id}`}
-                                                className="card d-flex flex-xl-row gap-3 rounded-24 shadow p-3"
-                                                onClick={() =>
-                                                    handleListClick(trail.id, trail.trail_popular)
-                                                }
-                                            >
-                                                <div className="card-img rounded-16 overflow-hidden">
-                                                    <img
-                                                        className="card-img-top"
-                                                        src={`${trail.trail_image}?q=70&w=520&auto=format&fit=crop`}
-                                                        alt={trail.trail_name}
-                                                        loading="lazy"
-                                                        decoding="async"
-                                                    />
-                                                    <div className="card-featured d-flex gap-1 text-white fs-9">
-                                                        <div className="d-flex align-items-center gap-1">
-                                                            <i className="material-icons fs-9">
-                                                                local_fire_department
-                                                            </i>
-                                                            <span>
-                                                                {formatNumber(trail.trail_popular)}
-                                                            </span>
-                                                        </div>
-                                                        <span>・</span>
-                                                        <div className="d-flex align-items-center gap-1">
-                                                            <i className="material-icons fs-9">
-                                                                favorite
-                                                            </i>
-                                                            <span>
-                                                                {formatNumber(trail.trail_collect)}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="card-body d-flex flex-column">
-                                                    <h4 className="card-title fs-7 fw-medium text-black-900 mb-1">
-                                                        {trail.trail_name}
-                                                    </h4>
-                                                    <p className="text-primary-300 fw-medium mb-1">
-                                                        {trail.trail_address}
-                                                    </p>
-                                                    <div className="d-flex align-items-center text-black-400 fs-10 fw-medium mb-4">
-                                                        <p className="me-1">
-                                                            {trail.trail_difficulty}
-                                                        </p>
-                                                        <StarRating
-                                                            rating={trail.trail_difficulty}
-                                                            fontSize={12}
-                                                            color={'black-400'}
-                                                        />
-                                                        <p>・{trail.trail_hour}</p>
-                                                    </div>
-                                                    <div className="d-flex justify-content-between align-items-end mt-auto">
-                                                        <ul className="list-unstyled d-flex column-gap-2">
-                                                            {trail.trail_tags
-                                                                ?.slice(0, 3)
-                                                                .map((tag, index) => {
-                                                                    return (
-                                                                        <li
-                                                                            key={index}
-                                                                            className="bg-primary-300 text-white px-2 py-1 fs-9 fw-medium rounded-4"
-                                                                        >
-                                                                            {tag}
-                                                                        </li>
-                                                                    );
-                                                                })}
-                                                        </ul>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-go p-3"
-                                                        >
-                                                            <span className="material-symbols-outlined">
-                                                                arrow_forward
-                                                            </span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </Link>
-                                        </div>
-                                    );
-                                })}
+                                {trailData.map((trail) => (
+                                    <SearchTrailList
+                                        key={trail.id}
+                                        trail={trail}
+                                        handleListClick={handleListClick}
+                                    />
+                                ))}
                             </div>
                         </div>
-                        <div className="d-flex justify-content-center">
-                            <ul className="pagination gap-1">
-                                {/* 上一頁 */}
-                                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                                    <button
-                                        className="page-link"
-                                        onClick={() => handlePageChange(currentPage - 1)}
-                                    >
-                                        <span className="material-symbols-outlined">
-                                            keyboard_arrow_left
-                                        </span>
-                                    </button>
-                                </li>
-
-                                {/* 動態產生頁碼按鈕 */}
-                                {renderPagination()}
-
-                                {/* 下一頁 */}
-                                <li
-                                    className={`page-item ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''}`}
-                                >
-                                    <button
-                                        className="page-link"
-                                        onClick={() => handlePageChange(currentPage + 1)}
-                                    >
-                                        <span className="material-symbols-outlined">
-                                            keyboard_arrow_right
-                                        </span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
+                        <SearchPagination
+                            totalPages={totalPages}
+                            currentPage={currentPage}
+                            updateRoute={updateRoute}
+                        />
                     </div>
                 </section>
 

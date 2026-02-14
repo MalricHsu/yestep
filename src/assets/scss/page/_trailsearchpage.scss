@@ -5,19 +5,17 @@
 
 .trail-loader {
     display: flex;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     pointer-events: none;
     z-index: 2;
 
     .lottie-walk {
-        max-width: 800px;
+        width: 300px;
+        height: 200px;
     }
 
     .loading-text {
-        margin-top: -0.5rem;
+        margin-top: -1rem;
         color: $primary-300;
         letter-spacing: 2px;
         animation: text-pulse 1.5s infinite;
@@ -355,7 +353,7 @@
 
 .search-theme {
     position: relative;
-    background: url(https://images.unsplash.com/photo-1725877762973-2422cee8ac72?q=70&w=1170&auto=format&fit=crop)
+    background: url(https://images.unsplash.com/photo-1725877762973-2422cee8ac72?q=70&w=1170&fm=webp&auto=format&fit=crop)
         no-repeat center bottom;
     background-size: cover;
 
