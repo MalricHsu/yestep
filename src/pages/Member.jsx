@@ -1000,17 +1000,13 @@ const MemberFavorite = ({ user }) => {
 
 const REGION_KEYS = ['北部', '中部', '南部', '東部'];
 
-const normalizeRegion = (r) => {
-    if (!r) return '其他地區';
-    if (REGION_KEYS.includes(r)) return r;
-    return '其他地區';
-};
-
 const countByRegion = (list, getRegion) => {
-    const acc = { 北部: 0, 中部: 0, 南部: 0, 東部: 0, 其他地區: 0 };
+    const acc = { 北部: 0, 中部: 0, 南部: 0, 東部: 0 };
     (Array.isArray(list) ? list : []).forEach((item) => {
-        const region = normalizeRegion(getRegion(item));
-        acc[region] = (acc[region] || 0) + 1;
+        const region = getRegion(item);
+        if (REGION_KEYS.includes(region)) {
+            acc[region] += 1;
+        }
     });
     return acc;
 };
@@ -1086,7 +1082,6 @@ export const MemberAnalytics = ({ user }) => {
             中部: '#8AA96B',
             南部: '#F2C14E',
             東部: '#4D9DE0',
-            其他地區: '#B0B7C3',
         }),
         [],
     );
@@ -1103,7 +1098,7 @@ export const MemberAnalytics = ({ user }) => {
 
     // 3) 各區收藏率：收藏筆數 / 該區步道數
     const favRateByRegion = useMemo(() => {
-        const regions = [...REGION_KEYS, '其他地區'];
+        const regions = [...REGION_KEYS];
 
         return regions.map((r) => {
             const trailCount = trailsRegionCount[r] || 0;
@@ -1118,7 +1113,7 @@ export const MemberAnalytics = ({ user }) => {
     }, [trailsRegionCount, favRegionCount]);
 
     const doughnutDataTrails = useMemo(() => {
-        const labels = [...REGION_KEYS, '其他地區'];
+        const labels = [...REGION_KEYS];
         const data = labels.map((k) => trailsRegionCount[k] || 0);
 
         return {
@@ -1132,9 +1127,8 @@ export const MemberAnalytics = ({ user }) => {
                         '#8AA96B', // 中部
                         '#F2C14E', // 南部
                         '#4D9DE0', // 東部
-                        '#B0B7C3', // 其他地區
                     ],
-                    borderColor: ['#4F6947', '#8AA96B', '#F2C14E', '#4D9DE0', '#B0B7C3'],
+                    borderColor: ['#4F6947', '#8AA96B', '#F2C14E', '#4D9DE0'],
                     borderWidth: 1,
                 },
             ],
@@ -1151,8 +1145,8 @@ export const MemberAnalytics = ({ user }) => {
                 {
                     label: '收藏率（%）',
                     data,
-                    backgroundColor: ['#4F6947', '#8AA96B', '#F2C14E', '#4D9DE0', '#B0B7C3'],
-                    borderColor: ['#3E5439', '#6F8E54', '#D9A62C', '#2F7FBE', '#8F98A6'],
+                    backgroundColor: ['#4F6947', '#8AA96B', '#F2C14E', '#4D9DE0'],
+                    borderColor: ['#3E5439', '#6F8E54', '#D9A62C', '#2F7FBE'],
                     borderWidth: 1,
                     borderRadius: 8,
                 },
@@ -1216,7 +1210,7 @@ export const MemberAnalytics = ({ user }) => {
 
                 <Bar data={barDataFavRate} options={barOptionsFavRate} />
 
-                {/* 讓你看數字（方便 debug / 對照） */}
+                {/* 數字 */}
                 <div className="mt-4">
                     <div className="small text-muted mb-2">各區收藏佔比</div>
                     <ul className="list-unstyled d-grid gap-2 mb-0">
@@ -1225,8 +1219,8 @@ export const MemberAnalytics = ({ user }) => {
                                 key={x.region}
                                 className="d-flex justify-content-between align-items-center rounded-12 px-3 py-2"
                                 style={{
-                                    backgroundColor: `${REGION_COLORS[x.region] ?? '#B0B7C3'}22`,
-                                    border: `1px solid ${REGION_COLORS[x.region] ?? '#B0B7C3'}55`,
+                                    backgroundColor: `${REGION_COLORS[x.region]}22`,
+                                    border: `1px solid ${REGION_COLORS[x.region]}55`,
                                 }}
                             >
                                 <span className="d-flex align-items-center gap-2">
@@ -1236,13 +1230,13 @@ export const MemberAnalytics = ({ user }) => {
                                             width: 10,
                                             height: 10,
                                             borderRadius: 999,
-                                            backgroundColor: REGION_COLORS[x.region] ?? '#B0B7C3',
+                                            backgroundColor: REGION_COLORS[x.region],
                                             display: 'inline-block',
                                         }}
                                     />
                                     <span className="fw-semibold">{x.region}</span>
                                 </span>
-                                <span className="text-muted" style={{ width: 110 }}>
+                                <span className="text-muted" style={{ width: 115 }}>
                                     {x.favCount} / {x.trailCount}（{x.rate}%）
                                 </span>
                             </li>

@@ -78,7 +78,7 @@
     }
     .accordion-button {
         box-shadow: none;
-        background-color: rgba($primary-200, 0.5);
+        background-color: rgba($primary-100, 0.75);
 
         &:hover {
             color: $primary-300;
@@ -104,7 +104,7 @@
     }
 
     .memberMain {
-        padding: 105px 5% 0;
+        padding: calc(5px + 5vw) 5% 0;
     }
 }
 
