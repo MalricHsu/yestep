@@ -134,8 +134,27 @@ const Home = () => {
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
-                                <div className="theme__title mb-6">
+                                <div className="theme__title d-flex justify-content-between align-items-center mb-lg-6 mb-4">
                                     <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
+                                    {/* 左右按鈕 */}
+                                    <div className="d-flex gap-3 ">
+                                        <button
+                                            type="button"
+                                            className="theme__btn-prev btn border-0 rounded-circle p-2"
+                                        >
+                                            <span className="material-symbols-outlined">
+                                                keyboard_arrow_left
+                                            </span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="theme__btn-next btn border-0 rounded-circle p-2"
+                                        >
+                                            <span className="material-symbols-outlined">
+                                                keyboard_arrow_right
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="theme__swiper">
                                     <ThemeSwiper />
@@ -144,6 +163,7 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
+
                 {/* 熱門步道 */}
                 <PopularTrails />
 
