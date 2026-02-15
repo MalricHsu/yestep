@@ -17,6 +17,7 @@ import Nav from '../components/Nav';
 import StarRating from '../components/StarRating';
 import ActionModal from '../components/ActionModal';
 import TrailCard from '../components/TrailCard';
+import LikeModal from '../components/LikeModal';
 
 const TrailDetail = () => {
     const [detailData, setDetailData] = useState({});
@@ -167,19 +168,18 @@ const TrailDetail = () => {
                 <button
                     type="button"
                     className={`btn px-6 py-3 d-flex justify-content-center align-items-center me-3 ${isLiked ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'} `}
-                    // style={{ width: '48px', height: '48px' }}
                     onClick={() => {
                         handleAction('like');
                     }}
                 >
                     <span className="material-symbols-outlined m-0">favorite</span>
-                    <p className="body1-bold">加入收藏</p>
+                    <p className="ms-1 body1-bold">{isLiked ? '已收藏' : '加入收藏'}</p>
                 </button>
             </>
         );
     };
 
-    //檢查收藏/行程
+    //檢查收藏
     useEffect(() => {
         const checkStatus = async () => {
             // 必須 "已登入" 且 "有使用者ID" 且 "有目前步道ID" 才去檢查
@@ -205,39 +205,67 @@ const TrailDetail = () => {
         checkStatus();
     }, [isLogin, user, id, detailApi]);
 
+    // 新增State 來控制取消收藏的 Modal
+    const [isUnfavoriteModalOpen, setIsUnfavoriteModalOpen] = useState(false);
     //處理按鈕點擊
     const handleAction = async (type) => {
         if (!isLogin) {
             ModalRef.current.open(`${type}_guest`);
             return;
         }
-        try {
-            if (type === 'like') {
-                if (favoriteId) {
-                    //取消收藏
-                    await detailApi.delete(`/favorites/${favoriteId}`);
-                    setFavoriteId(null);
-                } else {
-                    const res = await detailApi.post('/favorites', {
-                        userId: user.id,
-                        trailId: id, // 使用 URL 參數的 ID
-                        trailName: detailData.trail_name, // 存入名稱方便以後顯示
-                        trailImage: detailData.trail_image,
-                        trail_region: detailData.trail_region,
-                        trail_altitude: detailData.trail_altitude,
-                        trail_length: detailData.trail_length,
-                        trail_landscape: detailData.trail_landscape,
-                        trail_difficulty: detailData.trail_difficulty,
-                        trail_popular: detailData.trail_popular,
-                    });
-                    setFavoriteId(res.data.id);
-                    ModalRef.current.open('like_auth');
-                }
+        if (type === 'like') {
+            // 如果已經收藏 -> 開啟「取消確認」Modal
+            if (favoriteId) {
+                setIsUnfavoriteModalOpen(true);
+                return;
             }
-        } catch (error) {
+            try {
+                const payload = {
+                    userId: user.id,
+                    trailId: id,
+                    trailName: detailData.trail_name,
+                    trailImage: detailData.trail_image,
+                    trail_region: detailData.trail_region,
+                    trail_altitude: detailData.trail_altitude,
+                    trail_length: detailData.trail_length,
+                    trail_landscape: detailData.trail_landscape,
+                    trail_difficulty: detailData.trail_difficulty,
+                    trail_popular: detailData.trail_popular,
+                };
+
+                const res = await detailApi.post('/favorites', payload);
+                setFavoriteId(res.data.id);
+                ModalRef.current.open('like_auth'); // 顯示收藏成功的 Modal
+            } catch (error) {
+                const errorMessage = error.response?.data?.message || '連線失敗，請稍候再試';
+                dispatch(
+                    createMessage({
+                        text: errorMessage,
+                        type: 'red',
+                    }),
+                );
+            }
+        }
+    };
+    // 新增專門「確認刪除」的函式
+    const confirmUnfavorite = async () => {
+        try {
+            await detailApi.delete(`/favorites/${favoriteId}`);
+            setFavoriteId(null);
+            setIsUnfavoriteModalOpen(false); // 關閉 Modal
+
+            // 彈出取消成功的 Toast
             dispatch(
                 createMessage({
-                    text: error.response?.data?.message || '連線失敗，請稍候再試',
+                    text: `已取消收藏 ${detailData.trail_name} 步道`,
+                    type: 'success',
+                }),
+            );
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || '連線失敗，請稍候再試';
+            dispatch(
+                createMessage({
+                    text: errorMessage,
                     type: 'red',
                 }),
             );
@@ -565,6 +593,12 @@ const TrailDetail = () => {
             </div>
             {/* Modal */}
             <ActionModal ref={ModalRef} />
+            <LikeModal
+                isOpen={isUnfavoriteModalOpen}
+                detailData={detailData}
+                onClose={() => setIsUnfavoriteModalOpen(false)}
+                onConfirm={confirmUnfavorite}
+            />
         </div>
     );
 };

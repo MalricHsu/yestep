@@ -52,10 +52,71 @@ const OptimizedImg = ({ src, alt = '', q = 75, w = 520, className, style, ...res
     );
 };
 
-// ===== Itinerary modal =====
-const ItineraryModal = ({ open, data, note, onChangeNote, onClose, onSaveNote, saving }) => {
-    if (!open || !data) return null;
+//刪除收藏 Modal
+const ConfirmModal = ({ open, title, content, onConfirm, onClose }) => {
+    if (!open) return null;
 
+    return (
+        <>
+            {/* Backdrop: 確保 z-index 足夠高 */}
+            <div className="modal-backdrop fade show" style={{ zIndex: 1060 }} onClick={onClose} />
+
+            {/* Modal: 必須加上 show 和 display: block */}
+            <div
+                className="modal fade show"
+                tabIndex="-1"
+                role="dialog"
+                style={{ display: 'block', zIndex: 1061 }}
+            >
+                <div className="modal-dialog modal-dialog-centered">
+                    {/* 把 rounded-24 移動到 modal-content 上效果更準確 */}
+                    <div className="modal-content border-0 rounded-24 overflow-hidden shadow">
+                        <div className="modal-body p-4 p-md-5">
+                            <div className="mb-4">
+                                <h5 className="sub1-bold text-center text-primary-300 mb-3">
+                                    {title}
+                                </h5>
+                                <p className="body-regular text-center text-black-700 mb-0">
+                                    {content}
+                                </p>
+                            </div>
+
+                            <div className="d-flex justify-content-center align-items-center gap-3">
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-primary-300 w-50 rounded-pill"
+                                    onClick={onClose}
+                                >
+                                    我再想想
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary-100 w-50 rounded-pill"
+                                    onClick={onConfirm}
+                                >
+                                    確定取消
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
+//Itinerary modal
+const ItineraryModal = ({
+    open,
+    data,
+    note,
+    isEdit,
+    onChangeNote,
+    onClose,
+    onSaveNote,
+    saving,
+}) => {
+    if (!open || !data) return null;
     const dateText = (() => {
         try {
             return new Date(data.date).toLocaleString('zh-TW');
@@ -66,80 +127,60 @@ const ItineraryModal = ({ open, data, note, onChangeNote, onClose, onSaveNote, s
 
     return (
         <>
-            {/* Backdrop */}
-            <div className="modal-backdrop fade show" onClick={onClose} aria-hidden="true" />
-
-            {/* Modal */}
+            <div className="modal-backdrop fade show" onClick={onClose} style={{ zIndex: 1050 }} />
             <div
                 className="modal fade show"
+                style={{ display: 'block', zIndex: 1051 }}
                 tabIndex={-1}
-                role="dialog"
-                aria-modal="true"
-                style={{ display: 'block' }}
             >
-                <div className="modal-dialog modal-dialog-centered" role="document">
+                <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content border-0 rounded-24 overflow-hidden">
                         <div className="modal-header border-0 pb-0">
-                            <h5 className="modal-title fw-semibold">已加入行程</h5>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                aria-label="Close"
-                                onClick={onClose}
-                            />
+                            {/* 這裡根據 isEdit 切換標題 */}
+                            <h5 className="modal-title fw-semibold">
+                                {isEdit ? '編輯行程規劃' : '已加入行程'}
+                            </h5>
+                            <button type="button" className="btn-close" onClick={onClose} />
                         </div>
-
                         <div className="modal-body pt-3">
                             <div className="d-flex gap-3 align-items-center mb-3">
                                 <OptimizedImg
                                     src={data.trailImage}
                                     alt={data.trailName || ''}
-                                    q={75}
                                     w={220}
                                     style={{
                                         width: 88,
                                         height: 64,
                                         borderRadius: 16,
                                         objectFit: 'cover',
-                                        flexShrink: 0,
                                     }}
                                 />
-
                                 <div className="flex-grow-1">
                                     <div className="fw-semibold">{data.trailName}</div>
                                     <div className="small text-muted">加入日期：{dateText}</div>
                                 </div>
                             </div>
-
                             <div className="form-floating">
                                 <textarea
                                     className="form-control"
-                                    id="itineraryNote"
                                     placeholder="新增筆記"
                                     style={{ minHeight: 110 }}
                                     value={note}
                                     onChange={(e) => onChangeNote(e.target.value)}
                                 />
-                                <label htmlFor="itineraryNote">筆記（可選）</label>
-                                <div className="form-text">* 註記</div>
+                                <label>筆記（可選）</label>
                             </div>
                         </div>
-
                         <div className="modal-footer border-0 pt-0">
-                            <button
-                                type="button"
-                                className="btn btn-outline-secondary"
-                                onClick={onClose}
-                            >
+                            <button className="btn btn-outline-secondary" onClick={onClose}>
                                 關閉
                             </button>
                             <button
-                                type="button"
                                 className="btn btn-primary"
                                 onClick={onSaveNote}
                                 disabled={saving}
                             >
-                                {saving ? '儲存中…' : '儲存規劃'}
+                                {saving ? '儲存中…' : isEdit ? '更新規劃' : '儲存規劃'}
                             </button>
                         </div>
                     </div>
@@ -185,7 +226,7 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
 
                                 {/* 標題 */}
                                 <div className="flex-grow-1 text-start">
-                                    <div className="fw-semibold">{item.name}</div>
+                                    <div className="fw-semibold text-primary-300">{item.name}</div>
                                     <div className="small text-muted">
                                         {item.length} • {item.altitude}
                                     </div>
@@ -208,7 +249,7 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span className="text-muted">海拔</span>
-                                        <span className="fw-semibold">{item.altitude}</span>
+                                        <span className="fw-semibold">{item.altitude} 公尺</span>
                                     </div>
                                 </div>
 
@@ -216,22 +257,22 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
                                     <Link
                                         to={`/detail/${item.trailId ?? item.id}`}
                                         target="_blank"
-                                        className="btn btn-outline-primary"
+                                        className="btn btn-primary-100 body1-bold"
                                     >
                                         查看步道
                                     </Link>
 
                                     <button
                                         type="button"
-                                        className="btn btn-primary"
+                                        className="btn btn-primary-100 body1-bold "
                                         onClick={() => onAddItinerary?.(item)}
                                     >
-                                        加入規劃
+                                        規劃行程
                                     </button>
 
                                     <button
                                         type="button"
-                                        className="btn btn-link text-danger text-decoration-none"
+                                        className="btn btn-primary-100 body1-bold"
                                         onClick={() => onRemove(item.id)}
                                     >
                                         取消收藏
@@ -784,119 +825,112 @@ const MemberProfile = ({ user, setUser }) => {
 };
 
 //收藏頁面
-//收藏頁面
+
 const MemberFavorite = ({ user }) => {
-    //接收 user props
     const [favorites, setFavorites] = useState([]);
+    const [itineraryIds, setItineraryIds] = useState([]); // 新增：存目前已規劃的 trailId
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const dispatch = useDispatch();
 
+    // Modal 控制
     const [itineraryModalOpen, setItineraryModalOpen] = useState(false);
     const [itineraryData, setItineraryData] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false); // 新增：判斷是新增還是更新
     const [itineraryNote, setItineraryNote] = useState('');
     const [savingNote, setSavingNote] = useState(false);
 
+    // 刪除確認狀態
+    const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
+
     useEffect(() => {
         let mounted = true;
-        const fetchFavorites = async () => {
-            // 如果沒有 user 資料（例如尚未登入完全）
-            if (!user || !user.id) return;
+        const fetchData = async () => {
+            if (!user?.id) return;
             try {
                 setLoading(true);
-                setError('');
+                const token = Cookies.get('accessToken');
 
-                const token = Cookies.get('accessToken'); // 2. 取得 Token
-                // 修改 API 請求
-                const res = await searchApi.get(`/favorites`, {
-                    params: {
-                        userId: user.id, // 只抓這個人的
-                        _limit: 9999,
-                    },
-                    headers: {
-                        Authorization: `Bearer ${token}`, // 帶上通行證
-                    },
-                });
+                // 同時抓收藏跟行程，才能判斷按鈕文字
+                const [favRes, itiRes] = await Promise.all([
+                    searchApi.get(`/favorites?userId=${user.id}`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                    searchApi.get(`/itinerary?userId=${user.id}`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                ]);
 
-                const list = Array.isArray(res.data) ? res.data : [];
-                // 轉成 MobileFavoriteDropdown 需要的欄位
-                const mapped = list.map((f) => ({
-                    id: f.id,
-                    trailId: f.trailId,
-                    name: f.trailName,
-                    image: f.trailImage,
-                    length: f.trail_length ?? '—',
-                    altitude: f.trail_altitude ?? '—',
-                }));
-                if (mounted) setFavorites(mapped);
+                if (mounted) {
+                    setFavorites(
+                        favRes.data.map((f) => ({
+                            id: f.id,
+                            trailId: f.trailId,
+                            name: f.trailName,
+                            image: f.trailImage,
+                            length: f.trail_length ?? '—',
+                            altitude: f.trail_altitude ?? '—',
+                        })),
+                    );
+                    // 記錄哪些 trailId 已經規劃過
+                    setItineraryIds(itiRes.data.map((i) => String(i.trailId)));
+                }
             } catch (err) {
                 if (mounted) {
-                    dispatch(
-                        createMessage({
-                            text: err.response?.data?.message || '收藏步道資料載入失敗',
-                            type: 'red',
-                        }),
-                    );
-                    setError('收藏資料載入失敗');
-                    setFavorites([]);
+                    console.error(err);
+                    setError('資料載入失敗');
                 }
             } finally {
                 if (mounted) setLoading(false);
             }
         };
-
-        fetchFavorites();
-
+        fetchData();
         return () => {
             mounted = false;
         };
-    }, [dispatch, user]);
+    }, [user]);
 
-    const handleRemove = async (favId) => {
-        const token = Cookies.get('accessToken'); // 刪除時也要 Token
+    // --- 刪除邏輯 ---
+    const handleRequestRemove = (favId) => {
+        setDeleteConfirm({ open: true, id: favId });
+    };
 
-        // 樂觀更新 UI
+    const handleConfirmRemove = async () => {
+        const favId = deleteConfirm.id;
+        const token = Cookies.get('accessToken');
         const prev = favorites;
+
         setFavorites((p) => p.filter((x) => x.id !== favId));
+        setDeleteConfirm({ open: false, id: null });
 
         try {
             await searchApi.delete(`/favorites/${favId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
         } catch (e) {
-            console.error('刪除失敗', e);
-            setError('取消收藏失敗，請稍後再試');
-            setFavorites(prev); // 回滾
+            console.error(e);
+            setFavorites(prev);
+            dispatch(createMessage({ text: '刪除失敗', type: 'red' }));
         }
     };
 
-    // --- 修改這裡：先 GET 檢查，再決定是否 POST ---
+    // --- 行程邏輯 ---
     const handleAddItinerary = async (item) => {
-        if (!user || !user.id) return;
-
+        if (!user?.id) return;
         try {
             const token = Cookies.get('accessToken');
             const trailId = String(item.trailId ?? item.id);
 
-            // 1. 先根據 userId 和 trailId 檢查該行程是否已經存在
             const checkRes = await searchApi.get(
                 `/itinerary?userId=${user.id}&trailId=${trailId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
+                { headers: { Authorization: `Bearer ${token}` } },
             );
 
             let itineraryToOpen;
-
             if (checkRes.data && checkRes.data.length > 0) {
-                // 2. 如果已經存在，直接抓取現有的第一筆資料
                 itineraryToOpen = checkRes.data[0];
+                setIsEditMode(true); // 已經存在，進入編輯模式
             } else {
-                // 3. 如果不存在，才執行 POST 新增
                 const payload = {
                     userId: user.id,
                     trailId,
@@ -905,60 +939,39 @@ const MemberFavorite = ({ user }) => {
                     date: new Date().toISOString(),
                     note: '',
                 };
-
                 const postRes = await searchApi.post('/itinerary', payload, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
                 itineraryToOpen = postRes.data || payload;
+                setIsEditMode(false); // 新增模式
+                setItineraryIds((prev) => [...prev, trailId]); // 更新本地狀態
             }
 
-            // 4. 將抓到的資料帶入 State，準備開啟 Modal
             setItineraryData(itineraryToOpen);
-            setItineraryNote(itineraryToOpen.note || ''); // 這裡就會抓到原本寫的內容了
+            setItineraryNote(itineraryToOpen.note || '');
             setItineraryModalOpen(true);
         } catch (e) {
             console.error('處理行程失敗', e);
         }
     };
 
-    const handleCloseItineraryModal = () => {
-        setItineraryModalOpen(false);
-        setItineraryData(null);
-        setItineraryNote('');
-        setSavingNote(false);
-    };
-
     const handleSaveItineraryNote = async () => {
-        if (!itineraryData?.id) {
-            handleCloseItineraryModal();
-            return;
-        }
-
+        if (!itineraryData?.id) return;
         try {
             setSavingNote(true);
             const token = Cookies.get('accessToken');
-
-            // json-server 允許 patch 新欄位
-            const res = await searchApi.patch(
+            await searchApi.patch(
                 `/itinerary/${itineraryData.id}`,
                 { note: itineraryNote },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
+                { headers: { Authorization: `Bearer ${token}` } },
             );
-
-            const updated = res?.data || { ...itineraryData, note: itineraryNote };
-            setItineraryData(updated);
-
-            dispatch(createMessage({ text: '行程規劃儲存成功', type: 'success' }));
-            handleCloseItineraryModal();
+            dispatch(
+                createMessage({ text: isEditMode ? '更新成功' : '儲存成功', type: 'success' }),
+            );
+            setItineraryModalOpen(false);
         } catch (e) {
-            console.error('儲存筆記失敗', e);
-            dispatch(createMessage({ text: '行程規劃儲存失敗，請稍後再試', type: 'red' }));
+            console.error(e);
+            dispatch(createMessage({ text: '儲存失敗', type: 'red' }));
         } finally {
             setSavingNote(false);
         }
@@ -966,10 +979,15 @@ const MemberFavorite = ({ user }) => {
 
     return (
         <div className="d-grid gap-3" style={{ maxWidth: 520, minHeight: 450 }}>
+            {/* 1. 載入中狀態 */}
             {loading && <p className="text-muted mb-0">載入收藏中...</p>}
-            {error && <p className="text-danger mb-0">{error}</p>}
 
-            {/* 如果沒資料顯示提示 */}
+            {/* 2. 錯誤訊息顯示 (在這裡！) */}
+            {error && (
+                <div className="alert alert-danger py-2 px-3 rounded-16 small mb-0">{error}</div>
+            )}
+
+            {/* 3. 無資料提示 */}
             {!loading && favorites.length === 0 && !error && (
                 <div className="text-center py-5 text-black bg-primary-100 rounded-24 opacity-75">
                     目前沒有收藏步道
@@ -978,18 +996,29 @@ const MemberFavorite = ({ user }) => {
 
             <MobileFavoriteDropdown
                 favorites={favorites}
-                onRemove={handleRemove}
+                itineraryIds={itineraryIds} // 傳入已有的行程 ID 清單
+                onRemove={handleRequestRemove} // 改用詢問刪除
                 onAddItinerary={handleAddItinerary}
             />
 
-            {/* 修改這裡：加上 itineraryData && 的判斷 */}
+            {/* 刪除確認 Modal */}
+            <ConfirmModal
+                open={deleteConfirm.open}
+                title="確認刪除"
+                content="確定要將此步道從收藏中移除嗎？"
+                onConfirm={handleConfirmRemove}
+                onClose={() => setDeleteConfirm({ open: false, id: null })}
+            />
+
+            {/* 行程編輯/新增 Modal */}
             {itineraryData && (
                 <ItineraryModal
                     open={itineraryModalOpen}
                     data={itineraryData}
                     note={itineraryNote}
+                    isEdit={isEditMode}
                     onChangeNote={setItineraryNote}
-                    onClose={handleCloseItineraryModal}
+                    onClose={() => setItineraryModalOpen(false)}
                     onSaveNote={handleSaveItineraryNote}
                     saving={savingNote}
                 />

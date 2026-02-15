@@ -7,6 +7,7 @@ import Info from './components/Info';
 
 function App() {
     const { pathname } = useLocation();
+    const hideFooterRoutes = ['/login', '/register'];
 
     useEffect(() => {
         window.scrollTo({
@@ -20,8 +21,7 @@ function App() {
         <>
             <Info />
             <Outlet />
-            <Footer />
-
+            {!hideFooterRoutes.includes(pathname) && <Footer />}
             {/* 到頂端按鈕 */}
             <ScrollToTop />
         </>

@@ -208,7 +208,6 @@
             $primary-200,
             // 5. Hover 邊框
             $white,
-
             // 6. Hover 文字：變白色 (或是你也想維持 primary-300 就改這)
             // --- Active 狀態 (點擊時) ---
             $primary-200,
@@ -216,6 +215,28 @@
             $primary-200,
             // 8. Active 邊框
             $white // 9. Active 文字
+        );
+    }
+    &.btn-primary-200 {
+        @include button-variant(
+            transparent,
+            // 1. 平常背景：改為透明
+            $primary-200,
+            // 2. 平常邊框：主色
+            $primary-200,
+
+            // 3. 平常文字：主色
+            $primary-300,
+            // 4. Hover 背景：填滿主色
+            $primary-200,
+            // 5. Hover 邊框：主色
+            $white,
+            // 6. Hover 文字：變白色 (這樣才看得見)
+            $primary-300,
+            // 7. Active 背景：變深一點
+            $primary-300,
+            // 8. Active 邊框：變深一點
+            $white // 9. Active 文字：白色
         );
     }
 }

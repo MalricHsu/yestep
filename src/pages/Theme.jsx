@@ -2,9 +2,8 @@ import Nav from '../components/Nav';
 import { Link } from 'react-router-dom';
 import bg02 from '../assets/images/trailtheme/bg02.png';
 import axios from 'axios';
-import { useEffect, useState, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import { createMessage } from '../slices/infoSlice';
+import { useEffect, useState, useMemo, useRef } from 'react';
+import { Modal } from 'bootstrap';
 
 const trailApi = axios.create({
     baseURL: 'https://yestep.zeabur.app/',
@@ -87,6 +86,81 @@ const groupByType = (trails) =>
         return acc;
     }, {});
 
+//元件-modal
+const ActivityModal = ({ isOpen, status, onClose }) => {
+    const activityRef = useRef(null);
+    const activityInstance = useRef(null);
+    // 合併初始化與清理邏輯
+    useEffect(() => {
+        // 確保元素存在才初始化
+        if (activityRef.current) {
+            activityInstance.current = new Modal(activityRef.current, {
+                backdrop: 'static',
+            });
+        }
+        const element = activityRef.current;
+        const handleHidden = () => {
+            onClose(); // 當動畫結束、徹底隱藏後，才回傳給父組件
+        };
+
+        element.addEventListener('hidden.bs.modal', handleHidden);
+
+        // 清理機制：當組件卸載時，銷毀 Modal 實例與監聽器
+        return () => {
+            element.removeEventListener('hidden.bs.modal', handleHidden);
+            if (activityInstance.current) {
+                activityInstance.current.dispose();
+            }
+        };
+    }, [onClose]);
+
+    // 監聽 isOpen
+    useEffect(() => {
+        // 必須檢查實例是否存在
+        if (!activityInstance.current) return;
+        if (isOpen) {
+            activityInstance.current.show();
+        } else {
+            activityInstance.current.hide();
+        }
+    }, [isOpen]);
+
+    const isSuccess = status === 'success';
+    return (
+        <>
+            <div className="modal" tabIndex="-1" ref={activityRef}>
+                <div className="modal-dialog modal-dialog-centered rounded-24">
+                    <div className="modal-content">
+                        <div className="modal-body p-6">
+                            <div className="mb-6">
+                                <h5 className="sub1-bold text-center text-primary-300 mb-3">
+                                    {isSuccess ? '您已報名本次活動' : '您此本次活動報名失敗'}
+                                </h5>
+                                <p className="body-regular1 text-center text-black-700">
+                                    {isSuccess
+                                        ? '報名結果將以 Email 通知為主'
+                                        : '請檢查輸入資訊或稍後再試'}
+                                </p>
+                            </div>
+                            <div className="d-flex justify-content-between align-items-center gap-3 px-6">
+                                <button
+                                    type="button"
+                                    className={`btn btn-outline-primary-300 w-100 `}
+                                    onClick={() => {
+                                        activityInstance.current.hide();
+                                    }}
+                                >
+                                    {isSuccess ? '我知道了' : '請重新申請表單'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
 //元件-表單
 const RegistrationForm = () => {
     const sessions = useMemo(() => Array.from({ length: 7 }, (_, i) => i + 1), []);
@@ -99,8 +173,11 @@ const RegistrationForm = () => {
         consent: false,
     });
     const [errors, setErrors] = useState({});
-    const dispatch = useDispatch();
-
+    //顯示modal
+    const [modalConfig, setModalConfig] = useState({
+        isOpen: false,
+        status: 'success',
+    });
     // 共用 input change
     const handleChange = (e) => {
         const { name, type, value, checked } = e.target;
@@ -159,185 +236,185 @@ const RegistrationForm = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    /* ===== 送出 ===== */
+    // 送出
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!validate()) return;
-
         try {
             await trailApi.post('/registrations', form);
-            dispatch(
-                createMessage({
-                    text: '已成功報名',
-                    type: 'success',
-                }),
-            );
+            setModalConfig({ isOpen: true, status: 'success' });
             setForm({ name: '', phone: '', email: '', session: '', qty: 0, consent: false });
         } catch (error) {
-            dispatch(
-                createMessage({
-                    text: error.response || '報名失敗，請重新輸入',
-                    type: 'red',
-                }),
-            );
+            console.error(error);
+            setModalConfig({ isOpen: true, status: 'error' });
         }
     };
     return (
-        <form
-            className="registration bg-white p-4 p-md-6 rounded-24 d-flex flex-column gap-4 gap-md-5"
-            onSubmit={handleSubmit}
-            noValidate
-        >
-            <h2 className="sub1-bold text-primary-300 text-center">
-                <span className="fw-normal text-primary-200 fs-5">\</span> 立即報名導覽{' '}
-                <span className="fw-normal text-primary-200 fs-5">/</span>
-            </h2>
+        <>
+            <form
+                className="registration bg-white p-4 p-md-6 rounded-24 d-flex flex-column gap-4 gap-md-5"
+                onSubmit={handleSubmit}
+                noValidate
+            >
+                <h2 className="sub1-bold text-primary-300 text-center">
+                    <span className="fw-normal text-primary-200 fs-5">\</span> 立即報名導覽{' '}
+                    <span className="fw-normal text-primary-200 fs-5">/</span>
+                </h2>
 
-            {/* 姓名 */}
-            <div className="form-floating">
-                <input
-                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                    id="registerName"
-                    name="name"
-                    type="text"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="姓名"
-                    required
-                />
-                <label htmlFor="registerName">
-                    姓名<span className="text-red ps-1">*</span>
-                </label>
-                {errors.name && <div className="invalid-feedback">{errors.name}</div>}
-            </div>
-
-            {/* 聯絡電話 */}
-            <div className="form-floating">
-                <input
-                    className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
-                    id="phoneNumber"
-                    name="phone"
-                    type="tel"
-                    value={form.phone}
-                    onChange={handleChange}
-                    placeholder="0900-000-000"
-                    required
-                />
-                <label htmlFor="phoneNumber">
-                    聯絡電話<span className="text-red ps-1">*</span>
-                </label>
-                {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
-            </div>
-
-            {/* Email */}
-            <div className="form-floating">
-                <input
-                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="name@example.com"
-                />
-                <label htmlFor="email">
-                    E-mail<span className="text-red ps-1">*</span>
-                </label>
-                {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-            </div>
-
-            {/* 活動場次 */}
-            <div>
-                <label htmlFor="session" className="form-label">
-                    活動場次<span className="text-red ps-1">*</span>
-                </label>
-                <select
-                    className={`form-select ${errors.session ? 'is-invalid' : ''}`}
-                    id="session"
-                    name="session"
-                    value={form.session}
-                    onChange={handleChange}
-                >
-                    <option value="">請選擇活動場次</option>
-                    {sessions.map((s) => (
-                        <option key={s} value={s}>
-                            {s}
-                        </option>
-                    ))}
-                </select>
-                {errors.session && <div className="invalid-feedback d-block">{errors.session}</div>}
-            </div>
-
-            {/* 參加人數 */}
-            <div>
-                <label className="mb-2">
-                    參加人數<span className="text-red ps-1">*</span>
-                </label>
-
-                <div className="input-group mb-1">
-                    <button
-                        className="btn btn-outline-secondary"
-                        type="button"
-                        onClick={() => handleQty(-1)}
-                    >
-                        －
-                    </button>
-
+                {/* 姓名 */}
+                <div className="form-floating">
                     <input
-                        className={`form-control text-center ${errors.qty ? 'is-invalid' : ''}`}
-                        name="qty"
+                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                        id="registerName"
+                        name="name"
                         type="text"
-                        min="0"
-                        max="10"
-                        value={form.qty}
-                        onChange={(e) => {
-                            const v = e.target.value;
-                            if (v === '') return setForm((p) => ({ ...p, qty: '' }));
-                            setForm((p) => ({
-                                ...p,
-                                qty: Math.max(0, Math.min(10, Number(v))),
-                            }));
-                        }}
-                        onBlur={() => setForm((p) => ({ ...p, qty: p.qty === '' ? 0 : p.qty }))}
+                        value={form.name}
+                        onChange={handleChange}
+                        placeholder="姓名"
+                        required
                     />
-
-                    <button
-                        className="btn btn-outline-secondary"
-                        type="button"
-                        onClick={() => handleQty(1)}
-                    >
-                        ＋
-                    </button>
+                    <label htmlFor="registerName">
+                        姓名<span className="text-red ps-1">*</span>
+                    </label>
+                    {errors.name && <div className="invalid-feedback">{errors.name}</div>}
                 </div>
 
-                {errors.qty && <div className="invalid-feedback d-block">{errors.qty}</div>}
-            </div>
+                {/* 聯絡電話 */}
+                <div className="form-floating">
+                    <input
+                        className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
+                        id="phoneNumber"
+                        name="phone"
+                        type="tel"
+                        value={form.phone}
+                        onChange={handleChange}
+                        placeholder="0900-000-000"
+                        required
+                    />
+                    <label htmlFor="phoneNumber">
+                        聯絡電話<span className="text-red ps-1">*</span>
+                    </label>
+                    {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
+                </div>
 
-            {/* 同意條款 */}
-            <div className="form-check">
-                <input
-                    className={`form-check-input ${errors.consent ? 'is-invalid' : ''}`}
-                    id="checkDefaultOn"
-                    name="consent"
-                    type="checkbox"
-                    checked={form.consent}
-                    onChange={handleChange}
-                />
-                <label
-                    className="form-check-label text-black-700"
-                    htmlFor="checkDefaultOn"
-                    style={{ cursor: 'pointer' }}
-                >
-                    我同意活動照片可作為宣傳使用
-                </label>
-                {errors.consent && <div className="invalid-feedback d-block">{errors.consent}</div>}
-            </div>
+                {/* Email */}
+                <div className="form-floating">
+                    <input
+                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        placeholder="name@example.com"
+                    />
+                    <label htmlFor="email">
+                        E-mail<span className="text-red ps-1">*</span>
+                    </label>
+                    {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                </div>
 
-            <button type="submit" className="btn btn-primary">
-                送出
-            </button>
-        </form>
+                {/* 活動場次 */}
+                <div>
+                    <label htmlFor="session" className="form-label">
+                        活動場次<span className="text-red ps-1">*</span>
+                    </label>
+                    <select
+                        className={`form-select ${errors.session ? 'is-invalid' : ''}`}
+                        id="session"
+                        name="session"
+                        value={form.session}
+                        onChange={handleChange}
+                    >
+                        <option value="">請選擇活動場次</option>
+                        {sessions.map((s) => (
+                            <option key={s} value={s}>
+                                {s}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.session && (
+                        <div className="invalid-feedback d-block">{errors.session}</div>
+                    )}
+                </div>
+
+                {/* 參加人數 */}
+                <div>
+                    <label className="mb-2">
+                        參加人數<span className="text-red ps-1">*</span>
+                    </label>
+
+                    <div className="input-group mb-1">
+                        <button
+                            className="btn btn-outline-secondary"
+                            type="button"
+                            onClick={() => handleQty(-1)}
+                        >
+                            －
+                        </button>
+
+                        <input
+                            className={`form-control text-center ${errors.qty ? 'is-invalid' : ''}`}
+                            name="qty"
+                            type="text"
+                            min="0"
+                            max="10"
+                            value={form.qty}
+                            onChange={(e) => {
+                                const v = e.target.value;
+                                if (v === '') return setForm((p) => ({ ...p, qty: '' }));
+                                setForm((p) => ({
+                                    ...p,
+                                    qty: Math.max(0, Math.min(10, Number(v))),
+                                }));
+                            }}
+                            onBlur={() => setForm((p) => ({ ...p, qty: p.qty === '' ? 0 : p.qty }))}
+                        />
+
+                        <button
+                            className="btn btn-outline-secondary"
+                            type="button"
+                            onClick={() => handleQty(1)}
+                        >
+                            ＋
+                        </button>
+                    </div>
+
+                    {errors.qty && <div className="invalid-feedback d-block">{errors.qty}</div>}
+                </div>
+
+                {/* 同意條款 */}
+                <div className="form-check">
+                    <input
+                        className={`form-check-input ${errors.consent ? 'is-invalid' : ''}`}
+                        id="checkDefaultOn"
+                        name="consent"
+                        type="checkbox"
+                        checked={form.consent}
+                        onChange={handleChange}
+                    />
+                    <label
+                        className="form-check-label text-black-700"
+                        htmlFor="checkDefaultOn"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        我同意活動照片可作為宣傳使用
+                    </label>
+                    {errors.consent && (
+                        <div className="invalid-feedback d-block">{errors.consent}</div>
+                    )}
+                </div>
+
+                <button type="submit" className="btn btn-primary">
+                    送出
+                </button>
+            </form>
+            <ActivityModal
+                isOpen={modalConfig.isOpen}
+                status={modalConfig.status}
+                onClose={() => setModalConfig({ ...modalConfig, isOpen: false })}
+            />
+        </>
     );
 };
 
