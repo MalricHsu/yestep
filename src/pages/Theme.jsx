@@ -397,13 +397,13 @@ const MonthlyActivityRegistrationSection = ({ infoProps }) => {
 const Theme = () => {
     const { trails, loading: trailsLoading, activity, themeSection } = useTrails();
     const trailsByType = groupByType(trails);
-    const [activeId, setActiveId] = useState('monthlyActivity');
+    const [activeId, setActiveId] = useState('fantasy');
     const navItems = useMemo(
         () => [
-            { id: 'monthlyActivity', label: '每月活動' },
             { id: 'fantasy', label: '忙裡偷閒' },
             { id: 'relaxing', label: '舒壓放鬆' },
             { id: 'familyHiking', label: '親子步道' },
+            { id: 'tungBlossom', label: '桐花步道' },
         ],
         [],
     );
@@ -476,8 +476,7 @@ const Theme = () => {
                     }}
                 />
 
-                {/* 讓文字永遠在最上層 */}
-                <div className="position-relative text-center" style={{ zIndex: 1 }}>
+                <div className="text-center w-100" style={{ zIndex: 1 }}>
                     <h1 className="sub1-medium text-white">主題活動</h1>
                     <h2 className="text-white fs-4 fs-lg-1 py-4 pt-sm-24 text-center">
                         一起走進自然
@@ -486,8 +485,9 @@ const Theme = () => {
                     <p className="text-primary-100 sub1-medium">讓自然成為你的休息室</p>
 
                     <ul
-                        className="nav nav-underline position-absolute bottom-0 d-sm-none opacity-75"
+                        className="nav nav-underline position-absolute bottom-0 start-50 translate-middle-x d-sm-none opacity-75"
                         style={{
+                            width: 385,
                             flexWrap: 'nowrap',
                             overflowX: 'scroll',
                             scrollbarWidth: 'none',
@@ -512,7 +512,7 @@ const Theme = () => {
                             </li>
                         ))}
                     </ul>
-                    <ul className="nav nav-pills mt-8 d-none d-sm-flex gap-2">
+                    <ul className="nav nav-pills mt-lg-8 mt-0 d-none d-sm-inline-flex gap-2 mx-auto">
                         {navItems.map((item) => (
                             <li key={item.id} className="nav-item">
                                 <button
@@ -604,7 +604,7 @@ const Theme = () => {
                 {trailsLoading ? (
                     <p className="text-center py-10">載入中...</p>
                 ) : (
-                    <ol className="p-0 m-0 border-0 d-grid">
+                    <ol className="p-0 m-0 border-0 d-grid gap-5">
                         {themeSection.map((sec) => {
                             const list = trailsByType[sec.type] || [];
                             const cards = list.slice(0, 4);
