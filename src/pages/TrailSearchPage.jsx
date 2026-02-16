@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 // 第三方套件
@@ -9,15 +9,24 @@ import { getErrorMessage } from '../utils/error';
 
 // 元件
 import Nav from '../components/Nav';
+import TrailLoading from '../components/TrailLoading';
+import SearchFilterDropdown from '../components/SearchFilterDropdown';
 import SearchTrailList from '../components/SearchTrailList';
 import SearchPagination from '../components/SearchPagination';
 import PopularTrails from '../components/PopularTrails';
 import SearchTheme from '../components/SearchTheme';
 
+// 圖檔
+import Result from '../assets/images/home/diffcard-03.webp';
+
 // 篩選、排序
-const difficulty = ['休閒級', '入門級', '健行級', '挑戰級', '專業級'];
-const estimatedDuration = ['3小時內', '3-6小時', '6-12小時', '12小時-兩天', '兩天以上'];
-const landscape = ['瀑布', '日出', '雲海', '晚霞', '觀星', '神木', '賞花', '賞鳥'];
+const durationMapping = {
+    '3小時內': ['0.5小時', '1~1.5小時', '1-2小時', '2~2.5小時', '2~3小時'],
+    '3-6小時': ['3~4小時', '半天'],
+    '6-12小時': ['一天'],
+    '12小時-兩天': ['一至二天'],
+    兩天以上: ['一天以上'],
+};
 const sortOptions = [
     { label: '難易度由高到低', sort: 'trail_difficulty_level', order: 'desc' },
     { label: '難易度由低到高', sort: 'trail_difficulty_level', order: 'asc' },
@@ -25,22 +34,43 @@ const sortOptions = [
     { label: '熱門程度由低到高', sort: 'trail_popular', order: 'asc' },
 ];
 
+// 取得多選參數，將 'A,B' 轉為 ['A', 'B']
+const getSplitParams = (searchParams, key) => {
+    const value = searchParams.get(key);
+    return value ? value.split(',') : [];
+};
+
 // API
 const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 
 const TrailSearchPage = () => {
+    // 網頁標題
+    useEffect(() => {
+        document.title = '步道總覽 | YeStep';
+    }, []);
+
     // 取得與設定網址參數
     const [searchParams, setSearchParams] = useSearchParams();
 
-    // 目前頁碼狀態
+    // 目前網址狀態
     const limit = 8; // 每頁筆數
     const urlArea = searchParams.get('trail_region') || '';
     const urlKeyword = searchParams.get('q') || '';
-    const urlDifficulty = searchParams.get('trail_difficulty') || '';
-    const urlLandscape = searchParams.get('trail_landscape') || '';
     const urlSort = searchParams.get('_sort') || '';
     const urlOrder = searchParams.get('_order') || 'desc';
     const currentPage = parseInt(searchParams.get('_page')) || 1;
+
+    const urlDifficulty = useMemo(
+        () => getSplitParams(searchParams, 'trail_difficulty'),
+        [searchParams],
+    );
+    const urlLandscape = useMemo(
+        () => getSplitParams(searchParams, 'trail_landscape'),
+        [searchParams],
+    );
+    const urlDuration = useMemo(() => getSplitParams(searchParams, 'trail_hour'), [searchParams]);
+
+    const [isLoading, setIsLoading] = useState(true);
 
     // 步道資料
     const [keyword, setKeyword] = useState(urlKeyword);
@@ -49,31 +79,28 @@ const TrailSearchPage = () => {
 
     const totalPages = Math.ceil(totalCount / limit); // 計算總頁數
 
+    const searchSection = useRef(null);
+
     // 當網址參數改變時
     useEffect(() => {
         setKeyword(urlKeyword);
     }, [urlKeyword]);
 
     // 統一發送網址更新的函式
-    const updateRoute = (params) => {
-        const currentParams = Object.fromEntries(searchParams.entries());
-
-        const newParams = {
-            area: searchParams.get('area') || '',
-            q: searchParams.get('q') || '',
-            _page: searchParams.get('_page') || 1,
-            ...currentParams,
-            ...params, // 覆蓋更新的部分
-        };
-
-        // 過濾掉空值，保持網址乾淨
-        Object.keys(newParams).forEach((key) => {
-            if (newParams[key] === '' || newParams[key] == null) {
-                delete newParams[key];
-            }
+    const updateRoute = (newParams) => {
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            Object.entries(newParams).forEach(([key, value]) => {
+                if (!value || (Array.isArray(value) && value.length === 0)) {
+                    next.delete(key);
+                } else {
+                    // 如果是陣列存成 A,B 格式
+                    next.set(key, Array.isArray(value) ? value.join(',') : value);
+                }
+            });
+            next.set('_page', newParams._page || '1'); // 預設跳回第一頁
+            return next;
         });
-
-        setSearchParams(newParams);
     };
 
     // 處理搜尋按鈕/Enter
@@ -87,54 +114,103 @@ const TrailSearchPage = () => {
         }
     };
 
-    // 網頁標題
-    useEffect(() => {
-        document.title = '步道總覽 | YeStep';
-    }, []);
+    // 處理 Checkbox 切換
+    const handleCheckboxChange = (key, value, currentArray) => {
+        const newArray = currentArray.includes(value)
+            ? currentArray.filter((item) => item !== value) // 已存在就移除
+            : [...currentArray, value]; // 不存在就加入
+
+        updateRoute({ [key]: newArray, _page: 1 });
+    };
+
+    // 全部清除
+    const handleClearAll = () => {
+        setSearchParams((prev) => {
+            const next = new URLSearchParams();
+
+            // 如果想保留關鍵字和地區，就從舊的拿
+            if (prev.has('q')) next.set('q', prev.get('q'));
+            if (prev.has('trail_region')) next.set('trail_region', prev.get('trail_region'));
+
+            // 強制分頁回到第 1 頁
+            next.set('_page', '1');
+            return next;
+        });
+    };
 
     // 步道列表
     useEffect(() => {
         const getTrailScenery = async () => {
+            const startTime = Date.now();
+            setIsLoading(true);
+
             try {
-                // 帶入分頁參數與關鍵字
-                const res = await searchApi.get(`/trails`, {
-                    params: {
-                        _page: currentPage, // 當前頁數
-                        _limit: limit, // 筆數
-                        q: urlKeyword, // 關鍵字
-                        trail_region: urlArea || undefined, // 地區篩選
-                        trail_difficulty: urlDifficulty || undefined, // 難度篩選
-                        trail_landscape: urlLandscape || undefined, // 景觀
-                        _sort: urlSort || undefined, // 排序欄位
-                        _order: urlOrder || undefined,
-                    },
+                const params = new URLSearchParams();
+
+                // 基礎參數
+                params.append('_page', currentPage);
+                params.append('_limit', limit);
+                if (urlKeyword) params.append('q', urlKeyword);
+                if (urlArea) params.append('trail_region', urlArea);
+                if (urlSort) params.append('_sort', urlSort);
+                if (urlOrder) params.append('_order', urlOrder);
+
+                // 【關鍵】多選部分：循環陣列，重複 append 同一個 Key
+                urlDifficulty.forEach((val) => params.append('trail_difficulty', val));
+                urlLandscape.forEach((val) => params.append('trail_landscape', val));
+
+                // 處理時間多選映射
+                urlDuration.forEach((label) => {
+                    const backendValues = durationMapping[label] || [];
+                    backendValues.forEach((val) => {
+                        // 使用重複 key 的方式發送，例如 ?trail_hour=0.5小時&trail_hour=1-2小時
+                        params.append('trail_hour', val);
+                    });
                 });
 
-                // 從 Header 抓取總數
-                const countFromHeader = res.headers['x-total-count'];
-                if (countFromHeader) {
-                    setTotalCount(parseInt(countFromHeader));
-                }
+                const res = await searchApi.get(`/trails`, { params });
 
-                setTrailData(res.data);
+                // 計算已經過了多久
+                const endTime = Date.now();
+                const durationTime = endTime - startTime;
+                // 如果不足 1 秒，計算還差多少毫秒
+                const delay = Math.max(0, 1000 - durationTime);
+
+                setTimeout(() => {
+                    // 更新資料
+                    const countFromHeader = res.headers['x-total-count'];
+                    if (countFromHeader) setTotalCount(parseInt(countFromHeader));
+                    setTrailData(res.data);
+
+                    // 執行滾動 (在 Loading 關閉前滾動可以減少視覺閃爍)
+                    if (searchSection.current) {
+                        const elementPosition = searchSection.current.offsetTop;
+                        const offsetPosition = elementPosition - 75;
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth',
+                        });
+                    }
+
+                    // 最後才關閉 Loading
+                    setIsLoading(false);
+                }, delay);
             } catch (error) {
                 console.error('API 錯誤:', getErrorMessage(error));
+                setIsLoading(false);
             }
         };
         getTrailScenery();
-    }, [currentPage, urlKeyword, urlArea, urlDifficulty, urlLandscape, urlSort, urlOrder]);
-
-    // 處理「步道列表」卡片的點擊
-    const handleListClick = async (id, currentPopular) => {
-        try {
-            await searchApi.patch(`/trails/${id}`, {
-                trail_popular: (currentPopular || 0) + 1,
-            });
-            syncListState(id); // 呼叫同步
-        } catch (error) {
-            console.error('列表更新失敗:', getErrorMessage(error));
-        }
-    };
+    }, [
+        currentPage,
+        urlKeyword,
+        urlArea,
+        urlDifficulty,
+        urlDuration,
+        urlLandscape,
+        urlSort,
+        urlOrder,
+    ]);
 
     // 更新 State 的輔助函式
     const syncListState = (id) => {
@@ -203,7 +279,7 @@ const TrailSearchPage = () => {
                 </div>
             </header>
             <main>
-                <section className="search bg-primary-50 py-8">
+                <section className="search bg-primary-50 py-8" ref={searchSection}>
                     <div className="container">
                         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-end row-gap-3 mb-3 mb-md-6">
                             <div className="d-flex flex-column">
@@ -219,116 +295,51 @@ const TrailSearchPage = () => {
                                         你可能喜歡的步道景觀
                                     </p>
                                 </div>
-                                <div className="checkbox-filter d-flex column-gap-2">
-                                    <div className="dropdown">
-                                        <button
-                                            className="btn btn-primary dropdown-toggle"
-                                            type="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                        >
-                                            <span className="ms-1">{urlDifficulty || '難度'}</span>
-                                        </button>
-                                        <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
-                                            <li>
-                                                <button
-                                                    className="dropdown-item"
-                                                    onClick={() =>
-                                                        updateRoute({
-                                                            trail_difficulty: '',
-                                                            _page: 1,
-                                                        })
-                                                    }
-                                                >
-                                                    難度
-                                                </button>
-                                            </li>
-                                            {difficulty.map((level, index) => (
-                                                <li key={index}>
-                                                    <button
-                                                        className={`dropdown-item ${urlDifficulty === level ? 'active' : ''}`}
-                                                        onClick={() =>
-                                                            updateRoute({
-                                                                trail_difficulty: level,
-                                                                _page: 1,
-                                                            })
-                                                        }
-                                                    >
-                                                        {level}
-                                                    </button>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                <div className="d-flex flex-wrap gap-2">
+                                    <div className="order-md-2">
+                                        {/* 清除全部 */}
+                                        {(urlDifficulty.length > 0 ||
+                                            urlDuration.length > 0 ||
+                                            urlLandscape.length > 0) && (
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary-300"
+                                                onClick={handleClearAll}
+                                            >
+                                                <span className="d-flex align-items-center ms-1">
+                                                    清除全部
+                                                    <i className="material-symbols-outlined rounded-pill">
+                                                        close
+                                                    </i>
+                                                </span>
+                                            </button>
+                                        )}
                                     </div>
-                                    <div className="dropdown">
-                                        <button
-                                            className="btn btn-primary dropdown-toggle"
-                                            type="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                        >
-                                            <span className="ms-1">時間</span>
-                                        </button>
-                                        <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
-                                            {estimatedDuration.map((time, index) => {
-                                                return (
-                                                    <div className="form-check" key={index}>
-                                                        <input
-                                                            className="form-check-input"
-                                                            type="checkbox"
-                                                            value=""
-                                                            id={`checkDefault${index}`}
-                                                        />
-                                                        <label
-                                                            className="form-check-label"
-                                                            htmlFor={`checkDefault${index}`}
-                                                        >
-                                                            {time}
-                                                        </label>
-                                                    </div>
-                                                );
-                                            })}
-                                        </ul>
-                                    </div>
-                                    <div className="dropdown">
-                                        <button
-                                            className="btn btn-primary dropdown-toggle"
-                                            type="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                        >
-                                            <span className="ms-1">{urlLandscape || '景觀'}</span>
-                                        </button>
-                                        <ul className="dropdown-menu dropdown-menu-start shadow mt-2">
-                                            <li>
-                                                <button
-                                                    className="dropdown-item"
-                                                    onClick={() =>
-                                                        updateRoute({
-                                                            trail_landscape: '',
-                                                            _page: 1,
-                                                        })
-                                                    }
-                                                >
-                                                    全部景觀
-                                                </button>
-                                            </li>
-                                            {landscape.map((type, index) => (
-                                                <li key={index}>
-                                                    <button
-                                                        className={`dropdown-item ${urlLandscape === type ? 'active' : ''}`}
-                                                        onClick={() =>
-                                                            updateRoute({
-                                                                trail_landscape: type,
-                                                                _page: 1,
-                                                            })
-                                                        }
-                                                    >
-                                                        {type}
-                                                    </button>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                    <div className="checkbox-filter d-flex column-gap-2 order-md-1">
+                                        {/* 難度 */}
+                                        <SearchFilterDropdown
+                                            label="難度"
+                                            apiKey="trail_difficulty"
+                                            selectedValues={urlDifficulty}
+                                            onCheckboxChange={handleCheckboxChange}
+                                        />
+
+                                        {/* 時間 */}
+                                        <SearchFilterDropdown
+                                            label="時間"
+                                            apiKey="trail_hour"
+                                            selectedValues={urlDuration}
+                                            onCheckboxChange={handleCheckboxChange}
+                                        />
+
+                                        {/* 景觀 */}
+                                        <SearchFilterDropdown
+                                            label="景觀"
+                                            apiKey="trail_landscape"
+                                            selectedValues={urlLandscape}
+                                            onCheckboxChange={handleCheckboxChange}
+                                            isGrid={true}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -366,21 +377,45 @@ const TrailSearchPage = () => {
                             </div>
                         </div>
                         <div className="mb-8">
-                            <div className="row row-gap-3 row-gap-sm-6">
-                                {trailData.map((trail) => (
-                                    <SearchTrailList
-                                        key={trail.id}
-                                        trail={trail}
-                                        handleListClick={handleListClick}
-                                    />
-                                ))}
-                            </div>
+                            {isLoading ? (
+                                <TrailLoading />
+                            ) : (
+                                <div className="row row-gap-3 row-gap-sm-6">
+                                    {trailData.length > 0 ? (
+                                        trailData.map((trail) => (
+                                            <SearchTrailList
+                                                key={trail.id}
+                                                trail={trail}
+                                                syncListState={syncListState}
+                                            />
+                                        ))
+                                    ) : (
+                                        <div className="col">
+                                            <div className="text-center pt-15">
+                                                <img
+                                                    className="img-fluid rounded-pill mb-4"
+                                                    src={Result}
+                                                    alt="步道圖"
+                                                />
+                                                <h6 className="fs-5 mb-2">找不到符合條件的步道</h6>
+                                                <p className="text-black-500">
+                                                    換個關鍵字試試？或刪減一些篩選條件
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
-                        <SearchPagination
-                            totalPages={totalPages}
-                            currentPage={currentPage}
-                            updateRoute={updateRoute}
-                        />
+
+                        {/* 分頁 */}
+                        {!isLoading && trailData.length > 0 && (
+                            <SearchPagination
+                                totalPages={totalPages}
+                                currentPage={currentPage}
+                                updateRoute={updateRoute}
+                            />
+                        )}
                     </div>
                 </section>
 
