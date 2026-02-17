@@ -1,12 +1,33 @@
 import { Link } from 'react-router-dom';
 
+// 第三方套件
+import axios from 'axios';
+
+// 工具
+import { getErrorMessage } from '../utils/error';
+
 // 工具
 import { formatNumber } from '../utils/formatNumber';
 
 // 元件
 import StarRating from '../components/StarRating';
 
-const SearchTrailList = ({ trail, handleListClick }) => {
+// API
+const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+
+const SearchTrailList = ({ trail, syncListState }) => {
+    // 處理「步道列表」卡片的點擊
+    const handleListClick = async (id, currentPopular) => {
+        try {
+            await searchApi.patch(`/trails/${id}`, {
+                trail_popular: (currentPopular || 0) + 1,
+            });
+            syncListState(id); // 呼叫同步
+        } catch (error) {
+            console.error('列表更新失敗:', getErrorMessage(error));
+        }
+    };
+
     return (
         <div className="col-md-6" key={trail.id}>
             <Link

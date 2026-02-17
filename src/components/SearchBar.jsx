@@ -23,7 +23,7 @@ const SearchBar = () => {
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                 />
-                <button className="btn btn-primary rounded-pill px-4" type="submit">
+                <button className="btn btn-primary rounded-pill px-6" type="submit">
                     搜尋
                 </button>
             </div>
