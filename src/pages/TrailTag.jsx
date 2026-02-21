@@ -1,12 +1,10 @@
 //react套件
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-//第三方套件
-import axios from 'axios';
 //元件
 import Nav from '../components/Nav';
-
-const tagApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+// API
+import { TrailsApi } from '../server/api';
 const TrailTag = () => {
     const [trails, setTrails] = useState([]);
     //抓取那個網頁？後面的字
@@ -31,8 +29,7 @@ const TrailTag = () => {
                     //換成路由看得懂的樣子（可以加很多的參數）
                     queryName = searchParams.toString();
                 }
-
-                const res = await tagApi.get(`/trails?${queryName}`);
+                const res = await TrailsApi.get(`/trails?${queryName}`);
 
                 setTrails(res);
             } catch (error) {

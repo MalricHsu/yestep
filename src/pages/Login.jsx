@@ -1,14 +1,18 @@
+//React套件
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+//狀態管理
+import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../slices/authSlice';
 import { createMessage, clearMessage } from '../slices/infoSlice';
-import axios from 'axios';
+
+//第三方套件
 import Cookies from 'js-cookie';
 
 // API
-const LoginApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+import { TrailsApi } from '../server/api';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -29,7 +33,7 @@ const Login = () => {
     const onSubmit = async (data) => {
         dispatch(clearMessage());
         try {
-            const res = await LoginApi.post('/login', data);
+            const res = await TrailsApi.post('/login', data);
             const { accessToken, user } = res.data;
             //後端路由取得userId 只能看到自己的部分
             Cookies.set('accessToken', accessToken, { expires: 7 });
@@ -154,7 +158,6 @@ const Login = () => {
                                         </div>
                                     )}
                                 </div>
-
                                 <button
                                     type="submit"
                                     className="btn btn-primary-200 text-white w-100 py-3 rounded-3 fw-bold mb-4 shadow-sm"
@@ -167,15 +170,29 @@ const Login = () => {
                                 >
                                     立即登入
                                 </button>
-
-                                <div className="d-flex justify-content-end align-items-center mt-3 border-top border-primary-100 border-opacity-25 pt-4 gap-2">
-                                    <span className="text-primary-100 small">還沒有帳號嗎？</span>
+                                <div className="d-flex justify-content-center align-items-center mt-4">
                                     <Link
-                                        to="/register"
-                                        className="text-white fw-bold text-decoration-none px-3 py-1 rounded-pill border border-primary-100"
+                                        to="/"
+                                        className="text-white fw-bold text-decoration-none small"
                                     >
-                                        註冊帳號
+                                        <i className="bi bi-arrow-left me-2"></i>
+                                        <span className="border-bottom border-primary-100 pb-1 me-1">
+                                            首頁
+                                        </span>
+                                        ｜
                                     </Link>
+
+                                    <div className="ms-2 d-flex align-items-center gap-3">
+                                        <Link
+                                            to="/register"
+                                            className="text-white fw-bold text-decoration-none small"
+                                        >
+                                            還沒有帳號嗎？
+                                            <span className="border-bottom border-primary-100 pb-1 ms-1">
+                                                在此登入
+                                            </span>
+                                        </Link>
+                                    </div>
                                 </div>
                             </form>
                         </div>

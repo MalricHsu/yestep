@@ -21,6 +21,14 @@ const router = createHashRouter([
                 element: <Home />,
             },
             {
+                path: '/login',
+                element: <Login />,
+            },
+            {
+                path: '/register',
+                element: <Register />,
+            },
+            {
                 path: 'search',
                 element: <TrailSearchPage />,
             },
@@ -49,14 +57,6 @@ const router = createHashRouter([
                 element: <NotFound404 />,
             },
         ],
-    },
-    {
-        path: '/login',
-        element: <Login />,
-    },
-    {
-        path: '/register',
-        element: <Register />,
     },
 ]);
 

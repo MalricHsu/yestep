@@ -1,7 +1,11 @@
+//React套件
 import { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
-import { Modal } from 'bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+//第三方套件
+import { Modal } from 'bootstrap';
+
+//modal設定
 const MODAL_CONFIG = {
     //沒登入
     like_guest: {

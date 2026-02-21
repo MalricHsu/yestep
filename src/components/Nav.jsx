@@ -1,38 +1,29 @@
-// 引入Link
+//React套件
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
 // 引入 logo
 import logoWhite from '../assets/images/logo/logo-white.png';
 import logoDark from '../assets/images/logo/logo.png';
 import yestepWhite from '../assets/images/logo/yestep-white.svg';
 import yestepDark from '../assets/images/logo/yestep.svg';
-
 // 元件
 import NavOffcanvas from './NavOffcanvas.jsx';
-
 //狀態管理
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../slices/authSlice';
 import { createMessage } from '../slices/infoSlice.js';
-
+//第三方套件
 import Cookies from 'js-cookie';
 
 //預設nav的字一開始就是非綠色的
 const Nav = () => {
     const location = useLocation();
-
-    const isLogin = useSelector((state) => {
-        console.log(state);
-        return state.auth.isLogin;
-    });
-    const user = useSelector((state) => {
-        console.log(state);
-        return state.auth.user;
-    });
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    //取出狀態
+    const isLogin = useSelector((state) => state.auth.isLogin);
+    const user = useSelector((state) => state.auth.user);
 
     const [scrolled, setScrolled] = useState(false);
     const [show, setShow] = useState(false);

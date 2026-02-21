@@ -5,37 +5,33 @@
 // fix: 選單active bg底色、預約按鈕Link、景觀小卡傳中文
 // fix: 更正成壓縮後圖片、替換手機版的 ThemeSwiper.jsx 圖片、替換 HeroSwiper 圖片
 
-// 引入Nav
+//React套件
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+
+//元件
 import Nav from '../components/Nav';
-
-// 引入 Hero 影片
-import heroVideo from '../assets/videos/hero-video.mp4';
-import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
-
+import SearchBar from '../components/SearchBar';
+import PopularTrails from '../components/PopularTrails';
 // 引入 HeroSwiper.jsx
 import HeroSwiper from '../components/HeroSwiper';
-
 // 引入 主題活動特輯 ThemeSwiper
 import ThemeSwiper from '../components/ThemeSwiper';
-
 // 引入 步道難度指南 diffcard 難易度小卡
 import DiffCardList from '../components/DiffcardList';
-
 // 引入 特色景觀步道 landscape 資料
 import { landscapeColumns } from '../data/home-landscape';
 
+//圖片
+// 引入 Hero 影片
+import heroVideo from '../assets/videos/hero-video.mp4';
+import heroVideoLg from '../assets/videos/hero-video-lg.mp4';
 // 引入 關於我們
 import aboutImg from '../assets/images/home/about-img.webp';
 import aboutImgLg from '../assets/images/home/about-img-lg.webp';
-
 // 引入 關於我們-背景山脈圖
 import aboutBgLg from '../assets/images/home/about-bg-lg.webp';
 import aboutBg from '../assets/images/home/about-bg.webp';
-
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import SearchBar from '../components/SearchBar';
-import PopularTrails from '../components/PopularTrails';
 
 const Home = () => {
     const { hash } = useLocation();
@@ -102,7 +98,7 @@ const Home = () => {
                         <div className="row ">
                             <div className="col-12 col-lg-8 mx-auto">
                                 <h1 className="fs-2 fs-lg-1 text-white text-center mb-8">
-                                    Yes to taking the next{' '}
+                                    Yes to taking the next
                                     <span className="d-inline-flex">step !</span>
                                 </h1>
                                 <SearchBar />

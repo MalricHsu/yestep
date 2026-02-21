@@ -1,33 +1,28 @@
+//React套件
 import { useEffect, useRef, useCallback } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import Offcanvas from 'bootstrap/js/dist/offcanvas';
 
-import logoDark from '../assets/images/logo/logo.png';
-import yestepDark from '../assets/images/logo/yestep.svg';
-
+//狀態管理
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../slices/authSlice';
 import { createMessage } from '../slices/infoSlice.js';
 
+//第三方套件
+import Offcanvas from 'bootstrap/js/dist/offcanvas';
 import Cookies from 'js-cookie';
+//圖檔
+import logoDark from '../assets/images/logo/logo.png';
+import yestepDark from '../assets/images/logo/yestep.svg';
 
 const NavOffcanvas = ({ show, onClose }) => {
     const location = useLocation();
-
     const offcanvasRef = useRef(null);
     const instanceRef = useRef(null);
-
-    const isLogin = useSelector((state) => {
-        console.log(state);
-        return state.auth.isLogin;
-    });
-    const user = useSelector((state) => {
-        console.log(state);
-        return state.auth.user;
-    });
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    //取出狀態
+    const isLogin = useSelector((state) => state.auth.isLogin);
+    const user = useSelector((state) => state.auth.user);
     // 優化：點擊連結後同時關閉選單並置頂
     const handleLinkClick = useCallback(() => {
         onClose?.();

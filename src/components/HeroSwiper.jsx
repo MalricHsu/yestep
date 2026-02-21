@@ -1,9 +1,10 @@
+//第三方套件
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 
-// 引入圖片
+// 圖檔
 import heroSwiper01 from '../assets/images/home/heroswiper-01.webp';
 import heroSwiper02 from '../assets/images/home/heroswiper-02.webp';
 import heroSwiper03 from '../assets/images/home/heroswiper-03.webp';

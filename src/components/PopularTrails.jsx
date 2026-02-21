@@ -1,8 +1,8 @@
+//React套件
 import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 
 // 第三方套件
-import axios from 'axios';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -16,7 +16,7 @@ import { getErrorMessage } from '../utils/error';
 import TrailLoading from './TrailLoading';
 
 // API
-const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+import { TrailsApi } from '../server/api';
 
 const PopularTrails = ({ onUpdateSuccess, hasBorder = false }) => {
     const [popularTrails, setPopularTrails] = useState([]);
@@ -27,7 +27,7 @@ const PopularTrails = ({ onUpdateSuccess, hasBorder = false }) => {
     useEffect(() => {
         const getPopularTrailScenery = async () => {
             try {
-                const res = await searchApi.get(
+                const res = await TrailsApi.get(
                     '/trails?_sort=trail_popular&_limit=10&_order=desc',
                 );
                 setPopularTrails(res.data);
@@ -99,7 +99,7 @@ const PopularTrails = ({ onUpdateSuccess, hasBorder = false }) => {
     // 處理步道點擊
     const handleAddPopular = async (id, currentPopular) => {
         try {
-            await searchApi.patch(`/trails/${id}`, {
+            await TrailsApi.patch(`/trails/${id}`, {
                 trail_popular: (currentPopular || 0) + 1,
             });
 
