@@ -1,14 +1,18 @@
+//React套件
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+
+//狀態管理
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../slices/authSlice';
-import axios from 'axios';
 import { createMessage, clearMessage } from '../slices/infoSlice';
+
+//第三方套件
 import Cookies from 'js-cookie';
 
 // API
-const RegisterApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+import { TrailsApi } from '../server/api';
 
 const Register = () => {
     const dispatch = useDispatch();
@@ -27,7 +31,7 @@ const Register = () => {
 
     const onSubmit = async (data) => {
         try {
-            const res = await RegisterApi.post('/register', {
+            const res = await TrailsApi.post('/register', {
                 name: data.username,
                 email: data.email,
                 password: data.password,

@@ -1,12 +1,14 @@
+//React套件
+import { useEffect, useRef } from 'react';
+//狀態管理
 import { useDispatch, useSelector } from 'react-redux';
 import { removeMessage } from '../slices/infoSlice';
-import { useEffect, useRef } from 'react';
+//圖檔
 import logoImg from '../assets/images/logo/logo-white.png';
 
 const Info = () => {
     const messageState = useSelector((state) => state.info);
     const { isShow, text, type, time } = messageState;
-    console.log(messageState);
     const dispatch = useDispatch();
 
     const timeoutRef = useRef(null);

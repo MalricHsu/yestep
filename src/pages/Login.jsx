@@ -1,14 +1,18 @@
+//React套件
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+//狀態管理
+import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../slices/authSlice';
 import { createMessage, clearMessage } from '../slices/infoSlice';
-import axios from 'axios';
+
+//第三方套件
 import Cookies from 'js-cookie';
 
 // API
-const LoginApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+import { TrailsApi } from '../server/api';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -29,7 +33,7 @@ const Login = () => {
     const onSubmit = async (data) => {
         dispatch(clearMessage());
         try {
-            const res = await LoginApi.post('/login', data);
+            const res = await TrailsApi.post('/login', data);
             const { accessToken, user } = res.data;
             //後端路由取得userId 只能看到自己的部分
             Cookies.set('accessToken', accessToken, { expires: 7 });

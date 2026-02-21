@@ -1,13 +1,16 @@
-import Nav from '../components/Nav';
+//React套件
 import { Link } from 'react-router-dom';
-import bg02 from '../assets/images/trailtheme/bg02.png';
-import axios from 'axios';
-import { useEffect, useState, useMemo, useRef } from 'react';
-import { Modal } from 'bootstrap';
+import { useEffect, useState, useMemo } from 'react';
 
-const trailApi = axios.create({
-    baseURL: 'https://yestep.zeabur.app/',
-});
+//元件
+import Nav from '../components/Nav';
+import ThemeRegistrationForm from '../components/ThemeRegistrationForm';
+
+//圖片
+import bg02 from '../assets/images/trailtheme/bg02.png';
+
+// API
+import { TrailsApi } from '../server/api';
 
 // Unsplash 圖片最佳化（非 Unsplash 來源就原樣回傳）
 const optimizeImgUrl = (rawUrl, { q = 70, w = 520, fm = 'webp', fit = 'crop' } = {}) => {
@@ -43,7 +46,7 @@ const useTrails = () => {
         const getTrails = async () => {
             try {
                 setLoading(true);
-                const res = await trailApi.get('/trails');
+                const res = await TrailsApi.get('/trails');
                 setTrails(res.data);
             } catch (error) {
                 console.log('API 錯誤：', error);
@@ -55,7 +58,7 @@ const useTrails = () => {
         //每月活動內容
         const activityIntroData = async () => {
             try {
-                const res = await trailApi.get('/activity');
+                const res = await TrailsApi.get('/activity');
                 setActivity(res.data);
                 console.log(res.data);
             } catch (error) {
@@ -67,7 +70,7 @@ const useTrails = () => {
         //四大主題內容
         const themeSectionData = async () => {
             try {
-                const res = await trailApi.get('/themeSections');
+                const res = await TrailsApi.get('/themeSections');
                 setThemeSection(res.data);
             } catch (error) {
                 console.log(error);
@@ -85,338 +88,6 @@ const groupByType = (trails) =>
         (acc[key] ||= []).push(t);
         return acc;
     }, {});
-
-//元件-modal
-const ActivityModal = ({ isOpen, status, onClose }) => {
-    const activityRef = useRef(null);
-    const activityInstance = useRef(null);
-    // 合併初始化與清理邏輯
-    useEffect(() => {
-        // 確保元素存在才初始化
-        if (activityRef.current) {
-            activityInstance.current = new Modal(activityRef.current, {
-                backdrop: 'static',
-            });
-        }
-        const element = activityRef.current;
-        const handleHidden = () => {
-            onClose(); // 當動畫結束、徹底隱藏後，才回傳給父組件
-        };
-
-        element.addEventListener('hidden.bs.modal', handleHidden);
-
-        // 清理機制：當組件卸載時，銷毀 Modal 實例與監聽器
-        return () => {
-            element.removeEventListener('hidden.bs.modal', handleHidden);
-            if (activityInstance.current) {
-                activityInstance.current.dispose();
-            }
-        };
-    }, [onClose]);
-
-    // 監聽 isOpen
-    useEffect(() => {
-        // 必須檢查實例是否存在
-        if (!activityInstance.current) return;
-        if (isOpen) {
-            activityInstance.current.show();
-        } else {
-            activityInstance.current.hide();
-        }
-    }, [isOpen]);
-
-    const isSuccess = status === 'success';
-    return (
-        <>
-            <div className="modal" tabIndex="-1" ref={activityRef}>
-                <div className="modal-dialog modal-dialog-centered rounded-24">
-                    <div className="modal-content">
-                        <div className="modal-body p-6">
-                            <div className="mb-6">
-                                <h5 className="sub1-bold text-center text-primary-300 mb-3">
-                                    {isSuccess ? '您已報名本次活動' : '您此本次活動報名失敗'}
-                                </h5>
-                                <p className="body-regular1 text-center text-black-700">
-                                    {isSuccess
-                                        ? '報名結果將以 Email 通知為主'
-                                        : '請檢查輸入資訊或稍後再試'}
-                                </p>
-                            </div>
-                            <div className="d-flex justify-content-between align-items-center gap-3 px-6">
-                                <button
-                                    type="button"
-                                    className={`btn btn-outline-primary-300 w-100 `}
-                                    onClick={() => {
-                                        activityInstance.current.hide();
-                                    }}
-                                >
-                                    {isSuccess ? '我知道了' : '請重新申請表單'}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
-};
-
-//元件-表單
-const RegistrationForm = () => {
-    const sessions = useMemo(() => Array.from({ length: 7 }, (_, i) => i + 1), []);
-    const [form, setForm] = useState({
-        name: '',
-        phone: '',
-        email: '',
-        session: '',
-        qty: 0,
-        consent: false,
-    });
-    const [errors, setErrors] = useState({});
-    //顯示modal
-    const [modalConfig, setModalConfig] = useState({
-        isOpen: false,
-        status: 'success',
-    });
-    // 共用 input change
-    const handleChange = (e) => {
-        const { name, type, value, checked } = e.target;
-        setForm((prev) => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value,
-        }));
-    };
-
-    // 人數加減
-    const handleQty = (delta) => {
-        setForm((prev) => {
-            const next = Math.max(0, Math.min(10, Number(prev.qty) + delta));
-            return { ...prev, qty: next };
-        });
-    };
-
-    //表單驗證
-    const validate = () => {
-        const newErrors = {};
-        // 姓名
-        if (!form.name.trim()) {
-            newErrors.name = '請輸入您的姓名';
-        }
-
-        // 電話（09xxxxxxxx 或 10 碼數字）
-        if (!form.phone.trim()) {
-            newErrors.phone = '請輸入您的聯絡電話';
-        } else if (!/^(\d{10}|09\d{8})$/.test(form.phone)) {
-            newErrors.phone = '您的電話格式不正確';
-        }
-
-        // Email
-        if (!form.email.trim()) {
-            newErrors.email = '請輸入您的Email';
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-            newErrors.email = '您的Email格式不正確';
-        }
-
-        // 場次
-        if (!form.session) {
-            newErrors.session = '請您選擇想要參與的活動場次';
-        }
-
-        // 人數
-        if (form.qty <= 0) {
-            newErrors.qty = '人數至少 1 人';
-        }
-
-        // 同意條款
-        if (!form.consent) {
-            newErrors.consent = '請勾選同意條款';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    // 送出
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!validate()) return;
-        try {
-            await trailApi.post('/registrations', form);
-            setModalConfig({ isOpen: true, status: 'success' });
-            setForm({ name: '', phone: '', email: '', session: '', qty: 0, consent: false });
-        } catch (error) {
-            console.error(error);
-            setModalConfig({ isOpen: true, status: 'error' });
-        }
-    };
-    return (
-        <>
-            <form
-                className="registration bg-white p-4 p-md-6 rounded-24 d-flex flex-column gap-4 gap-md-5"
-                onSubmit={handleSubmit}
-                noValidate
-            >
-                <h2 className="sub1-bold text-primary-300 text-center">
-                    <span className="fw-normal text-primary-200 fs-5">\</span> 立即報名導覽{' '}
-                    <span className="fw-normal text-primary-200 fs-5">/</span>
-                </h2>
-
-                {/* 姓名 */}
-                <div className="form-floating">
-                    <input
-                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                        id="registerName"
-                        name="name"
-                        type="text"
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="姓名"
-                        required
-                    />
-                    <label htmlFor="registerName">
-                        姓名<span className="text-red ps-1">*</span>
-                    </label>
-                    {errors.name && <div className="invalid-feedback">{errors.name}</div>}
-                </div>
-
-                {/* 聯絡電話 */}
-                <div className="form-floating">
-                    <input
-                        className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
-                        id="phoneNumber"
-                        name="phone"
-                        type="tel"
-                        value={form.phone}
-                        onChange={handleChange}
-                        placeholder="0900-000-000"
-                        required
-                    />
-                    <label htmlFor="phoneNumber">
-                        聯絡電話<span className="text-red ps-1">*</span>
-                    </label>
-                    {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
-                </div>
-
-                {/* Email */}
-                <div className="form-floating">
-                    <input
-                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="name@example.com"
-                    />
-                    <label htmlFor="email">
-                        E-mail<span className="text-red ps-1">*</span>
-                    </label>
-                    {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-                </div>
-
-                {/* 活動場次 */}
-                <div>
-                    <label htmlFor="session" className="form-label">
-                        活動場次<span className="text-red ps-1">*</span>
-                    </label>
-                    <select
-                        className={`form-select ${errors.session ? 'is-invalid' : ''}`}
-                        id="session"
-                        name="session"
-                        value={form.session}
-                        onChange={handleChange}
-                    >
-                        <option value="">請選擇活動場次</option>
-                        {sessions.map((s) => (
-                            <option key={s} value={s}>
-                                {s}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.session && (
-                        <div className="invalid-feedback d-block">{errors.session}</div>
-                    )}
-                </div>
-
-                {/* 參加人數 */}
-                <div>
-                    <label className="mb-2">
-                        參加人數<span className="text-red ps-1">*</span>
-                    </label>
-
-                    <div className="input-group mb-1">
-                        <button
-                            className="btn btn-outline-secondary"
-                            type="button"
-                            onClick={() => handleQty(-1)}
-                        >
-                            －
-                        </button>
-
-                        <input
-                            className={`form-control text-center ${errors.qty ? 'is-invalid' : ''}`}
-                            name="qty"
-                            type="text"
-                            min="0"
-                            max="10"
-                            value={form.qty}
-                            onChange={(e) => {
-                                const v = e.target.value;
-                                if (v === '') return setForm((p) => ({ ...p, qty: '' }));
-                                setForm((p) => ({
-                                    ...p,
-                                    qty: Math.max(0, Math.min(10, Number(v))),
-                                }));
-                            }}
-                            onBlur={() => setForm((p) => ({ ...p, qty: p.qty === '' ? 0 : p.qty }))}
-                        />
-
-                        <button
-                            className="btn btn-outline-secondary"
-                            type="button"
-                            onClick={() => handleQty(1)}
-                        >
-                            ＋
-                        </button>
-                    </div>
-
-                    {errors.qty && <div className="invalid-feedback d-block">{errors.qty}</div>}
-                </div>
-
-                {/* 同意條款 */}
-                <div className="form-check">
-                    <input
-                        className={`form-check-input ${errors.consent ? 'is-invalid' : ''}`}
-                        id="checkDefaultOn"
-                        name="consent"
-                        type="checkbox"
-                        checked={form.consent}
-                        onChange={handleChange}
-                    />
-                    <label
-                        className="form-check-label text-black-700"
-                        htmlFor="checkDefaultOn"
-                        style={{ cursor: 'pointer' }}
-                    >
-                        我同意活動照片可作為宣傳使用
-                    </label>
-                    {errors.consent && (
-                        <div className="invalid-feedback d-block">{errors.consent}</div>
-                    )}
-                </div>
-
-                <button type="submit" className="btn btn-primary">
-                    送出
-                </button>
-            </form>
-            <ActivityModal
-                isOpen={modalConfig.isOpen}
-                status={modalConfig.status}
-                onClose={() => setModalConfig({ ...modalConfig, isOpen: false })}
-            />
-        </>
-    );
-};
 
 // 元件-每月活動：活動資訊卡
 const MonthlyActivityInfoCard = ({
@@ -466,7 +137,7 @@ const MonthlyActivityRegistrationSection = ({ infoProps }) => {
     return (
         <section className="navigationAndRegistration d-grid gap-3 gap-md-6">
             <MonthlyActivityInfoCard {...infoProps} />
-            <RegistrationForm />
+            <ThemeRegistrationForm />
         </section>
     );
 };

@@ -9,8 +9,10 @@ import { useDispatch } from 'react-redux';
 import { createMessage } from '../slices/infoSlice';
 import { updateName } from '../slices/authSlice';
 
+//API
+import { TrailsApi } from '../server/api';
+
 //第三方套件
-import axios from 'axios';
 import {
     Chart as ChartJS,
     ArcElement,
@@ -29,8 +31,6 @@ import Nav from '../components/Nav';
 
 //圖表設定
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-//api設定
-const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 
 const withImgParams = (url, { q = 75, w = 520 } = {}) => {
     if (!url) return '';
@@ -543,7 +543,7 @@ const MemberProfile = ({ user, setUser }) => {
             if (!userId) return;
             try {
                 setLoading(true);
-                const res = await searchApi.get(`/users/${userId}`, {
+                const res = await TrailsApi.get(`/users/${userId}`, {
                     headers: authHeaders,
                 });
 
@@ -619,7 +619,7 @@ const MemberProfile = ({ user, setUser }) => {
         };
 
         try {
-            const res = await searchApi.patch(`/users/${userId}`, payload, {
+            const res = await TrailsApi.patch(`/users/${userId}`, payload, {
                 headers: authHeaders,
             });
 
@@ -853,10 +853,10 @@ const MemberFavorite = ({ user }) => {
 
                 // 同時抓收藏跟行程，才能判斷按鈕文字
                 const [favRes, itiRes] = await Promise.all([
-                    searchApi.get(`/favorites?userId=${user.id}`, {
+                    TrailsApi.get(`/favorites?userId=${user.id}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     }),
-                    searchApi.get(`/itinerary?userId=${user.id}`, {
+                    TrailsApi.get(`/itinerary?userId=${user.id}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     }),
                 ]);
@@ -904,7 +904,7 @@ const MemberFavorite = ({ user }) => {
         setDeleteConfirm({ open: false, id: null });
 
         try {
-            await searchApi.delete(`/favorites/${favId}`, {
+            await TrailsApi.delete(`/favorites/${favId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
         } catch (e) {
@@ -921,7 +921,7 @@ const MemberFavorite = ({ user }) => {
             const token = Cookies.get('accessToken');
             const trailId = String(item.trailId ?? item.id);
 
-            const checkRes = await searchApi.get(
+            const checkRes = await TrailsApi.get(
                 `/itinerary?userId=${user.id}&trailId=${trailId}`,
                 { headers: { Authorization: `Bearer ${token}` } },
             );
@@ -939,7 +939,7 @@ const MemberFavorite = ({ user }) => {
                     date: new Date().toISOString(),
                     note: '',
                 };
-                const postRes = await searchApi.post('/itinerary', payload, {
+                const postRes = await TrailsApi.post('/itinerary', payload, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 itineraryToOpen = postRes.data || payload;
@@ -960,7 +960,7 @@ const MemberFavorite = ({ user }) => {
         try {
             setSavingNote(true);
             const token = Cookies.get('accessToken');
-            await searchApi.patch(
+            await TrailsApi.patch(
                 `/itinerary/${itineraryData.id}`,
                 { note: itineraryNote },
                 { headers: { Authorization: `Bearer ${token}` } },
@@ -1066,9 +1066,9 @@ export const MemberAnalytics = ({ user }) => {
                 // 兩支 API 一起打
                 const [trailsRes, favRes] = await Promise.all([
                     // 1. 抓全部步道 (用來當分母，這不用過濾)
-                    searchApi.get('/trails', { params: { _limit: 9999 } }),
+                    TrailsApi.get('/trails', { params: { _limit: 9999 } }),
                     // 2. 修改重點：只抓「這個會員」的收藏
-                    searchApi.get('/favorites', {
+                    TrailsApi.get('/favorites', {
                         params: {
                             userId: user.id, // 加上 userId 篩選
                             _limit: 9999,
@@ -1305,7 +1305,7 @@ const MemberRecommend = () => {
                 setLoading(true);
                 setError('');
                 // 這裡先抓多一點再隨機抽 6 筆（json-server 沒有隨機 API）
-                const res = await searchApi.get('/trails', {
+                const res = await TrailsApi.get('/trails', {
                     params: { _limit: 200 },
                 });
 

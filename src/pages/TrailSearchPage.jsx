@@ -1,12 +1,8 @@
+//React套件
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-
-// 第三方套件
-import axios from 'axios';
-
 // 工具
 import { getErrorMessage } from '../utils/error';
-
 // 元件
 import Nav from '../components/Nav';
 import TrailLoading from '../components/TrailLoading';
@@ -15,7 +11,8 @@ import SearchTrailList from '../components/SearchTrailList';
 import SearchPagination from '../components/SearchPagination';
 import PopularTrails from '../components/PopularTrails';
 import SearchTheme from '../components/SearchTheme';
-
+// API
+import { TrailsApi } from '../server/api';
 // 圖檔
 import Result from '../assets/images/home/diffcard-03.webp';
 
@@ -39,9 +36,6 @@ const getSplitParams = (searchParams, key) => {
     const value = searchParams.get(key);
     return value ? value.split(',') : [];
 };
-
-// API
-const searchApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
 
 const TrailSearchPage = () => {
     // 網頁標題
@@ -76,9 +70,7 @@ const TrailSearchPage = () => {
     const [keyword, setKeyword] = useState(urlKeyword);
     const [trailData, setTrailData] = useState([]);
     const [totalCount, setTotalCount] = useState(0);
-
     const totalPages = Math.ceil(totalCount / limit); // 計算總頁數
-
     const searchSection = useRef(null);
 
     // 當網址參數改變時
@@ -168,7 +160,7 @@ const TrailSearchPage = () => {
                     });
                 });
 
-                const res = await searchApi.get(`/trails`, { params });
+                const res = await TrailsApi.get(`/trails`, { params });
 
                 // 計算已經過了多久
                 const endTime = Date.now();

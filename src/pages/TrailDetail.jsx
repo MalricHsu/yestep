@@ -1,16 +1,9 @@
 //react套件
-import { useState, useEffect, Fragment, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMessage } from '../slices/infoSlice';
-
-//第三方套件
-import axios from 'axios';
-import Swiper from 'swiper';
-import { Navigation, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
 
 //元件
 import Nav from '../components/Nav';
@@ -18,166 +11,67 @@ import StarRating from '../components/StarRating';
 import ActionModal from '../components/ActionModal';
 import TrailCard from '../components/TrailCard';
 import LikeModal from '../components/LikeModal';
+import TrailMap from '../components/TrailMap';
+import DetailsActionButtons from '../components/DetailsActionButtons';
+import TrailSwiper from '../components/TrailSwiper';
+
+//API
+import { TrailsApi } from '../server/api';
 
 const TrailDetail = () => {
+    //設定資料
     const [detailData, setDetailData] = useState({});
-    const [reviewData, setReviewData] = useState([]);
     const [systemOne, setSystemOne] = useState([]);
     const [systemOther, setSystemOther] = useState([]);
-    const detailApi = axios.create({ baseURL: 'https://yestep.zeabur.app/' });
+    //取出步道設定頁面
     const useParam = useParams();
     const { id } = useParam;
+    //取出狀態
+    const isLogin = useSelector((state) => state.auth.isLogin);
+    const user = useSelector((state) => state.auth.user);
+    //使用狀態
     const dispatch = useDispatch();
-
-    //狀態管理
-    const isLogin = useSelector((state) => {
-        return state.auth.isLogin;
-    });
-    const user = useSelector((state) => {
-        return state.auth.user;
-    });
-    //設定實體
+    //設定實體modal
     const ModalRef = useRef(null);
+    //設定是否有加入收藏
     const [favoriteId, setFavoriteId] = useState(null);
+    // 新增State 來控制取消收藏的 Modal
+    const [isUnfavoriteModalOpen, setIsUnfavoriteModalOpen] = useState(false);
 
     //標題名稱
     useEffect(() => {
         document.title = `${detailData.trail_name} | YeStep`;
     }, [detailData.trail_name]);
 
-    //取得步道資料 //取得有關中央山脈脊梁國家步道系統資料 //取得與中央山脈無關
+    //取得步道資料、取得有關中央山脈脊梁國家步道系統資料、取得與中央山脈無關
     useEffect(() => {
-        const handleDetailData = async () => {
+        const fetchAllData = async () => {
             try {
-                const res = await detailApi.get(`/trails/${id}`);
-                setDetailData(res.data);
-                // 重點：使用 behavior: 'instant' 實現「直接跳轉」的感覺
+                const getRandomTrails = (arr, count = 3) =>
+                    [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
+                // 使用 Promise.all 同時發出 3 個請求，節省等待時間
+                const [detailRes, centralRes, allRes] = await Promise.all([
+                    TrailsApi.get(`/trails/${id}`),
+                    TrailsApi.get('/trails?trail_system_like=中央山脈'),
+                    TrailsApi.get('/trails'),
+                ]);
+                // 1. 處理詳細資料與畫面滾動
+                setDetailData(detailRes.data);
                 window.scrollTo({ top: 0, behavior: 'instant' });
+                // 2. 處理中央山脈資料
+                setSystemOne(getRandomTrails(centralRes.data));
+                // 3. 處理其他資料 (過濾掉中央山脈)
+                const otherTrails = allRes.data.filter(
+                    (item) => !item.trail_system?.includes('中央山脈'),
+                );
+                setSystemOther(getRandomTrails(otherTrails));
             } catch (error) {
-                console.log(error);
+                console.error('取得步道資料發生錯誤：', error);
             }
         };
-        handleDetailData();
-        const getSystemData = async () => {
-            try {
-                const res = await detailApi.get('/trails?trail_system_like=中央山脈');
-                console.log(res.data);
-                const allCentralTrails = res.data;
-                const randomTrail = [...allCentralTrails].sort(() => 0.5 - Math.random());
 
-                setSystemOne(randomTrail.slice(0, 3));
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        getSystemData();
-        const getOtherData = async () => {
-            try {
-                const res = await detailApi.get('/trails');
-                console.log(res.data);
-                const filterSystem = res.data.filter((trail) => {
-                    return !trail.trail_system.includes('中央山脈');
-                });
-                const randomTrail = [...filterSystem].sort(() => 0.5 - Math.random());
-                setSystemOther(randomTrail.slice(0, 3));
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        getOtherData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchAllData();
     }, [id]);
-
-    //取得回覆資料
-    useEffect(() => {
-        const handleReviewData = async () => {
-            try {
-                const res = await detailApi.get(`/reviews`);
-                setReviewData(res.data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        handleReviewData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    //swiper
-    useEffect(() => {
-        if (!reviewData || reviewData.length === 0) return;
-        // 定義 swiper 變數以便後續銷毀
-        let swiperInstance = null;
-        // 使用 setTimeout 確保 React 已經把 DOM (卡片) 真的畫在螢幕上了
-        const initSwiper = setTimeout(() => {
-            swiperInstance = new Swiper('.trail-experience-content', {
-                modules: [Navigation, Autoplay],
-                slidesPerView: 1.2,
-                spaceBetween: 16,
-                navigation: {
-                    nextEl: '.detail-button-next',
-                    prevEl: '.detail-button-prev',
-                },
-
-                autoplay: {
-                    delay: 3000,
-                },
-                loop: true,
-                breakpoints: {
-                    768: {
-                        slidesPerView: 2,
-                        spaceBetween: 20,
-                    },
-                    992: {
-                        slidesPerView: 3,
-                        spaceBetween: 24,
-                    },
-                },
-            });
-        }, 100);
-
-        return () => {
-            clearTimeout(initSwiper);
-            if (swiperInstance) {
-                swiperInstance.destroy();
-            }
-        };
-    }, [reviewData]);
-
-    //地圖元件
-    const TrailMap = () => {
-        return (
-            <iframe
-                className="rounded-24 detail-map"
-                src={detailData.trail_map_html}
-                width="100%"
-                height="270px"
-                style={{ border: '0' }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Google Map"
-            ></iframe>
-        );
-    };
-    //按鈕元件
-    const ActionButtons = () => {
-        // 利用 !! 將 ID 轉為布林值來決定樣式
-        const isLiked = !!favoriteId;
-        return (
-            <>
-                <button
-                    type="button"
-                    className={`btn px-6 py-3 d-flex justify-content-center align-items-center me-3 ${isLiked ? 'btn-primary-100 text-white' : 'btn-outline-primary-300'} `}
-                    onClick={() => {
-                        handleAction('like');
-                    }}
-                >
-                    <span className="material-symbols-outlined m-0">favorite</span>
-                    <p className="ms-1 body1-bold">{isLiked ? '已收藏' : '加入收藏'}</p>
-                </button>
-            </>
-        );
-    };
 
     //檢查收藏
     useEffect(() => {
@@ -186,7 +80,7 @@ const TrailDetail = () => {
             if (isLogin && user && id) {
                 try {
                     //檢查收藏
-                    const favRes = await detailApi.get(
+                    const favRes = await TrailsApi.get(
                         `/favorites?userId=${user.id}&trailId=${id}`,
                     );
                     if (favRes.data.length > 0) {
@@ -203,10 +97,8 @@ const TrailDetail = () => {
             }
         };
         checkStatus();
-    }, [isLogin, user, id, detailApi]);
+    }, [isLogin, user, id]);
 
-    // 新增State 來控制取消收藏的 Modal
-    const [isUnfavoriteModalOpen, setIsUnfavoriteModalOpen] = useState(false);
     //處理按鈕點擊
     const handleAction = async (type) => {
         if (!isLogin) {
@@ -233,9 +125,9 @@ const TrailDetail = () => {
                     trail_popular: detailData.trail_popular,
                 };
 
-                const res = await detailApi.post('/favorites', payload);
+                const res = await TrailsApi.post('/favorites', payload);
                 setFavoriteId(res.data.id);
-                ModalRef.current.open('like_auth'); // 顯示收藏成功的 Modal
+                ModalRef.current.open('like_auth');
             } catch (error) {
                 const errorMessage = error.response?.data?.message || '連線失敗，請稍候再試';
                 dispatch(
@@ -247,14 +139,12 @@ const TrailDetail = () => {
             }
         }
     };
-    // 新增專門「確認刪除」的函式
+    //確認刪除函式
     const confirmUnfavorite = async () => {
         try {
-            await detailApi.delete(`/favorites/${favoriteId}`);
+            await TrailsApi.delete(`/favorites/${favoriteId}`);
             setFavoriteId(null);
-            setIsUnfavoriteModalOpen(false); // 關閉 Modal
-
-            // 彈出取消成功的 Toast
+            setIsUnfavoriteModalOpen(false);
             dispatch(
                 createMessage({
                     text: `已取消收藏 ${detailData.trail_name} 步道`,
@@ -291,7 +181,7 @@ const TrailDetail = () => {
                                     decoding="async"
                                 />
                                 <div className="d-none d-lg-block">
-                                    <TrailMap />
+                                    <TrailMap detailData={detailData} />
                                 </div>
                             </div>
                             <div className="col-lg-7 d-flex flex-column">
@@ -306,12 +196,13 @@ const TrailDetail = () => {
                                                     {detailData.trail_name}
                                                 </h1>
                                             </div>
-                                            {/*按鈕 */}
                                             <div className="d-none d-lg-flex align-items-lg-center flex-lg-column›">
-                                                <ActionButtons />
+                                                <DetailsActionButtons
+                                                    favoriteId={favoriteId}
+                                                    handleAction={handleAction}
+                                                />
                                             </div>
                                         </div>
-                                        {/*資訊*/}
                                         <div>
                                             <div className="pb-3 pb-lg-6 mb-3 mb-lg-6 border-bottom border-black-100">
                                                 <div className="row row-cols-3 ">
@@ -357,7 +248,6 @@ const TrailDetail = () => {
                                                     {detailData.trail_description}
                                                 </p>
                                             </div>
-                                            {/*表格 */}
                                             <div className="mb-6 mb-lg-14">
                                                 <div className="border-bottom border-black-100">
                                                     <div className="row py-3">
@@ -430,7 +320,6 @@ const TrailDetail = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            {/* 標籤*/}
                                             <div className="d-flex flex-wrap gap-1 mb-6 mb-lg-0 ">
                                                 <Link
                                                     to={`/trails?trail_system=${detailData.trail_system}`}
@@ -463,9 +352,11 @@ const TrailDetail = () => {
                                                     );
                                                 })}
                                             </div>
-                                            {/*按鈕 */}
                                             <div className="d-flex align-items-center d-lg-none">
-                                                <ActionButtons />
+                                                <DetailsActionButtons
+                                                    favoriteId={favoriteId}
+                                                    handleAction={handleAction}
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -502,76 +393,7 @@ const TrailDetail = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="trail-experience-content swiper-container overflow-hidden">
-                            <div className="swiper-wrapper ">
-                                {reviewData?.map((review) => {
-                                    return (
-                                        <div className="swiper-slide h-auto d-flex" key={review.id}>
-                                            <div className="bg-white p-6 pt-4 rounded-16 w-100 h-100">
-                                                <div className="review-info">
-                                                    <div
-                                                        className="d-flex align-items-center border-bottom border-primary-100 "
-                                                        style={{ minHeight: '113px' }}
-                                                    >
-                                                        <img
-                                                            src={review.avatar}
-                                                            alt={review.avatar}
-                                                            style={{
-                                                                width: '72px',
-                                                                height: '72px',
-                                                            }}
-                                                            className="rounded-16 me-4 object-fit-cover "
-                                                        />
-                                                        <div className="d-flex flex-column justify-content-center align-items-start">
-                                                            <p className="body1-medium text-primary-300 mb-1">
-                                                                {review.user}
-                                                            </p>
-                                                            <div className="d-flex flex-wrap mb-1">
-                                                                {review.tag.map((item, index) => {
-                                                                    return (
-                                                                        <Fragment key={index}>
-                                                                            <p className="body3-regular text-black-700">
-                                                                                {item}
-                                                                            </p>
-                                                                            {index <
-                                                                                review.tag.length -
-                                                                                    1 && (
-                                                                                <span className="mx-1 text-black-700">
-                                                                                    ・
-                                                                                </span>
-                                                                            )}
-                                                                        </Fragment>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                            <div className="d-none d-lg-block">
-                                                                <StarRating
-                                                                    rating={review.rating}
-                                                                    fontSize={12}
-                                                                    color={'text-primary-300'}
-                                                                />
-                                                            </div>
-                                                            <div className="d-block d-lg-none">
-                                                                <StarRating
-                                                                    rating={review.rating}
-                                                                    fontSize={16}
-                                                                    color={'text-primary-300'}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="pt-4">
-                                                        <p className="body2-regular text-black-700">
-                                                            {review.comment}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
+                        <TrailSwiper />
                     </div>
                 </div>
             </section>

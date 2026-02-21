@@ -1,4 +1,6 @@
+//React套件
 import { Modal } from 'bootstrap';
+//第三方套件
 import { useEffect, useRef } from 'react';
 
 const LikeModal = ({ isOpen, detailData, onClose, onConfirm }) => {
