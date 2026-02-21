@@ -30,8 +30,7 @@ const TrailTag = () => {
                     queryName = searchParams.toString();
                 }
                 const res = await TrailsApi.get(`/trails?${queryName}`);
-
-                setTrails(res);
+                setTrails(res.data);
             } catch (error) {
                 console.log(error);
             }
