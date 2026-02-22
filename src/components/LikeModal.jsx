@@ -7,26 +7,47 @@ const LikeModal = ({ isOpen, detailData, onClose, onConfirm }) => {
     const likeRef = useRef(null);
     const likeInstance = useRef(null);
 
+    // 1. 負責初始化 Modal 與綁定事件
     useEffect(() => {
-        if (likeRef.current) {
-            likeInstance.current = new Modal(likeRef.current, { backdrop: 'static' });
+        const modalElement = likeRef.current;
+        if (!modalElement) return;
+
+        // 確保 Modal 實體只會被建立一次，避免重複 new 產生破圖
+        if (!likeInstance.current) {
+            likeInstance.current = new Modal(modalElement, { backdrop: 'static' });
         }
-        //更新isUnfavoriteModalOpen狀態
-        const handleHidden = () => onClose();
-        likeRef.current.addEventListener('hidden.bs.modal', handleHidden);
+
+        const handleHidden = () => {
+            if (onClose) onClose();
+        };
+
+        // 綁定隱藏事件
+        modalElement.addEventListener('hidden.bs.modal', handleHidden);
 
         return () => {
-            if (likeRef.current) {
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-                likeRef.current.removeEventListener('hidden.bs.modal', handleHidden);
-            }
-            if (likeInstance.current) likeInstance.current.dispose();
+            // 只移除事件監聽，不要在這裡 dispose！
+            modalElement.removeEventListener('hidden.bs.modal', handleHidden);
         };
     }, [onClose]);
 
+    // 2. 負責在元件完全卸載時，清空記憶體中的 Modal 實體
+    useEffect(() => {
+        return () => {
+            if (likeInstance.current) {
+                likeInstance.current.dispose();
+                likeInstance.current = null;
+            }
+        };
+    }, []);
+
+    // 3. 監控 isOpen 狀態來開關 Modal
     useEffect(() => {
         if (!likeInstance.current) return;
-        isOpen ? likeInstance.current.show() : likeInstance.current.hide();
+        if (isOpen) {
+            likeInstance.current.show();
+        } else {
+            likeInstance.current.hide();
+        }
     }, [isOpen]);
 
     return (
@@ -46,7 +67,7 @@ const LikeModal = ({ isOpen, detailData, onClose, onConfirm }) => {
                                     className={`btn btn-outline-primary-300 w-50 `}
                                     onClick={() => likeInstance.current.hide()}
                                 >
-                                    我在想想
+                                    我再想想
                                 </button>
                                 <button
                                     type="button"
