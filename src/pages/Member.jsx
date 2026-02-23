@@ -1265,7 +1265,7 @@ export const MemberAnalytics = ({ user }) => {
                                     />
                                     <span className="fw-semibold">{x.region}</span>
                                 </span>
-                                <span className="text-muted" style={{ width: 115 }}>
+                                <span className="text-muted" style={{ width: 120 }}>
                                     {x.favCount} / {x.trailCount}（{x.rate}%）
                                 </span>
                             </li>
