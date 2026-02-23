@@ -193,7 +193,7 @@ const ItineraryModal = ({
 // 我的收藏dropdown
 const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) => {
     return (
-        <div className="accordion" id="favoriteAccordion">
+        <div className="accordion d-flex flex-column gap-2" id="favoriteAccordion">
             {favorites.map((item) => (
                 <div
                     className="accordion-item border-0 rounded-md-24 overflow-hidden"
