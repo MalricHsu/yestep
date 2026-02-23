@@ -189,7 +189,7 @@ const Login = () => {
                                         >
                                             還沒有帳號嗎？
                                             <span className="border-bottom border-primary-100 pb-1 ms-1">
-                                                在此登入
+                                                在此註冊
                                             </span>
                                         </Link>
                                     </div>
