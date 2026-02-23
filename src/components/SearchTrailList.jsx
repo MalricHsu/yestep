@@ -71,7 +71,7 @@ const SearchTrailList = ({ trail, syncListState }) => {
                         <p>・{trail.trail_hour}</p>
                     </div>
                     <div className="d-flex justify-content-between align-items-end mt-auto">
-                        <ul className="list-unstyled d-flex column-gap-2">
+                        <ul className="list-unstyled d-flex gap-2 flex-wrap">
                             <li className="bg-primary-300 text-white px-2 py-1 fs-9 fw-medium rounded-4">
                                 {trail.trail_landscape}
                             </li>
