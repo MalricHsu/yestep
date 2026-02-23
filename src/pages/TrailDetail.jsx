@@ -196,7 +196,7 @@ const TrailDetail = () => {
                                                     {detailData.trail_name}
                                                 </h1>
                                             </div>
-                                            <div className="d-none d-lg-flex align-items-lg-center flex-lg-column›">
+                                            <div className="d-none d-lg-flex align-items-lg-center flex-lg-column text-nowrap">
                                                 <DetailsActionButtons
                                                     favoriteId={favoriteId}
                                                     handleAction={handleAction}
