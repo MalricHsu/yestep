@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { createMessage } from '../slices/infoSlice';
 import { updateName } from '../slices/authSlice';
-import TrailLoading from './components/TrailLoading';
+import TrailLoading from './TrailLoading';
 //API
 import { TrailsApi } from '../server/api';
 
