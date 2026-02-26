@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { createMessage } from '../slices/infoSlice';
 import { updateName } from '../slices/authSlice';
-
+import TrailLoading from '../components/TrailLoading';
 //API
 import { TrailsApi } from '../server/api';
 
@@ -680,7 +680,7 @@ const MemberProfile = ({ user, setUser }) => {
             }
         >
             {loading ? (
-                <p className="text-muted mb-0">載入會員資料中...</p>
+                <TrailLoading />
             ) : (
                 <form id="member-profile-form" onSubmit={handleSubmit(onSubmit)}>
                     {/* 帳號資訊 */}
@@ -980,7 +980,7 @@ const MemberFavorite = ({ user }) => {
     return (
         <div className="d-grid gap-3" style={{ maxWidth: 520, minHeight: 450 }}>
             {/* 1. 載入中狀態 */}
-            {loading && <p className="text-muted mb-0">載入收藏中...</p>}
+            {loading && <TrailLoading />}
 
             {/* 2. 錯誤訊息顯示 (在這裡！) */}
             {error && (
@@ -1213,7 +1213,7 @@ export const MemberAnalytics = ({ user }) => {
     }, [favRateByRegion]);
     return (
         <div className="d-grid gap-4">
-            {loading && <p className="text-muted mb-0">載入統計中...</p>}
+            {loading && <TrailLoading />}
             {err && <p className="text-danger mb-0">{err}</p>}
 
             {/* Chart 1: 步道區域分佈 */}
@@ -1265,7 +1265,7 @@ export const MemberAnalytics = ({ user }) => {
                                     />
                                     <span className="fw-semibold">{x.region}</span>
                                 </span>
-                                <span className="text-muted text-nowrap" style={{ width: 120 }}>
+                                <span className="text-muted" style={{ width: 120 }}>
                                     {x.favCount} / {x.trailCount}（{x.rate}%）
                                 </span>
                             </li>
@@ -1338,7 +1338,7 @@ const MemberRecommend = () => {
 
     return (
         <div className="pb-6">
-            {loading && <p className="text-muted">載入推薦中...</p>}
+            {loading && <TrailLoading />}
 
             {(error || items.length === 0) && !loading ? (
                 <div
