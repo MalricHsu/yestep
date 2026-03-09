@@ -34,279 +34,244 @@ import aboutBgLg from '../assets/images/home/about-bg-lg.webp';
 import aboutBg from '../assets/images/home/about-bg.webp';
 
 const Home = () => {
-    const { hash } = useLocation();
+  const { hash } = useLocation();
 
-    useEffect(() => {
-        document.title = '首頁 | YeStep';
-    }, []);
+  useEffect(() => {
+    document.title = '首頁 | YeStep';
+  }, []);
 
-    useEffect(() => {
-        if (hash === '#popular-trails') {
-            // 稍微延遲 100ms 確保頁面其他元件（如圖片）渲染定位
-            const timer = setTimeout(() => {
-                const element = document.getElementById('popular-trails');
-                if (element) {
-                    // 取得導覽列的高度，動態計算偏移量
-                    const headerOffset = 80;
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+  useEffect(() => {
+    if (hash === '#popular-trails') {
+      // 稍微延遲 100ms 確保頁面其他元件（如圖片）渲染定位
+      const timer = setTimeout(() => {
+        const element = document.getElementById('popular-trails');
+        if (element) {
+          // 取得導覽列的高度，動態計算偏移量
+          const headerOffset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth',
-                    });
-                }
-            }, 100);
-
-            return () => clearTimeout(timer);
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          });
         }
-    }, [hash]);
+      }, 100);
 
-    // Hero顯示邏輯
-    const [heroMode, setHeroMode] = useState('video');
+      return () => clearTimeout(timer);
+    }
+  }, [hash]);
 
-    return (
-        <>
-            <header className="position-relative">
-                <Nav />
-                {/* HERO:手機90vh、桌機16:9 */}
-                <div className="hero">
-                    {/* 值為video */}
-                    {heroMode === 'video' && (
-                        <video
-                            className="object-fit-cover w-100 h-100"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                        >
-                            {/* 平板跟桌機版套用 heroVideoLg */}
-                            <source src={heroVideoLg} media="(min-width: 576px)" type="video/mp4" />
-                            <source src={heroVideo} type="video/mp4" />
-                        </video>
-                    )}
-                    {/* 值為swiper */}
-                    {heroMode === 'swiper' && (
-                        <div className="w-100 h-100">
-                            <HeroSwiper />
-                        </div>
-                    )}
+  // Hero顯示邏輯
+  const [heroMode, setHeroMode] = useState('video');
+
+  return (
+    <>
+      <header className="position-relative">
+        <Nav />
+        {/* HERO:手機90vh、桌機16:9 */}
+        <div className="hero">
+          {/* 值為video */}
+          {heroMode === 'video' && (
+            <video className="object-fit-cover w-100 h-100" autoPlay loop muted playsInline>
+              {/* 平板跟桌機版套用 heroVideoLg */}
+              <source src={heroVideoLg} media="(min-width: 576px)" type="video/mp4" />
+              <source src={heroVideo} type="video/mp4" />
+            </video>
+          )}
+          {/* 值為swiper */}
+          {heroMode === 'swiper' && (
+            <div className="w-100 h-100">
+              <HeroSwiper />
+            </div>
+          )}
+        </div>
+        {/* slogan+搜尋欄 */}
+        <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
+          <div className="container">
+            <div className="row ">
+              <div className="col-lg-8 mx-auto">
+                <h1 className="fs-2 fs-lg-1 text-white text-center mb-8">
+                  Yes to taking the next
+                  <span className="d-inline-flex">step !</span>
+                </h1>
+                <SearchBar />
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Hero切換按鈕 */}
+        <div className="hero__bottom-wrap position-absolute start-50 translate-middle-x z-1">
+          <div className="d-flex bg-primary-300 rounded-pill p-2">
+            <button
+              className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'video' ? 'active' : ''}`}
+              onClick={() => setHeroMode('video')}
+            >
+              <span className=" material-symbols-outlined">animated_images</span>
+            </button>
+            <button
+              className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'swiper' ? 'active' : ''}`}
+              onClick={() => setHeroMode('swiper')}
+            >
+              <span className=" material-symbols-outlined ">filter</span>
+            </button>
+          </div>
+        </div>
+      </header>
+      <main>
+        {/* 本月活動特輯 Swiper */}
+        <section className="py-8 py-lg-16 ">
+          <div className="container">
+            <div className="row">
+              <div>
+                <div className="theme__title d-flex justify-content-between align-items-center mb-lg-6 mb-4">
+                  <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
+                  {/* 左右按鈕 */}
+                  <div className="d-flex gap-3 ">
+                    <button
+                      type="button"
+                      className="theme__btn-prev btn border-0 rounded-circle p-2"
+                    >
+                      <span className="material-symbols-outlined">keyboard_arrow_left</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="theme__btn-next btn border-0 rounded-circle p-2"
+                    >
+                      <span className="material-symbols-outlined">keyboard_arrow_right</span>
+                    </button>
+                  </div>
                 </div>
-                {/* slogan+搜尋欄 */}
-                <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center z-1">
-                    <div className="container">
-                        <div className="row ">
-                            <div className="col-12 col-lg-8 mx-auto">
-                                <h1 className="fs-2 fs-lg-1 text-white text-center mb-8">
-                                    Yes to taking the next
-                                    <span className="d-inline-flex">step !</span>
-                                </h1>
-                                <SearchBar />
-                            </div>
-                        </div>
-                    </div>
+                <div className="theme__swiper">
+                  <ThemeSwiper />
                 </div>
-                {/* Hero切換按鈕 */}
-                <div className="hero__bottom-wrap position-absolute start-50 translate-middle-x z-1">
-                    <div className="d-flex bg-primary-300 rounded-pill p-2">
-                        <button
-                            className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'video' ? 'active' : ''}`}
-                            onClick={() => setHeroMode('video')}
-                        >
-                            <span className=" material-symbols-outlined">animated_images</span>
-                        </button>
-                        <button
-                            className={`hero__switch-btn btn rounded-pill d-flex justify-content-center align-items-center px-3 py-2  ${heroMode === 'swiper' ? 'active' : ''}`}
-                            onClick={() => setHeroMode('swiper')}
-                        >
-                            <span className=" material-symbols-outlined ">filter</span>
-                        </button>
-                    </div>
-                </div>
-            </header>
-            <main>
-                {/* 本月活動特輯 Swiper */}
-                <section className="py-8 py-lg-16 ">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="theme__title d-flex justify-content-between align-items-center mb-lg-6 mb-4">
-                                    <h2 className="fs-lg-2 fs-5">本月活動特輯</h2>
-                                    {/* 左右按鈕 */}
-                                    <div className="d-flex gap-3 ">
-                                        <button
-                                            type="button"
-                                            className="theme__btn-prev btn border-0 rounded-circle p-2"
-                                        >
-                                            <span className="material-symbols-outlined">
-                                                keyboard_arrow_left
-                                            </span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="theme__btn-next btn border-0 rounded-circle p-2"
-                                        >
-                                            <span className="material-symbols-outlined">
-                                                keyboard_arrow_right
-                                            </span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="theme__swiper">
-                                    <ThemeSwiper />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-                {/* 熱門步道 */}
-                <PopularTrails />
+        {/* 熱門步道 */}
+        <PopularTrails />
 
-                {/* 步道難度指南 */}
-                <section className="pt-10 pb-16">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-12">
-                                <h2 className="fs-lg-2 fs-5 mb-2">步道難度指南</h2>
-                                <h5 className="body3-medium mb-8 text-black-400">
-                                    了解各種步道的難易度分級
-                                </h5>
-                                <DiffCardList />
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        {/* 步道難度指南 */}
+        <section className="pt-10 pb-16">
+          <div className="container">
+            <div className="row">
+              <div>
+                <h2 className="fs-lg-2 fs-5 mb-2">步道難度指南</h2>
+                <h5 className="body3-medium mb-8 text-black-400">了解各種步道的難易度分級</h5>
+                <DiffCardList />
+              </div>
+            </div>
+          </div>
+        </section>
 
-                {/* 特色景觀步道 feature */}
-                <section className="py-5">
-                    <div className="landscape__gallery text-primary-50 ">
-                        {/* 左邊欄 */}
-                        <div className="landscape__column">
-                            {landscapeColumns.left.map((item) => (
-                                <Link
-                                    to={`/search?trail_landscape=${item.landscapeName}`}
-                                    className="landscape__card"
-                                    key={item.id}
-                                >
-                                    <img src={item.img} alt={item.alt} />
-                                    <p className="landscape__card-title sub1-bold">
-                                        {item.landscapeName}
-                                    </p>
-                                </Link>
-                            ))}
-                        </div>
-                        {/* 中間欄 */}
-                        <div className="landscape__column">
-                            {landscapeColumns.center.map((item) => (
-                                <Link
-                                    to={`/search?trail_landscape=${item.landscapeName}`}
-                                    className="landscape__card"
-                                    key={item.id}
-                                >
-                                    <img src={item.img} alt={item.alt} />
-                                    <p className="landscape__card-title sub1-bold">
-                                        {item.landscapeName}
-                                    </p>
-                                </Link>
-                            ))}
-                        </div>
-                        {/* 右邊欄 */}
-                        <div className="landscape__column">
-                            {landscapeColumns.right.map((item) => (
-                                <Link
-                                    to={`/search?trail_landscape=${item.landscapeName}`}
-                                    className="landscape__card"
-                                    key={item.id}
-                                >
-                                    <img src={item.img} alt={item.alt} />
-                                    <p className="landscape__card-title sub1-bold">
-                                        {item.landscapeName}
-                                    </p>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+        {/* 特色景觀步道 feature */}
+        <section className="py-5">
+          <div className="landscape__gallery text-primary-50 ">
+            {/* 左邊欄 */}
+            <div className="landscape__column">
+              {landscapeColumns.left.map((item) => (
+                <Link
+                  to={`/search?trail_landscape=${item.landscapeName}`}
+                  className="landscape__card"
+                  key={item.id}
+                >
+                  <img src={item.img} alt={item.alt} />
+                  <p className="landscape__card-title sub1-bold">{item.landscapeName}</p>
+                </Link>
+              ))}
+            </div>
+            {/* 中間欄 */}
+            <div className="landscape__column">
+              {landscapeColumns.center.map((item) => (
+                <Link
+                  to={`/search?trail_landscape=${item.landscapeName}`}
+                  className="landscape__card"
+                  key={item.id}
+                >
+                  <img src={item.img} alt={item.alt} />
+                  <p className="landscape__card-title sub1-bold">{item.landscapeName}</p>
+                </Link>
+              ))}
+            </div>
+            {/* 右邊欄 */}
+            <div className="landscape__column">
+              {landscapeColumns.right.map((item) => (
+                <Link
+                  to={`/search?trail_landscape=${item.landscapeName}`}
+                  className="landscape__card"
+                  key={item.id}
+                >
+                  <img src={item.img} alt={item.alt} />
+                  <p className="landscape__card-title sub1-bold">{item.landscapeName}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                {/* 關於我們 about */}
-                <section className="py-16 py-lg-32 position-relative">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="about__card bg-white rounded-24 rounded-lg-60 p-4 p-lg-6 position-relative z-1">
-                                    <div className="row align-items-center">
-                                        <div className="col-lg-7">
-                                            <div className="about__card-img text-center">
-                                                <picture>
-                                                    <source
-                                                        srcSet={aboutImgLg}
-                                                        media="(min-width: 992px)"
-                                                        alt="關於我們桌機版登山者圖"
-                                                    />
-                                                    <img
-                                                        src={aboutImg}
-                                                        alt="關於我們手機版登山者圖"
-                                                    />
-                                                </picture>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-5">
-                                            <div className="about__card-content body2-medium">
-                                                <h2 className="fs-5 fs-lg-2 mb-6">關於我們</h2>
-                                                <div className="about__card-paragraph  mb-4">
-                                                    <p>
-                                                        人生的旅途中，我們經常問自己：「我做得到嗎？我能再往前走嗎？」
-                                                    </p>
-                                                    <p>大多時候，答案只差那麼一步 ——</p>
-                                                    <p className=" text-primary-200">
-                                                        一個肯定的Yes
-                                                    </p>
-                                                </div>
-                                                <div className="about__card-paragraph  mb-4">
-                                                    <p>YeStep的誕生，來自一個簡單卻重要的想法：</p>
-                                                    <p>
-                                                        把每一個「Yes（願意）」化為實際的「Step（行動）」
-                                                    </p>
-                                                    <p>選擇向前、選擇相信、選擇可行</p>
-                                                    <p>第一步可以很輕、很小、很不確定。</p>
-                                                    <p>但它依然是找回呼吸的開始</p>
-                                                    <p>
-                                                        讓你看見森林的寧靜、山稜的光線，還有踏出每一步的自己
-                                                    </p>
-                                                </div>
-                                                <div className="about__card-paragraph  text-primary-200 mb-4">
-                                                    <p>Yes to nature.</p>
-                                                    <p>Yes to slowing down.</p>
-                                                    <p>Yes to breathing with every step.</p>
-                                                </div>
-                                                <div className="about__card-paragraph ">
-                                                    <p>
-                                                        只要你願意開始，世界就會為你敞開更多可行的道路。
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* 背景山脈圖 */}
-                    <div className="about__bg w-100 position-absolute opacity-75 ">
+        {/* 關於我們 about */}
+        <section className="py-16 py-lg-32 position-relative">
+          <div className="container">
+            <div className="row">
+              <div>
+                <div className="about__card bg-white rounded-24 rounded-lg-60 p-4 p-lg-6 position-relative z-1">
+                  <div className="row align-items-center">
+                    <div className="col-lg-7">
+                      <div className="about__card-img text-center">
                         <picture>
-                            <source
-                                srcSet={aboutBgLg}
-                                media="(min-width: 992px)"
-                                alt="桌機版背景山脈圖"
-                            />
-                            <img src={aboutBg} className="w-100" alt="手機版背景山脈圖" />
+                          <source
+                            srcSet={aboutImgLg}
+                            media="(min-width: 992px)"
+                            alt="關於我們桌機版登山者圖"
+                          />
+                          <img src={aboutImg} alt="關於我們手機版登山者圖" />
                         </picture>
+                      </div>
                     </div>
-                </section>
-            </main>
-        </>
-    );
+                    <div className="col-lg-5">
+                      <div className="about__card-content body2-medium">
+                        <h2 className="fs-5 fs-lg-2 mb-6">關於我們</h2>
+                        <div className="about__card-paragraph  mb-4">
+                          <p>人生的旅途中，我們經常問自己：「我做得到嗎？我能再往前走嗎？」</p>
+                          <p>大多時候，答案只差那麼一步 ——</p>
+                          <p className=" text-primary-200">一個肯定的Yes</p>
+                        </div>
+                        <div className="about__card-paragraph  mb-4">
+                          <p>YeStep的誕生，來自一個簡單卻重要的想法：</p>
+                          <p>把每一個「Yes（願意）」化為實際的「Step（行動）」</p>
+                          <p>選擇向前、選擇相信、選擇可行</p>
+                          <p>第一步可以很輕、很小、很不確定。</p>
+                          <p>但它依然是找回呼吸的開始</p>
+                          <p>讓你看見森林的寧靜、山稜的光線，還有踏出每一步的自己</p>
+                        </div>
+                        <div className="about__card-paragraph  text-primary-200 mb-4">
+                          <p>Yes to nature.</p>
+                          <p>Yes to slowing down.</p>
+                          <p>Yes to breathing with every step.</p>
+                        </div>
+                        <div className="about__card-paragraph ">
+                          <p>只要你願意開始，世界就會為你敞開更多可行的道路。</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* 背景山脈圖 */}
+          <div className="about__bg w-100 position-absolute opacity-75 ">
+            <picture>
+              <source srcSet={aboutBgLg} media="(min-width: 992px)" alt="桌機版背景山脈圖" />
+              <img src={aboutBg} className="w-100" alt="手機版背景山脈圖" />
+            </picture>
+          </div>
+        </section>
+      </main>
+    </>
+  );
 };
 
 export default Home;
