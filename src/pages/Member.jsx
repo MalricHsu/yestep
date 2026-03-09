@@ -224,24 +224,24 @@ const MobileFavoriteDropdown = ({ favorites = [], onRemove, onAddItinerary }) =>
                   </div>
                 </div>
 
-                <div className="d-flex flex-wrap gap-2 justify-content-center">
+                <div className="d-flex flex-column flex-md-row gap-3 justify-content-center align-items-center">
                   <Link
                     to={`/detail/${item.trailId ?? item.id}`}
                     target="_blank"
-                    className="btn btn-primary-100 body1-bold"
+                    className="btn btn-primary-100 body1-bold fs-9 w-100 w-md-auto"
                   >
                     查看步道
                   </Link>
                   <button
                     type="button"
-                    className="btn btn-primary-100 body1-bold"
+                    className="btn btn-primary-100 body1-bold fs-9 w-100 w-md-auto"
                     onClick={() => onAddItinerary?.(item)}
                   >
                     規劃行程
                   </button>
                   <button
                     type="button"
-                    className="btn btn-primary-100 body1-bold"
+                    className="btn btn-primary-100 body1-bold fs-9 w-100 w-md-auto"
                     onClick={() => onRemove(item.id)}
                   >
                     取消收藏
@@ -948,7 +948,7 @@ export const MemberAnalytics = ({ user }) => {
         <>
           <div className="bg-primary-50 rounded-24 p-4 p-md-8 overflow-hidden">
             <h3 className="mb-3">各區收藏分佈</h3>
-            <div style={{ maxWidth: 520 }}>
+            <div style={{ maxWidth: 520, margin: '0 auto' }}>
               <Doughnut data={doughnutDataTrails} />
             </div>
             <div className="mt-4">
