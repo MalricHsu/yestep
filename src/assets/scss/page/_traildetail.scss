@@ -1,79 +1,79 @@
 .detail-header {
-    position: relative;
-    padding: 180px 0 144px;
-    background: url(../../images/traildetail/bgtrail.svg) no-repeat center center;
-    background-size: cover;
+  position: relative;
+  padding: 180px 0 144px;
+  background: url(../../images/traildetail/bgtrail.svg) no-repeat center center;
+  background-size: cover;
 
-    &::before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 4.5rem;
-        bottom: -1rem;
-        left: 0;
-        background: url(../../images/trailsearchpage/mask.svg) no-repeat center bottom;
-        background-size: cover;
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 4.5rem;
+    bottom: -1rem;
+    left: 0;
+    background: url(../../images/trailsearchpage/mask.svg) no-repeat center bottom;
+    background-size: cover;
+  }
 }
 
 .detail-img {
-    width: 100%;
-    height: 480px;
-    box-shadow: 0px 1px 40px 1px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  height: 480px;
+  box-shadow: 0px 1px 40px 1px rgba(0, 0, 0, 0.04);
 }
 
-@media (max-width: 991.98px) {
-    .detail-img {
-        height: 280px;
-    }
+@include media-breakpoint-down(lg) {
+  .detail-img {
+    height: 280px;
+  }
 }
 
 .detail-map {
-    box-shadow: 0px 1px 40px 1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0px 1px 40px 1px rgba(0, 0, 0, 0.04);
 }
 .detail-information {
-    box-shadow: 0px 1px 40px 1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0px 1px 40px 1px rgba(0, 0, 0, 0.04);
 }
 
 .bg-detail-section2 {
-    background: linear-gradient(90deg, #dde0d5 0%, #eef0e9 100%);
-    width: 100%;
+  background: linear-gradient(90deg, #dde0d5 0%, #eef0e9 100%);
+  width: 100%;
 }
 
 .swiper-button-next::after,
 .swiper-button-prev::after {
-    font-size: 0 !important; /* 字體變 0，箭頭就會消失 */
-    width: 0 !important;
-    height: 0 !important;
+  font-size: 0 !important; /* 字體變 0，箭頭就會消失 */
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .detail-nav-btn {
-    position: static !important; //* 覆寫預設的 absolute */
-    width: 40px;
-    height: 40px;
-    background-color: $black-100; //* 淺灰底色，請依設計稿調整 */
-    border-radius: 50%; //* 變圓形 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin: 0 !important; //* 清除預設 margin */
+  position: static !important; //* 覆寫預設的 absolute */
+  width: 40px;
+  height: 40px;
+  background-color: $black-100; //* 淺灰底色，請依設計稿調整 */
+  border-radius: 50%; //* 變圓形 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin: 0 !important; //* 清除預設 margin */
 }
 
 /* 修改箭頭顏色與大小 */
 .detail-nav-btn::after {
-    color: $black-900;
+  color: $black-900;
 }
 
 /* 滑鼠移過去的效果 (Hover) */
 .detail-nav-btn:hover {
-    background-color: $primary-200;
+  background-color: $primary-200;
 }
 
 .detail-badge {
-    box-shadow: 0px 1px 20px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 1px 20px 1px rgba(0, 0, 0, 0.1);
 }
 
 .detail-textshadow {
-    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9);
 }

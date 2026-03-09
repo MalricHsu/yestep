@@ -6,26 +6,26 @@ import ScrollToTop from './components/ScrollToTop';
 import Info from './components/Info';
 
 function App() {
-    const { pathname } = useLocation();
-    const hideFooterRoutes = ['/login', '/register'];
+  const { pathname } = useLocation();
+  const hideFooterRoutes = ['/login', '/register'];
 
-    useEffect(() => {
-        window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'instant',
-        });
-    }, [pathname]);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'instant',
+    });
+  }, [pathname]);
 
-    return (
-        <>
-            <Info />
-            <Outlet />
-            {!hideFooterRoutes.includes(pathname) && <Footer />}
-            {/* 到頂端按鈕 */}
-            <ScrollToTop />
-        </>
-    );
+  return (
+    <>
+      <Info />
+      <Outlet />
+      {!hideFooterRoutes.includes(pathname) && <Footer />}
+      {/* 到頂端按鈕 */}
+      <ScrollToTop />
+    </>
+  );
 }
 
 export default App;

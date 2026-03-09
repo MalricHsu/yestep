@@ -6,41 +6,41 @@ const userCookie = Cookies.get('user');
 
 //具名匯出：Slice 物件本身
 export const authSlice = createSlice({
-    name: 'auth',
-    initialState: {
-        isLogin: !!token, //變成布林值
-        user: userCookie ? JSON.parse(userCookie) : null,
-        token: token || null,
+  name: 'auth',
+  initialState: {
+    isLogin: !!token, //變成布林值
+    user: userCookie ? JSON.parse(userCookie) : null,
+    token: token || null,
+  },
+  reducers: {
+    //登入成功
+    loginSuccess: (state, action) => {
+      const { accessToken, user } = action.payload;
+      state.isLogin = true;
+      state.user = user;
+      state.token = accessToken;
+      // 將 Token 和 User 資料寫入 Cookie
+      // expires: 7 代表 7 天後過期
+      Cookies.set('accessToken', accessToken, { expires: 7 });
+      // 為了方便前端顯示 User 名稱，我們先把 user 資訊也存 cookie (實務上通常只存 token)
+      Cookies.set('user', JSON.stringify(user), { expires: 7 });
+      Cookies.set('userId', user.id, { expires: 7 });
     },
-    reducers: {
-        //登入成功
-        loginSuccess: (state, action) => {
-            const { accessToken, user } = action.payload;
-            state.isLogin = true;
-            state.user = user;
-            state.token = accessToken;
-            // 將 Token 和 User 資料寫入 Cookie
-            // expires: 7 代表 7 天後過期
-            Cookies.set('accessToken', accessToken, { expires: 7 });
-            // 為了方便前端顯示 User 名稱，我們先把 user 資訊也存 cookie (實務上通常只存 token)
-            Cookies.set('user', JSON.stringify(user), { expires: 7 });
-            Cookies.set('userId', user.id, { expires: 7 });
-        },
-        //登出
-        logout: (state) => {
-            state.isLogin = false;
-            state.user = null;
-            state.token = null;
-            Cookies.remove('accessToken');
-            Cookies.remove('user');
-            Cookies.remove('userId');
-        },
-        //修改暱稱
-        updateName: (state, action) => {
-            state.user = { ...state.user, ...action.payload };
-            Cookies.set('user', JSON.stringify(state.user), { expires: 7 });
-        },
+    //登出
+    logout: (state) => {
+      state.isLogin = false;
+      state.user = null;
+      state.token = null;
+      Cookies.remove('accessToken');
+      Cookies.remove('user');
+      Cookies.remove('userId');
     },
+    //修改暱稱
+    updateName: (state, action) => {
+      state.user = { ...state.user, ...action.payload };
+      Cookies.set('user', JSON.stringify(state.user), { expires: 7 });
+    },
+  },
 });
 
 //預設匯出：Reducer 函式

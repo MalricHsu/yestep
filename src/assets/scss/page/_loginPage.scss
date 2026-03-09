@@ -1,21 +1,21 @@
 .loginContainer {
-    p.slg {
-        // left: calc(-1em - 3vw);
-        // top: 50%;
-        // transform: translateY(-50%);
-        // width: min-content;
-        left: 50%;
-        top: -70px;
-        transform: translate(-50%, 0);
-        width: 100%;
-        text-align: center;
-    }
+  p.slg {
+    // left: calc(-1em - 3vw);
+    // top: 50%;
+    // transform: translateY(-50%);
+    // width: min-content;
+    left: 50%;
+    top: -70px;
+    transform: translate(-50%, 0);
+    width: 100%;
+    text-align: center;
+  }
 }
 
-@media (min-width: 480px) {
-    .loginContainer {
-        p.slg {
-            //
-        }
-    }
-}
+// @media (min-width: 480px) {
+//   .loginContainer {
+//     p.slg {
+//       //
+//     }
+//   }
+// }

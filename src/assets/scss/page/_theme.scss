@@ -1,146 +1,146 @@
 .theme-header {
-    position: relative;
-    padding: 176px 0 144px;
-    background: url(../../images/trailtheme/bg.jpg) no-repeat center bottom;
-    background-size: cover;
+  position: relative;
+  padding: 176px 0 144px;
+  background: url(../../images/trailtheme/bg.jpg) no-repeat center bottom;
+  background-size: cover;
 
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
 }
 
 .themeSectionItem {
-    position: relative;
-    overflow: hidden;
-    border-radius: 32px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 32px;
 
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.15);
-        pointer-events: none;
-        z-index: 1;
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+    z-index: 1;
+  }
 }
 
 .themeSectionBg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
 .themeSectionContent {
-    position: relative;
-    z-index: 2;
+  position: relative;
+  z-index: 2;
 }
 
 .themeCard {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    gap: 12px;
-    width: 100%;
-    aspect-ratio: 1.62;
-    padding: 16px;
-    border-radius: 24px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0px 0px 2vw 0px rgba(0, 0, 0, 0.4);
-    transition:
-        box-shadow 0.4s ease,
-        transform 0.4s ease;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 12px;
+  width: 100%;
+  aspect-ratio: 1.62;
+  padding: 16px;
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0px 0px 2vw 0px rgba(0, 0, 0, 0.4);
+  transition:
+    box-shadow 0.4s ease,
+    transform 0.4s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 55%);
+    opacity: 1;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  &:hover {
+    box-shadow: 0px 0px 3vw 0px rgba(0, 0, 0, 0.5);
 
     &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 55%);
-        opacity: 1;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
-        z-index: 1;
+      opacity: 0;
     }
 
-    &:hover {
-        box-shadow: 0px 0px 3vw 0px rgba(0, 0, 0, 0.5);
+    .themeCardCta {
+      background-color: #a3b082;
+      color: #fff;
 
-        &::before {
-            opacity: 0;
-        }
-
-        .themeCardCta {
-            background-color: #a3b082;
-            color: #fff;
-
-            svg {
-                transform: rotate(-45deg);
-            }
-        }
+      svg {
+        transform: rotate(-45deg);
+      }
     }
+  }
 }
 
 .themeCardImg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    z-index: 0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
 }
 
 .themeCardBody {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    gap: 12px;
-    width: 100%;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 12px;
+  width: 100%;
 }
 
 .themeCardCta {
-    width: 48px;
-    aspect-ratio: 1 / 1;
-    transition:
-        background-color 0.4s ease,
-        color 0.4s ease;
+  width: 48px;
+  aspect-ratio: 1 / 1;
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
 
-    svg {
-        transition: transform 0.4s ease;
-    }
+  svg {
+    transition: transform 0.4s ease;
+  }
 }
-@media (min-width: 576px) {
-    ul.activityIntro {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .themeSection ol > li {
-        grid-template-columns: 1fr 2fr;
-    }
+@include media-breakpoint-up(sm) {
+  ul.activityIntro {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .themeSection ol > li {
+    grid-template-columns: 1fr 2fr;
+  }
 }
 
-@media (min-width: 768px) {
-    ul.activityIntro {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .themeSection ol {
-        gap: 64px 0;
-    }
-    .themeSection ol > li {
-        grid-template-columns: 1fr 2fr;
-    }
+@include media-breakpoint-up(md) {
+  ul.activityIntro {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .themeSection ol {
+    gap: 64px 0;
+  }
+  .themeSection ol > li {
+    grid-template-columns: 1fr 2fr;
+  }
 }
-@media (min-width: 992px) {
-    section.navigationAndRegistration {
-        grid-template-columns: 2fr 1fr;
-    }
-    ul.themeList {
-        grid-template-columns: 1fr 1fr;
-    }
+@include media-breakpoint-up(lg) {
+  section.navigationAndRegistration {
+    grid-template-columns: 2fr 1fr;
+  }
+  ul.themeList {
+    grid-template-columns: 1fr 1fr;
+  }
 }
