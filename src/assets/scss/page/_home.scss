@@ -1,62 +1,62 @@
 /*  Slogan + Hero */
 
 .hero {
-    width: 100%;
-    height: 90vh;
-    position: relative;
-    z-index: 0;
+  width: 100%;
+  height: 90vh;
+  position: relative;
+  z-index: 0;
 
-    @media (min-width: 768px) {
-        height: auto; /* 取消 90vh*/
-        aspect-ratio: 16 / 9;
-    }
+  @include media-breakpoint-up(md) {
+    height: auto; /* 取消 90vh*/
+    aspect-ratio: 16 / 9;
+  }
 }
 
 // 🔸 影片滿版遮罩 - 問題在這
 .hero::after {
-    position: absolute;
-    content: '';
-    inset: 0;
-    background: linear-gradient(rgba(70, 100, 10, 0.1), rgba(70, 100, 10, 0.1));
-    z-index: 1;
+  position: absolute;
+  content: '';
+  inset: 0;
+  background: linear-gradient(rgba(70, 100, 10, 0.1), rgba(70, 100, 10, 0.1));
+  z-index: 1;
 }
 
 .hero__bottom-wrap {
-    bottom: 24px;
+  bottom: 24px;
 
-    @media (min-width: 992px) {
-        bottom: 36px;
-    }
+  @include media-breakpoint-up(lg) {
+    bottom: 36px;
+  }
 }
 
 // Hero切換按鈕
 .hero__switch-btn {
+  border: none;
+  /* 未點擊狀態 */
+  background-color: transparent;
+  color: $primary-100;
+  transition: all 0.3s ease;
+  &:focus,
+  &:active {
     border: none;
-    /* 未點擊狀態 */
-    background-color: transparent;
-    color: $primary-100;
-    transition: all 0.3s ease;
-    &:focus,
-    &:active {
-        border: none;
-        outline: none;
-        box-shadow: none;
-    }
-    &:hover {
-        color: lighten($primary-100, 10%);
-    }
+    outline: none;
+    box-shadow: none;
+  }
+  &:hover {
+    color: lighten($primary-100, 10%);
+  }
 
-    /* 點擊狀態 (Active) */
-    &.active {
-        background-color: $primary-100;
-        color: $primary-300;
-        font-weight: bold;
-    }
+  /* 點擊狀態 (Active) */
+  &.active {
+    background-color: $primary-100;
+    color: $primary-300;
+    font-weight: bold;
+  }
 }
 
 .hero__switch-btn .material-symbols-outlined {
-    font-size: 16px;
-    line-height: 1; /* 消除字體行高造成的微小位移 */
+  font-size: 16px;
+  line-height: 1; /* 消除字體行高造成的微小位移 */
 }
 
 /* 本月活動特輯 Swiper */
@@ -66,256 +66,256 @@
 // }
 
 .theme-swiper {
-    // overflow: visible;
-    padding-bottom: 144px;
+  // overflow: visible;
+  padding-bottom: 144px;
 
-    @media (min-width: 992px) {
-        // overflow: hidden;
-        padding-left: 72px;
-        padding-bottom: 20px;
-    }
+  @include media-breakpoint-up(lg) {
+    // overflow: hidden;
+    padding-left: 72px;
+    padding-bottom: 20px;
+  }
 }
 
 .theme {
-    position: relative;
+  position: relative;
 }
 
 .theme__decor {
-    position: absolute;
-    z-index: 1;
-    left: -72px;
-    bottom: 32px;
+  position: absolute;
+  z-index: 1;
+  left: -72px;
+  bottom: 32px;
 
-    @media (min-width: 992px) {
-        left: -72px;
-        bottom: 56px;
-    }
+  @include media-breakpoint-up(lg) {
+    left: -72px;
+    bottom: 56px;
+  }
 }
 
 // 新增按鈕樣式
 .theme__btn-prev,
 .theme__btn-next {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    // 預設樣式
-    background-color: $white;
-    box-shadow: 0 0.0625rem 0.5rem rgba($black, 0.08);
+  // 預設樣式
+  background-color: $white;
+  box-shadow: 0 0.0625rem 0.5rem rgba($black, 0.08);
 
-    &:hover {
-        color: $white;
-        background-color: $primary-200;
-    }
+  &:hover {
+    color: $white;
+    background-color: $primary-200;
+  }
 }
 
 .theme__content {
-    position: absolute;
-    bottom: -144px;
-    z-index: 2;
+  position: absolute;
+  bottom: -144px;
+  z-index: 2;
 
-    @media (min-width: 992px) {
-        bottom: -20px;
-    }
+  @include media-breakpoint-up(lg) {
+    bottom: -20px;
+  }
 }
 
 .theme__card {
-    height: 200px;
+  height: 200px;
 
-    @media (min-width: 992px) {
-        height: auto;
-    }
+  @include media-breakpoint-up(lg) {
+    height: auto;
+  }
 }
 
 .theme__btn {
-    background-color: $primary-100;
-    color: $primary-300;
+  background-color: $primary-100;
+  color: $primary-300;
 
-    &:hover {
-        background-color: $primary-200;
-        color: $white;
-    }
-    &:active {
-        background-color: lighten($primary-200, 30%);
-    }
+  &:hover {
+    background-color: $primary-200;
+    color: $white;
+  }
+  &:active {
+    background-color: lighten($primary-200, 30%);
+  }
 }
 
 /* 步道難度指南 diffcard */
 
 .diffcard__list {
-    display: flex;
-    overflow-x: auto; /* 手機版：水平滑動 */
+  display: flex;
+  overflow-x: auto; /* 手機版：水平滑動 */
 
-    /* 隱藏橫向捲軸 */
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-        display: none;
-    }
+  /* 隱藏橫向捲軸 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
-    @media (min-width: 1200px) {
-        display: grid;
-        flex-wrap: unset;
-        grid-template-columns: repeat(5, 1fr);
-        overflow-x: visible;
-    }
+  @include media-breakpoint-up(xl) {
+    display: grid;
+    flex-wrap: unset;
+    grid-template-columns: repeat(5, 1fr);
+    overflow-x: visible;
+  }
 }
 
 .diffcard__card {
-    flex: 0 0 200px;
-    scroll-snap-align: start;
-    cursor: pointer;
+  flex: 0 0 200px;
+  scroll-snap-align: start;
+  cursor: pointer;
 
-    // 陰影
-    // box-shadow: 0 8px 12px rgba(2, 154, 30, 0.1);
-    border-radius: 24px;
+  // 陰影
+  // box-shadow: 0 8px 12px rgba(2, 154, 30, 0.1);
+  border-radius: 24px;
 
-    @media (min-width: 1200px) {
-        flex: unset; // 取消flex
-        width: auto;
+  @include media-breakpoint-up(xl) {
+    flex: unset; // 取消flex
+    width: auto;
+  }
+
+  //難易度小卡遮罩
+  &:hover {
+    .diffcard__overlay {
+      opacity: 1; /* 滑鼠移過去時顯示 */
     }
-
-    //難易度小卡遮罩
-    &:hover {
-        .diffcard__overlay {
-            opacity: 1; /* 滑鼠移過去時顯示 */
-        }
-    }
+  }
 }
 
 // 遮罩顯示層
 .diffcard__content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 24px;
-    overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
 }
 
 /* 新增遮罩層 */
 .diffcard__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    inset: 0;
-    background-color: rgb(235, 220, 180); /* 米色背景 */
-    opacity: 0; /* 預設隱藏 */
-    transition: opacity 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  inset: 0;
+  background-color: rgb(235, 220, 180); /* 米色背景 */
+  opacity: 0; /* 預設隱藏 */
+  transition: opacity 0.3s ease;
 
-    /* 文字排版置中 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 16px;
-    text-align: left;
+  /* 文字排版置中 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px;
+  text-align: left;
 }
 
 /* 覆蓋層內的文字樣式  */
 
 .diffcard__label {
-    display: block;
-    color: $primary-300;
-    margin-bottom: 4px;
-    letter-spacing: 1px; /* 字距稍微拉開 */
+  display: block;
+  color: $primary-300;
+  margin-bottom: 4px;
+  letter-spacing: 1px; /* 字距稍微拉開 */
 }
 
 /* 設定固定寬高 */
 .diffcard__equip {
-    min-height: 44px;
+  min-height: 44px;
 }
 
 .diffcard__desc {
-    min-height: 60px;
+  min-height: 60px;
 }
 
 /* 特色景觀步道 feature */
 
 .landscape__gallery {
-    display: grid;
-    grid-template-columns: 1fr 1fr; // 🔸 手機版 grid 雙欄
-    height: auto;
-    gap: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr; // 🔸 手機版 grid 雙欄
+  height: auto;
+  gap: 0;
 
-    @media (min-width: 560px) {
-        grid-template-columns: 2fr 3fr 2fr; // 🔸 桌機版 grid 三欄
-        align-items: start;
-    }
+  @include media-breakpoint-up(sm) {
+    grid-template-columns: 2fr 3fr 2fr; // 🔸 桌機版 grid 三欄
+    align-items: start;
+  }
 }
 .landscape__gallery img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 .landscape__column {
-    display: contents;
+  display: contents;
 
-    @media (min-width: 560px) {
-        display: flex;
-        flex-direction: column;
-    }
+  @include media-breakpoint-up(sm) {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 // 指定手機版某些圖片要滿寬
 .landscape__column:nth-child(1) .landscape__card:nth-child(3) {
-    grid-column: 1 / -1;
+  grid-column: 1 / -1;
 }
 
 .landscape__column:nth-child(3) .landscape__card:nth-child(1) {
-    grid-column: 1 / -1;
+  grid-column: 1 / -1;
 }
 
 // 🔸 圖片遮罩
 .landscape__card {
-    flex: 1;
-    height: 140px;
-    position: relative;
-    z-index: 0;
-    overflow: hidden;
+  flex: 1;
+  height: 140px;
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
 
-    @media (min-width: 560px) {
-        height: auto;
-    }
+  @include media-breakpoint-up(sm) {
+    height: auto;
+  }
 }
 
 .landscape__card::after {
-    position: absolute;
-    content: '';
-    inset: 0;
-    width: 100%;
-    background:
-        linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%);
-    z-index: 1;
+  position: absolute;
+  content: '';
+  inset: 0;
+  width: 100%;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%);
+  z-index: 1;
 }
 
 .landscape__card-title {
-    position: absolute;
-    left: 1rem;
-    bottom: 1rem;
-    z-index: 2;
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 2;
 
-    @media (min-width: 768px) {
-        left: 1.5rem;
-        bottom: 1.5rem;
-    }
+  @include media-breakpoint-up(md) {
+    left: 1.5rem;
+    bottom: 1.5rem;
+  }
 }
 
 // 🔸 hover效果
 .landscape__card img {
-    transition: transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .landscape__card:hover img {
-    transition: transform 0.3s ease;
-    transform: scale(1.1);
+  transition: transform 0.3s ease;
+  transform: scale(1.1);
 }
 
 /* 關於我們 about */
 .about__card {
-    box-shadow: 0px 1px 40px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 1px 40px 1px rgba(0, 0, 0, 0.1);
 }
 
 .about__bg {
-    bottom: -1px;
+  bottom: -1px;
 }

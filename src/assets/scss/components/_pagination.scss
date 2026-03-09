@@ -1,46 +1,46 @@
 .page-item {
+  .page-link {
+    font-weight: 500;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: unset;
+
+    &:focus {
+      color: initial;
+    }
+  }
+  &:hover {
     .page-link {
-        font-weight: 500;
-        border-radius: 8px;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      color: $white;
+      background-color: $primary-300;
+    }
+  }
+
+  &.active {
+    .page-link {
+      color: $white;
+      background-color: $primary-200;
+    }
+  }
+
+  &.disabled {
+    .page-link {
+      color: $black-200;
+      background-color: unset;
+    }
+  }
+
+  &:first-child,
+  &:last-child {
+    &:focus {
+      .page-link {
+        color: $black-900;
         background-color: unset;
-
-        &:focus {
-            color: initial;
-        }
+      }
     }
-    &:hover {
-        .page-link {
-            color: $white;
-            background-color: $primary-300;
-        }
-    }
-
-    &.active {
-        .page-link {
-            color: $white;
-            background-color: $primary-200;
-        }
-    }
-
-    &.disabled {
-        .page-link {
-            color: $black-200;
-            background-color: unset;
-        }
-    }
-
-    &:first-child,
-    &:last-child {
-        &:focus {
-            .page-link {
-                color: $black-900;
-                background-color: unset;
-            }
-        }
-    }
+  }
 }

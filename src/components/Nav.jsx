@@ -18,154 +18,140 @@ import Cookies from 'js-cookie';
 
 //預設nav的字一開始就是非綠色的
 const Nav = () => {
-    const location = useLocation();
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    //取出狀態
-    const isLogin = useSelector((state) => state.auth.isLogin);
-    const user = useSelector((state) => state.auth.user);
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  //取出狀態
+  const isLogin = useSelector((state) => state.auth.isLogin);
+  const user = useSelector((state) => state.auth.user);
 
-    const [scrolled, setScrolled] = useState(false);
-    const [show, setShow] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [show, setShow] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    //處理登出
-    const handleLogout = (e) => {
-        e.preventDefault();
-        Cookies.remove('token');
-        Cookies.remove('user');
-        dispatch(logout());
-        dispatch(
-            createMessage({
-                text: `${user.name}，登出成功`,
-                type: 'success',
-            }),
-        );
-        setTimeout(() => {
-            navigate('/');
-        }, 1500);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
     };
 
-    return (
-        <>
-            <nav className={`py-3 py-lg-6 ${scrolled ? 'scrolled shadow-sm' : ''}`}>
-                <div className="container">
-                    <div className="header__links d-flex justify-content-between align-items-center">
-                        {/* logo + 導覽列 */}
-                        <div className="header__nav d-flex align-items-center ">
-                            <Link
-                                to="/"
-                                className="d-flex column-gap-2 pe-4 me-10"
-                                onClick={() => window.scrollTo(0, 0)}
-                            >
-                                <img
-                                    className="logo"
-                                    src={scrolled ? logoDark : logoWhite}
-                                    alt="logo圖片"
-                                />
-                                <img
-                                    className="logo-yestep"
-                                    src={scrolled ? yestepDark : yestepWhite}
-                                    alt="logo圖片"
-                                />
-                            </Link>
-                            <ul className="list-unstyled d-none d-lg-flex gap-16">
-                                <li className="decor-lined">
-                                    <NavLink to="/theme">主題活動</NavLink>
-                                </li>
-                                <li className="decor-lined">
-                                    <NavLink to="/search">步道總覽</NavLink>
-                                </li>
-                                {/* 熱門步道要連到首頁的點擊率小卡 */}
-                                <li className="decor-lined">
-                                    <NavLink
-                                        to="/#popular-trails"
-                                        className={() =>
-                                            location.pathname === '/' &&
-                                            location.hash === '#popular-trails'
-                                                ? 'active'
-                                                : ''
-                                        }
-                                    >
-                                        熱門步道
-                                    </NavLink>
-                                </li>
-                            </ul>
-                        </div>
-                        {/* 登入註冊 */}
-                        <div className="dropdown header__login d-none d-lg-flex ">
-                            <button
-                                type="button"
-                                className="dropdown-btn d-flex align-items-center text-decoration-none border-0 bg-transparent mb-2"
-                                data-bs-display="static"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <span className="material-symbols-outlined me-2">
-                                    account_circle
-                                </span>
-                                <span>{isLogin ? `嗨，${user?.name || '會員'}` : '登入/註冊'}</span>
-                            </button>
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-                            <ul className="dropdown-menu dropdown-menu-end px-3 py-2">
-                                {isLogin ? (
-                                    <>
-                                        <li>
-                                            <Link className="dropdown-item px-4 py-2" to="/member">
-                                                會員中心
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <a
-                                                href="#"
-                                                onClick={handleLogout}
-                                                className="dropdown-item px-4 py-2"
-                                            >
-                                                登出
-                                            </a>
-                                        </li>
-                                    </>
-                                ) : (
-                                    <>
-                                        <li>
-                                            <Link className="dropdown-item px-4 py-2" to="/login">
-                                                會員登入
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link
-                                                className="dropdown-item px-4 py-2"
-                                                to="/register"
-                                            >
-                                                註冊帳號
-                                            </Link>
-                                        </li>
-                                    </>
-                                )}
-                            </ul>
-                        </div>
-                        {/* 手機用 Nav */}
-                        <button
-                            type="button"
-                            className="btn btn-menu d-block d-lg-none p-3"
-                            onClick={() => setShow(true)}
-                        >
-                            <span className="material-symbols-outlined">menu</span>
-                        </button>
-                    </div>
-                </div>
-            </nav>
-            <NavOffcanvas show={show} onClose={() => setShow(false)} />
-        </>
+  //處理登出
+  const handleLogout = (e) => {
+    e.preventDefault();
+    Cookies.remove('token');
+    Cookies.remove('user');
+    dispatch(logout());
+    dispatch(
+      createMessage({
+        text: `${user.name}，登出成功`,
+        type: 'success',
+      }),
     );
+    setTimeout(() => {
+      navigate('/');
+    }, 1500);
+  };
+
+  return (
+    <>
+      <nav className={`py-3 py-lg-6 ${scrolled ? 'scrolled shadow-sm' : ''}`}>
+        <div className="container">
+          <div className="header__links d-flex justify-content-between align-items-center">
+            {/* logo + 導覽列 */}
+            <div className="header__nav d-flex align-items-center ">
+              <Link
+                to="/"
+                className="d-flex column-gap-2 pe-4 me-10"
+                onClick={() => window.scrollTo(0, 0)}
+              >
+                <img className="logo" src={scrolled ? logoDark : logoWhite} alt="logo圖片" />
+                <img
+                  className="logo-yestep"
+                  src={scrolled ? yestepDark : yestepWhite}
+                  alt="logo圖片"
+                />
+              </Link>
+              <ul className="list-unstyled d-none d-lg-flex gap-16">
+                <li className="decor-lined">
+                  <NavLink to="/theme">主題活動</NavLink>
+                </li>
+                <li className="decor-lined">
+                  <NavLink to="/search">步道總覽</NavLink>
+                </li>
+                {/* 熱門步道要連到首頁的點擊率小卡 */}
+                <li className="decor-lined">
+                  <NavLink
+                    to="/#popular-trails"
+                    className={() =>
+                      location.pathname === '/' && location.hash === '#popular-trails'
+                        ? 'active'
+                        : ''
+                    }
+                  >
+                    熱門步道
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+            {/* 登入註冊 */}
+            <div className="dropdown header__login d-none d-lg-flex ">
+              <button
+                type="button"
+                className="dropdown-btn d-flex align-items-center text-decoration-none border-0 bg-transparent mb-2"
+                data-bs-display="static"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span className="material-symbols-outlined me-2">account_circle</span>
+                <span>{isLogin ? `嗨，${user?.name || '會員'}` : '登入/註冊'}</span>
+              </button>
+
+              <ul className="dropdown-menu dropdown-menu-end px-3 py-2">
+                {isLogin ? (
+                  <>
+                    <li>
+                      <Link className="dropdown-item px-4 py-2" to="/member">
+                        會員中心
+                      </Link>
+                    </li>
+                    <li>
+                      <a href="#" onClick={handleLogout} className="dropdown-item px-4 py-2">
+                        登出
+                      </a>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li>
+                      <Link className="dropdown-item px-4 py-2" to="/login">
+                        會員登入
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item px-4 py-2" to="/register">
+                        註冊帳號
+                      </Link>
+                    </li>
+                  </>
+                )}
+              </ul>
+            </div>
+            {/* 手機用 Nav */}
+            <button
+              type="button"
+              className="btn btn-menu d-block d-lg-none p-3"
+              onClick={() => setShow(true)}
+            >
+              <span className="material-symbols-outlined">menu</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+      <NavOffcanvas show={show} onClose={() => setShow(false)} />
+    </>
+  );
 };
 
 export default Nav;
