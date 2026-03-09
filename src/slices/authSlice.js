@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 const token = Cookies.get('accessToken');
 const userCookie = Cookies.get('user');
 
+//具名匯出：Slice 物件本身
 export const authSlice = createSlice({
     name: 'auth',
     initialState: {
@@ -42,6 +43,8 @@ export const authSlice = createSlice({
     },
 });
 
+//預設匯出：Reducer 函式
 export default authSlice.reducer;
 
+//具名匯出：Action Creators (動作建立函數)
 export const { loginSuccess, logout, updateName } = authSlice.actions;
