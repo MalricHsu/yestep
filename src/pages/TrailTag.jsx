@@ -39,7 +39,8 @@ const TrailTag = () => {
         const res = await TrailsApi.get(`/trails?${queryName}`);
         setTrails(res.data);
       } catch (error) {
-        dispatch(createMessage({ text: error, type: 'red' }));
+        const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+        dispatch(createMessage({ text: errorMessage, type: 'red' }));
       }
     };
     tagData();

@@ -26,7 +26,8 @@ const TrailSwiper = () => {
         const res = await TrailsApi.get(`/reviews`);
         setReviewData(res.data);
       } catch (error) {
-        dispatch(createMessage({ text: error, type: 'red' }));
+        const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+        dispatch(createMessage({ text: errorMessage, type: 'red' }));
       }
     };
     handleReviewData();
