@@ -55,9 +55,9 @@ const Register = () => {
           error.response.data === 'Email already exists'
             ? '此 Email 已被註冊過'
             : '註冊失敗，請稍後再試';
-        dispatch(createMessage({ text: errorMsg, type: 'danger' }));
+        dispatch(createMessage({ text: errorMsg, type: 'red' }));
       } else {
-        dispatch(createMessage({ text: '伺服器連線失敗', type: 'danger' }));
+        dispatch(createMessage({ text: '伺服器連線失敗', type: 'red' }));
       }
     }
   };

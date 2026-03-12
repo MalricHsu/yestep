@@ -54,7 +54,8 @@ const useTrails = () => {
         const res = await TrailsApi.get('/trails');
         setTrails(res.data);
       } catch (error) {
-        dispatch(createMessage({ text: `API 錯誤${error}`, type: 'red' }));
+        const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+        dispatch(createMessage({ text: errorMessage, type: 'red' }));
       } finally {
         setLoading(false);
       }
@@ -66,7 +67,8 @@ const useTrails = () => {
         const res = await TrailsApi.get('/activity');
         setActivity(res.data);
       } catch (error) {
-        dispatch(createMessage({ text: `API 錯誤${error}`, type: 'red' }));
+        const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+        dispatch(createMessage({ text: errorMessage, type: 'red' }));
       }
     };
     activityIntroData();
@@ -77,7 +79,8 @@ const useTrails = () => {
         const res = await TrailsApi.get('/themeSections');
         setThemeSection(res.data);
       } catch (error) {
-        dispatch(createMessage({ text: `API 錯誤${error}`, type: 'red' }));
+        const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+        dispatch(createMessage({ text: errorMessage, type: 'red' }));
       }
     };
     themeSectionData();

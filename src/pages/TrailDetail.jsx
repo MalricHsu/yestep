@@ -64,7 +64,8 @@ const TrailDetail = () => {
         const otherTrails = allRes.data.filter((item) => !item.trail_system?.includes('中央山脈'));
         setSystemOther(getRandomTrails(otherTrails));
       } catch (error) {
-        dispatch(createMessage({ text: `取得步道資料發生錯誤${error}`, type: 'red' }));
+        const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+        dispatch(createMessage({ text: errorMessage, type: 'red' }));
       }
     };
 
@@ -86,7 +87,8 @@ const TrailDetail = () => {
             setFavoriteId(null);
           }
         } catch (error) {
-          dispatch(createMessage({ text: `狀態檢查失敗${error}`, type: 'red' }));
+          const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+          dispatch(createMessage({ text: errorMessage, type: 'red' }));
         }
       } else {
         // 如果沒登入，清空狀態

@@ -89,7 +89,8 @@ const ThemeRegistrationForm = () => {
       setModalConfig({ isOpen: true, status: 'success' });
       setForm({ name: '', phone: '', email: '', session: '', qty: 0, consent: false });
     } catch (error) {
-      dispatch(createMessage({ text: error, type: 'red' }));
+      const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+      dispatch(createMessage({ text: errorMessage, type: 'red' }));
       setModalConfig({ isOpen: true, status: 'error' });
     }
   };

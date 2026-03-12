@@ -501,10 +501,10 @@ const MemberProfile = ({ user, setUser }) => {
         if (setUser) setUser((prev) => ({ ...(prev || {}), ...u }));
         Cookies.set('user', JSON.stringify({ ...(user || {}), ...u }));
         if (u.id != null) Cookies.set('userId', String(u.id));
-      } catch (err) {
+      } catch (error) {
         dispatch(
           createMessage({
-            text: err.response?.data?.message || '會員資料載入失敗，請重新登入',
+            text: error.response?.data?.message || '會員資料載入失敗，請重新登入',
             type: 'red',
           }),
         );
@@ -552,8 +552,9 @@ const MemberProfile = ({ user, setUser }) => {
       if (setUser) setUser((prev) => ({ ...(prev || {}), ...updated }));
       Cookies.set('user', JSON.stringify({ ...(user || {}), ...updated }));
       setIsEditing(false);
-    } catch (err) {
-      dispatch(createMessage({ text: err.response?.data?.message || '更新資料失敗', type: 'red' }));
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+      dispatch(createMessage({ text: errorMessage, type: 'red' }));
     }
   };
 
@@ -713,9 +714,10 @@ const MemberFavorite = ({ user }) => {
           );
           setItineraryIds(itiRes.data.map((i) => String(i.trailId)));
         }
-      } catch (err) {
+      } catch (error) {
         if (mounted) {
-          dispatch(createMessage({ text: err, type: 'red' }));
+          const errorMessage = error.response?.data?.message || error.message || '連線伺服器失敗';
+          dispatch(createMessage({ text: errorMessage, type: 'red' }));
           setError('資料載入失敗');
         }
       } finally {
@@ -885,10 +887,10 @@ export const MemberAnalytics = ({ user }) => {
         if (!mounted) return;
         setTrails(Array.isArray(trailsRes.data) ? trailsRes.data : []);
         setFavorites(Array.isArray(favRes.data) ? favRes.data : []);
-      } catch (err) {
+      } catch (error) {
         if (!mounted) return;
         dispatch(
-          createMessage({ text: err.response?.data?.message || '統計資料載入失敗', type: 'red' }),
+          createMessage({ text: error.response?.data?.message || '統計資料載入失敗', type: 'red' }),
         );
         setErr('統計資料載入失敗');
       } finally {
@@ -1030,10 +1032,13 @@ const MemberRecommend = () => {
         const list = Array.isArray(res.data) ? res.data : [];
         const picked = pickRandomUnique(list, 6);
         if (isMounted) setItems(picked);
-      } catch (err) {
+      } catch (error) {
         if (isMounted) {
           dispatch(
-            createMessage({ text: err.response?.data?.message || '推薦資料載入失敗', type: 'red' }),
+            createMessage({
+              text: error.response?.data?.message || '推薦資料載入失敗',
+              type: 'red',
+            }),
           );
           setError('推薦步道載入失敗');
         }
