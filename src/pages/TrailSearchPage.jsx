@@ -221,7 +221,7 @@ const TrailSearchPage = () => {
               <h3 className="text-white text-center fw-medium fs-7 mb-4 mb-sm-8">步道總覽</h3>
               <h1 className="text-white text-center fs-4 fs-sm-1 mb-8">Next Step！想要去哪裡？</h1>
               <form
-                className="search-bar mb-3 px-3 py-2 bg-white rounded-pillmb-3 px-3 py-2 bg-white rounded-pill"
+                className="search-bar mb-3 px-3 py-2 bg-white rounded-pill mb-3 px-3 py-2 bg-white rounded-pill"
                 onSubmit={(e) => e.preventDefault()}
               >
                 <div className="input-group align-items-center">
